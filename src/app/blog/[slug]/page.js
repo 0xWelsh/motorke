@@ -56,7 +56,7 @@ export default async function BlogArticlePage({ params }) {
         <SeoArticleBody body={page.body} />
         <p className="mt-12 text-sm border-t border-slate-200 pt-6 text-slate-500">
           Ready to shop?{" "}
-          <Link href="/cars" className="text-[#2F855A] font-semibold">
+          <Link href="/cars" className="text-[var(--accent)] font-semibold">
             Browse verified listings
           </Link>
         </p>

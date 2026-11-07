@@ -72,7 +72,7 @@ export default function LoginForm({ error }) {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="you@email.com"
-              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
           </div>
 
@@ -88,7 +88,7 @@ export default function LoginForm({ error }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
-              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 pr-9 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 pr-9 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
             <button
               type="button"
@@ -102,10 +102,10 @@ export default function LoginForm({ error }) {
 
           <div className="flex items-center justify-between pt-0.5">
             <label className="flex items-center gap-2 cursor-pointer group">
-              <input type="checkbox" name="remember" className="w-3 h-3 rounded border border-slate-300 bg-slate-100 checked:bg-[#38A169] checked:border-[#38A169] accent-[#38A169]" />
+              <input type="checkbox" name="remember" className="w-3 h-3 rounded border border-slate-300 bg-slate-100 checked:bg-[var(--accent)] checked:border-[var(--accent)] accent-[var(--accent)]" />
               <span className="text-[10px] font-medium text-slate-500 group-hover:text-slate-500 transition-colors">Remember</span>
             </label>
-            <Link href="/forgot-password" className="text-[10px] font-medium text-slate-500 hover:text-[#38A169] transition-colors">
+            <Link href="/forgot-password" className="text-[10px] font-medium text-slate-500 hover:text-[var(--accent)] transition-colors">
               Forgot password?
             </Link>
           </div>
@@ -124,7 +124,7 @@ export default function LoginForm({ error }) {
 
         <p className="mt-4 text-center text-xs font-medium text-slate-500">
           New here?{" "}
-          <Link href="/signup" className="text-[#38A169] hover:underline underline-offset-2 font-semibold">
+          <Link href="/signup" className="text-[var(--accent)] hover:underline underline-offset-2 font-semibold">
             Sign Up
           </Link>
         </p>

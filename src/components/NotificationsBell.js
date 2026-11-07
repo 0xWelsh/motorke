@@ -147,8 +147,8 @@ export default function NotificationsBell({ variant = "portal" }) {
           <span className={clsx(
             "absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full text-[11px] font-bold flex items-center justify-center",
             isAdmin || isNavbar
-              ? "bg-[#2F855A] text-white border-2 border-white"
-              : "bg-[#2F855A] text-white border-2 border-slate-100"
+              ? "bg-[var(--accent)] text-white border-2 border-white"
+              : "bg-[var(--accent)] text-white border-2 border-slate-100"
           )}>
             {Math.min(unreadCount, 99)}
           </span>
@@ -168,7 +168,7 @@ export default function NotificationsBell({ variant = "portal" }) {
               <button
                 type="button"
                 onClick={markAllRead}
-                className="text-[10px] font-bold text-[#2F855A] uppercase tracking-widest hover:opacity-70 transition-opacity flex items-center gap-1.5"
+                className="text-[10px] font-bold text-[var(--accent)] uppercase tracking-widest hover:opacity-70 transition-opacity flex items-center gap-1.5"
                 disabled={busy}
               >
                 <CheckCheck size={12} /> Mark all
@@ -196,7 +196,7 @@ export default function NotificationsBell({ variant = "portal" }) {
                   <>
                     <div className="flex items-start justify-between gap-4">
                       <p className="text-[13px] font-bold leading-snug text-slate-900">{item.title}</p>
-                      {!item.read && <span className="mt-1 w-2 h-2 rounded-full bg-[#2F855A] shrink-0 shadow-[0_0_8px_rgba(47,133,90,0.45)]" />}
+                      {!item.read && <span className="mt-1 w-2 h-2 rounded-full bg-[var(--accent)] shrink-0 shadow-glow-sm" />}
                     </div>
                     <p className="text-[12px] text-slate-500 leading-relaxed mt-1.5 line-clamp-2">
                        {item.message}

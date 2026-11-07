@@ -36,7 +36,7 @@ export default function HomepageCompareDiscovery({ comparisons = [] }) {
             <Link
               key={cmp.slug}
               href={`/compare/${cmp.slug}`}
-              className="group p-5 bg-slate-50 border border-slate-200 hover:border-[var(--accent)]/40 hover:bg-white transition-all rounded-xl"
+              className="group p-5 bg-slate-50 border border-slate-200 hover:border-accent-glow hover:bg-white transition-all rounded-xl"
             >
               <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 group-hover:text-[var(--accent)] mb-2 transition-colors">Head to Head</p>
               <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-tight">

@@ -88,7 +88,7 @@ export async function sendAdminDailyReport(adminPhone, stats) {
   const { date, newCars, totalLeads, uniqueVisitors } = stats;
   
   const text = 
-    `📊 *Motorke Daily Report - ${date}*\n\n` +
+    `📊 *BIDGARI Daily Report - ${date}*\n\n` +
     `🚗 *New Listings:* ${newCars}\n` +
     `📩 *Total Leads:* ${totalLeads}\n` +
     `👥 *Unique Visitors:* ${uniqueVisitors}\n\n` +

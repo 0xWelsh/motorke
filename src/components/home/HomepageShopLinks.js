@@ -80,7 +80,7 @@ export default function HomepageShopLinks({ embedded = false }) {
                 </p>
               </div>
               <span
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--accent)]/20 bg-[var(--accent)]/10 text-[var(--accent)] transition-transform group-open:rotate-180"
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-accent-dim bg-accent-wash text-[var(--accent)] transition-transform group-open:rotate-180"
                 aria-hidden
               >
                 <ChevronDown className="h-4 w-4" />
@@ -186,7 +186,7 @@ export default function HomepageShopLinks({ embedded = false }) {
                 </p>
               </div>
               <span
-                className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--accent)]/20 bg-[var(--accent)]/10 text-[var(--accent)] transition-transform group-open:rotate-180"
+                className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-accent-dim bg-accent-wash text-[var(--accent)] transition-transform group-open:rotate-180"
                 aria-hidden
               >
                 <ChevronDown className="h-4 w-4" />

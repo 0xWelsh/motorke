@@ -72,7 +72,7 @@ export default function HeroShowcase({ items }) {
           <div className="p-8 flex flex-col min-h-[300px] justify-center text-center">
             <div className="flex justify-center mb-6">
               <div className="w-12 h-12 bg-slate-50 flex items-center justify-center rounded-full">
-                <Quote className="w-5 h-5 text-[var(--accent)] fill-[var(--accent)]/10" />
+                <Quote className="w-5 h-5 text-[var(--accent)] fill-accent-dim" />
               </div>
             </div>
             <div className="flex justify-center gap-0.5 mb-4">

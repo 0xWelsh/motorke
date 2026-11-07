@@ -81,7 +81,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
     setSaved(prev => prev.filter(c => c.id !== carId));
   }
 
-  const inputCls = "w-full bg-slate-50 border border-slate-300 focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/20 rounded-2xl py-2.5 px-4 text-sm font-medium text-slate-900 outline-none transition-colors placeholder:text-slate-400";
+  const inputCls = "w-full bg-slate-50 border border-slate-300 focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow rounded-2xl py-2.5 px-4 text-sm font-medium text-slate-900 outline-none transition-colors placeholder:text-slate-400";
   const labelCls = "text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 block";
   const buyerProfileItems = [
     { label: "Profile photo", done: Boolean(user.avatarUrl) },
@@ -254,21 +254,21 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
         {/* ── ENQUIRIES ── */}
         {tab === "enquiries" && (
           enquiries.length === 0
-            ? <Empty icon={<MessageSquare size={32} className="text-[#ff5a2f]" />} title="No Messages Yet" desc="Messages and inquiries you send to dealers will appear here." href="/cars" cta="Browse Cars" />
+            ? <Empty icon={<MessageSquare size={32} className="text-[var(--accent)]" />} title="No Messages Yet" desc="Messages and inquiries you send to dealers will appear here." href="/cars" cta="Browse Cars" />
             : (
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {enquiries.map(e => (
-                  <div key={e.id} className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-[var(--accent)]/30 transition-colors">
-                    <div className="w-14 h-14 rounded-2xl bg-blue-50 border border-blue-100 flex items-center justify-center font-black text-xl text-[#ff5a2f] shrink-0">
+                  <div key={e.id} className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-[var(--accent-dim)] transition-colors">
+                    <div className="w-14 h-14 rounded-2xl bg-accent-wash border border-[var(--accent-dim)] flex items-center justify-center font-black text-xl text-[var(--accent)] shrink-0">
                       {e.dealer.name[0]}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                         <div>
                           <h3 className="font-black text-slate-900 text-lg tracking-tight leading-tight">{e.dealer.name}</h3>
-                          <Link href={carListingPath(e.car)} className="text-xs font-bold text-[#ff5a2f] hover:text-blue-800 transition-colors line-clamp-1 block mt-1">
+                          <Link href={carListingPath(e.car)} className="text-xs font-bold text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors line-clamp-1 block mt-1">
                             Regarding:{" "}
-                            <span className="font-sans font-semibold text-[#ff5a2f]">
+                            <span className="font-sans font-semibold text-[var(--accent)]">
                               {e.car.year} {e.car.make} {e.car.model}
                             </span>{" "}
                             — {fmt(e.car.price)}
@@ -323,7 +323,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
         {/* ── RECENTLY VIEWED ── */}
         {tab === "recent" && (
           recent.length === 0
-            ? <Empty icon={<History size={32} className="text-indigo-500" />} title="Blank Horizon" desc="Cars you examine will automatically be cached here for rapid access." href="/cars" cta="Scan Marketplace" />
+            ? <Empty icon={<History size={32} className="text-accent" />} title="Blank Horizon" desc="Cars you examine will automatically be cached here for rapid access." href="/cars" cta="Scan Marketplace" />
             : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {recent.map(car => (

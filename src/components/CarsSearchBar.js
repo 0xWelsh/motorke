@@ -15,7 +15,7 @@ function SearchForm({ value, setValue, onSubmit, disabled = false }) {
           onChange={(e) => setValue(e.target.value)}
           disabled={disabled}
           placeholder="Search makes, models, keywords..."
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-[13px] font-semibold text-slate-900 shadow-sm placeholder:font-normal placeholder:text-slate-400 transition-colors focus:border-[var(--accent)] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[var(--accent)]/25"
+          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-[13px] font-semibold text-slate-900 shadow-sm placeholder:font-normal placeholder:text-slate-400 transition-colors focus:border-[var(--accent)] focus:bg-white focus:outline-none focus:ring-1 focus:ring-accent-glow"
         />
       </div>
       <button type="submit" className="btn btn-primary" disabled={disabled}>

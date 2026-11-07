@@ -65,7 +65,7 @@ export default function CompareSearchModal({
               key={res.id}
               type="button"
               onClick={() => onAddCarSearch(res)}
-              className="w-full flex items-center gap-3 p-3 border border-slate-200 hover:border-[var(--accent)]/40 text-left"
+              className="w-full flex items-center gap-3 p-3 border border-slate-200 hover:border-accent-glow text-left"
               style={{ borderRadius: "var(--radius)" }}
             >
               <div className="relative w-12 h-12 bg-slate-50 overflow-hidden border border-slate-200 shrink-0" style={{ borderRadius: "var(--radius)" }}>

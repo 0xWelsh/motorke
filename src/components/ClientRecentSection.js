@@ -52,7 +52,7 @@ export default function ClientRecentSection() {
           </div>
           <Link
             href="/account?tab=saved"
-            className="hidden sm:inline-flex items-center gap-2 bg-slate-50 border border-slate-200 px-6 py-3 rounded-2xl text-sm font-bold text-slate-900 hover:border-[var(--accent)]/30 hover:text-[var(--brand)] transition-all shadow-sm"
+            className="hidden sm:inline-flex items-center gap-2 bg-slate-50 border border-slate-200 px-6 py-3 rounded-2xl text-sm font-bold text-slate-900 hover:border-accent-glow hover:text-[var(--brand)] transition-all shadow-sm"
           >
             Saved cars <ChevronRight className="w-4 h-4" />
           </Link>

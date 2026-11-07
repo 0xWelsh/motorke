@@ -32,7 +32,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
   const { oldestImportableYear } = getImportYearWindow();
 
   return (
-    <section className="relative mb-0 overflow-hidden border-b border-slate-200 bg-red-50/70">
+    <section className="relative mb-0 overflow-hidden border-b border-slate-200 bg-accent-wash">
       <div className="home-shell pt-2 pb-4 sm:pb-6 lg:pb-8">
         <div className="max-w-6xl mx-auto">
           <nav className="text-xs text-slate-500 mb-4" aria-label="Breadcrumb">
@@ -44,12 +44,12 @@ export default function DutyPageHero({ compact = false, children = null }) {
           </nav>
 
           <div className="max-w-2xl lg:max-w-[55%]">
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-600 mb-2">
+            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-2">
               Kenya import decision engine
             </p>
             <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-black text-slate-900 mb-3 leading-[1.05] tracking-tight">
               Vehicle{" "}
-              <span className="text-red-600">duty calculator</span>
+              <span className="text-accent">duty calculator</span>
             </h1>
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed mb-4">
               Instant KRA-style tax breakdown for popular imports, then browse matching verified dealer stock.
@@ -74,8 +74,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
               </TrackedLink>
               <Link
                 href="#duty-calculator"
-                className="h-11 sm:h-12 inline-flex items-center justify-center gap-1.5 bg-[#b91c1c] hover:bg-[#991b1b] text-white px-4 text-[10px] sm:text-xs font-bold uppercase tracking-widest transition-all hover:scale-[0.98] active:scale-95"
-                style={{ borderRadius: "var(--radius)" }}
+                className="btn btn-primary"
               >
                 Calculate <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden />
               </Link>

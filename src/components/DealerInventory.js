@@ -161,7 +161,7 @@ export default function DealerInventory({ cars, dealerSlug }) {
                         onClick={() => setPage(p)}
                         className={`w-9 h-9 text-[11px] font-black rounded-xl ${
                           p === page
-                            ? "bg-[#ef3340] text-white"
+                            ? "bg-[var(--accent)] text-white"
                             : "bg-slate-100 text-slate-500"
                         }`}
                       >

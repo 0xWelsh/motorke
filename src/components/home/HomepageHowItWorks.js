@@ -88,7 +88,7 @@ export default function HomepageHowItWorks() {
                 <div className="hidden sm:block absolute top-8 left-[60%] w-[calc(100%-20%)] h-px bg-gradient-to-r from-slate-200 to-transparent" aria-hidden />
               )}
 
-              <div className="relative mx-auto w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-5 group-hover:border-[var(--accent)]/30 group-hover:bg-[var(--accent)]/5 transition-all duration-300">
+              <div className="relative mx-auto w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-5 group-hover:border-accent-glow group-hover:bg-accent-wash transition-all duration-300">
                 <step.icon className="w-7 h-7 text-[var(--accent)]" strokeWidth={1.5} />
                 <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[var(--accent)] text-white text-[10px] font-black flex items-center justify-center">
                   {i + 1}

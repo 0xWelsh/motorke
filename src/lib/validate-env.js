@@ -4,18 +4,28 @@
  */
 
 const REQUIRED_ENV = [
-  // Database
+  // Database (Neon PostgreSQL)
   "DATABASE_URL",
   "DIRECT_URL",
 
   // Authentication
   "AUTH_SECRET",
 
-  // Email/Notifications
+  // Email (Resend - primary, Zoho SMTP as fallback)
+  "RESEND_API_KEY",
+  // SMTP fallback (optional if RESEND_API_KEY is set)
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_USER",
   "SMTP_PASS",
+
+  // Email sender addresses
+  "MAIL_FROM_VERIFICATION",
+  "MAIL_FROM_NOREPLY",
+  "MAIL_FROM_ALERTS",
+  "MAIL_FROM_MARKETING",
+  "MAIL_FROM_HELLO",
+  "MAIL_SUPPORT",
 
   // M-Pesa
   "MPESA_CONSUMER_KEY",
@@ -23,7 +33,7 @@ const REQUIRED_ENV = [
   "MPESA_PASSKEY",
   "MPESA_SHORTCODE",
 
-  // R2 (Image Storage — replaces Supabase)
+  // R2 (Image Storage)
   "R2_ENDPOINT",
   "R2_ACCESS_KEY_ID",
   "R2_SECRET_ACCESS_KEY",
@@ -32,6 +42,9 @@ const REQUIRED_ENV = [
   // CAPTCHA
   "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
   "TURNSTILE_SECRET_KEY",
+
+  // Cron Security
+  "CRON_SECRET",
 ];
 
 const OPTIONAL_ENV = [
@@ -46,6 +59,12 @@ const OPTIONAL_ENV = [
 
   // Monitoring (optional)
   "SENTRY_DSN",
+
+  // WAHA (WhatsApp)
+  "WAHA_API_URL",
+  "WAHA_API_KEY",
+  "WAHA_DASHBOARD_USERNAME",
+  "WAHA_DASHBOARD_PASSWORD",
 ];
 
 /**
@@ -76,6 +95,11 @@ export function validateEnv(options = {}) {
     process.env.GOOGLE_CLIENT_ID !== process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
   ) {
     warnings.push("GOOGLE_CLIENT_ID and NEXT_PUBLIC_GOOGLE_CLIENT_ID do not match");
+  }
+
+  // Email validation: either Resend OR SMTP must be configured
+  if (!process.env.RESEND_API_KEY && (!process.env.SMTP_USER || !process.env.SMTP_PASS)) {
+    warnings.push("Neither RESEND_API_KEY nor SMTP credentials configured - emails will be mocked");
   }
 
   if (missing.length > 0) {

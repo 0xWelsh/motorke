@@ -36,9 +36,12 @@ function BudgetFilterInner() {
       key={label}
       type="button"
       onClick={onClick}
-      className={`text-[13px] font-semibold underline underline-offset-4 transition-colors ${
-        isActive ? "text-blue-800" : "text-blue-600 hover:text-blue-800"
+      className={`inline-flex min-h-8 items-center px-3 text-[12px] font-bold transition-colors ${
+        isActive
+          ? "bg-accent text-white"
+          : "border border-[var(--accent-dim)] bg-accent-wash text-accent hover:bg-accent-dim"
       }`}
+      style={{ borderRadius: "999px" }}
     >
       {label}
     </button>

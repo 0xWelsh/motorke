@@ -12,7 +12,7 @@ const SearchMapLeaflet = dynamic(() => import("./SearchMapLeaflet"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-[460px] bg-slate-50 animate-pulse flex items-center justify-center">
-      <Loader2 className="w-5 h-5 animate-spin text-[#ff5a2f]" />
+      <Loader2 className="w-5 h-5 animate-spin text-[var(--accent)]" />
     </div>
   ),
 });

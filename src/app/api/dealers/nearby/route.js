@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import { db } from "@/lib/db";
 import { calculateDistance } from "@/lib/geolocation";
-
-const prisma = new PrismaClient();
 
 /**
  * GET /api/dealers/nearby
@@ -50,7 +48,7 @@ export async function GET(request) {
       query.where.AND.push({ county: county });
     }
 
-    const dealers = await prisma.dealer.findMany(query);
+    const dealers = await db.dealer.findMany(query);
 
     // Calculate distance and filter by radius
     const dealersWithDistance = dealers

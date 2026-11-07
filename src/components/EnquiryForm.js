@@ -179,7 +179,7 @@ export default function EnquiryForm({
   }
 
   const inputCls =
-    "w-full bg-slate-50 border border-slate-300 px-3.5 py-2.5 sm:px-4 sm:py-3 text-[13px] sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 transition-all rounded-lg";
+    "w-full bg-slate-50 border border-slate-300 px-3.5 py-2.5 sm:px-4 sm:py-3 text-[13px] sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all rounded-lg";
 
   if (state === "sent") {
     return (

@@ -81,7 +81,7 @@ export default function DealerReviewForm({ dealerSlug, onReviewSubmitted }) {
             onChange={(e) => setComment(e.target.value)}
             placeholder="Share your experience with this dealer..."
             maxLength={500}
-            className="w-full border border-[#ddd4c8] rounded-2xl p-3 text-sm font-semibold placeholder:text-slate-400 focus:border-[#ff5a2f] focus:ring-2 focus:ring-blue-100 outline-none"
+            className="w-full border border-[#ddd4c8] rounded-2xl p-3 text-sm font-semibold placeholder:text-slate-400 focus:border-[var(--accent)] focus:ring-2 focus:ring-[var(--accent-dim)] outline-none"
             rows={4}
           />
           <p className="text-xs text-slate-400 mt-1">{comment.length}/500</p>

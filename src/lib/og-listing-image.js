@@ -6,7 +6,7 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
-import { BRAND_MARK_SQUARE, BRAND_OG_IMAGE } from "@/lib/site-url";
+import { BRAND_HEADER_LOGO, BRAND_MARK_SQUARE, BRAND_OG_IMAGE } from "@/lib/site-url";
 import {
   extractCarImageStoragePath,
   normalizeListingHeroImageUrl,
@@ -256,7 +256,7 @@ export async function buildBrandedOgJpeg(imageBuffer, carMeta) {
   return out;
 }
 
-const FALLBACK_FILES = [BRAND_OG_IMAGE, BRAND_MARK_SQUARE, "/headerlogo.png"];
+const FALLBACK_FILES = [BRAND_OG_IMAGE, BRAND_MARK_SQUARE, BRAND_HEADER_LOGO];
 
 /** @returns {Promise<Buffer>} */
 export async function buildBrandFallbackOgJpeg() {

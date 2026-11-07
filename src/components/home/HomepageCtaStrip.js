@@ -10,7 +10,7 @@ const CTAS = [
     subtitle: "We guide you through every step",
     href: "/how-to-buy",
     icon: ShoppingCart,
-    iconBg: "bg-blue-100 text-blue-600",
+    iconBg: "bg-accent-wash text-accent",
   },
   {
     title: "Selling your car?",

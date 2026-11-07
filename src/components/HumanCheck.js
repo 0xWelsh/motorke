@@ -171,7 +171,7 @@ export default function HumanCheck({ value, onChange, onFallbackChange, compactM
           <button
             type="button"
             onClick={reloadPage}
-            className="text-xs font-semibold text-[#38A169] hover:underline underline-offset-2 transition-colors"
+            className="text-xs font-semibold text-[var(--accent)] hover:underline underline-offset-2 transition-colors"
           >
             Reload page
           </button>

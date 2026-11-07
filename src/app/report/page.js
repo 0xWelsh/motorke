@@ -158,23 +158,23 @@ export default function ReportPage() {
                 )}
                 <div className="space-y-2 sm:space-y-3 min-w-0">
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Your name</label>
-                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Jane Doe" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-[var(--accent)]/50 transition-all rounded-xl" />
+                  <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Jane Doe" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-accent-glow transition-all rounded-xl" />
                 </div>
                 <div className="space-y-2 sm:space-y-3 min-w-0">
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Your email</label>
-                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@email.com" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-[var(--accent)]/50 transition-all rounded-xl" />
+                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@email.com" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-accent-glow transition-all rounded-xl" />
                 </div>
                 <div className="space-y-2 sm:space-y-3 min-w-0">
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Listing reference <span className="text-slate-400 normal-case">(optional)</span></label>
-                  <input type="text" value={listingRef} onChange={(e) => setListingRef(e.target.value)} placeholder="e.g. the car reference ID or URL" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-[var(--accent)]/50 transition-all rounded-xl" />
+                  <input type="text" value={listingRef} onChange={(e) => setListingRef(e.target.value)} placeholder="e.g. the car reference ID or URL" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-accent-glow transition-all rounded-xl" />
                 </div>
                 <div className="space-y-2 sm:space-y-3 min-w-0">
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Scammer contact <span className="text-slate-400 normal-case">(optional)</span></label>
-                  <input type="text" value={scammerContact} onChange={(e) => setScammerContact(e.target.value)} placeholder="Phone / M-Pesa number / username" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-[var(--accent)]/50 transition-all rounded-xl" />
+                  <input type="text" value={scammerContact} onChange={(e) => setScammerContact(e.target.value)} placeholder="Phone / M-Pesa number / username" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-accent-glow transition-all rounded-xl" />
                 </div>
                 <div className="md:col-span-2 space-y-2 sm:space-y-3 min-w-0">
                   <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">What happened?</label>
-                  <textarea value={details} onChange={(e) => setDetails(e.target.value)} required rows={5} placeholder="Tell us what happened — any screenshots, messages, or payment details you're comfortable sharing..." className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-[var(--accent)]/50 transition-all resize-none rounded-xl"></textarea>
+                  <textarea value={details} onChange={(e) => setDetails(e.target.value)} required rows={5} placeholder="Tell us what happened — any screenshots, messages, or payment details you're comfortable sharing..." className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-accent-glow transition-all resize-none rounded-xl"></textarea>
                 </div>
                 <div className="md:col-span-2">
                   <button type="submit" disabled={loading} className="btn btn-primary w-full disabled:opacity-50">

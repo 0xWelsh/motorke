@@ -99,7 +99,7 @@ export default function BuyerRequestBoard() {
           </p>
           {quota?.loggedIn && quota.isDealer ? (
             quota.unlimited ? (
-              <p className="text-xs font-semibold text-sky-300">
+              <p className="text-xs font-semibold text-accent">
                 Unlimited buyer request offers on your plan.
               </p>
             ) : quota.freeRemaining != null && quota.freeRemaining > 0 ? (
@@ -107,7 +107,7 @@ export default function BuyerRequestBoard() {
                 {quota.freeRemaining} free offer{quota.freeRemaining === 1 ? "" : "s"} left today (Nairobi time).
               </p>
             ) : (
-              <p className="text-xs font-semibold text-amber-200">
+              <p className="text-xs font-semibold text-amber-700">
                 Daily free offer used.{" "}
                 <span className="underline font-bold">
                   Upgrade for unlimited
@@ -116,7 +116,7 @@ export default function BuyerRequestBoard() {
             )
           ) : !quota?.loggedIn ? (
             <p className="text-xs text-slate-500">
-              <Link href="/login?callbackUrl=/requests" className="font-bold text-sky-300 hover:underline">
+              <Link href="/login?callbackUrl=/requests" className="font-bold text-accent hover:underline">
                 Sign in as a dealer
               </Link>{" "}
               to send offers (1 free per day).
@@ -161,13 +161,13 @@ export default function BuyerRequestBoard() {
           <Loader2 className="w-6 h-6 animate-spin mr-2" /> Loading requests…
         </div>
       ) : error ? (
-        <p className="text-sm font-semibold text-red-400">{error}</p>
+        <p className="text-sm font-semibold text-[var(--accent-red)]">{error}</p>
       ) : requests.length === 0 ? (
         <div
           className="border border-dashed border-slate-200 bg-slate-50 p-10 text-center text-sm text-slate-500 rounded-xl"
         >
           No open requests right now. Check back soon or{" "}
-          <a href="/request-car" className="text-sky-300 font-bold hover:underline">
+          <a href="/request-car" className="text-accent font-bold hover:underline">
             post your own
           </a>
           .
@@ -181,7 +181,7 @@ export default function BuyerRequestBoard() {
             >
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-sky-300">
+                  <p className="text-[10px] font-black uppercase tracking-[0.14em] text-accent">
                     {req.publicCode}
                   </p>
                   <h3 className="text-lg font-black text-slate-900 leading-tight">

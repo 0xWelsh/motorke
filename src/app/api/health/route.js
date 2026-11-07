@@ -15,6 +15,7 @@ export const maxDuration = 15;
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { probeR2Bucket } from "@/lib/storage";
+import { getQueryHealth } from "@/lib/query-monitor";
 
 async function checkDatabase() {
   try {
@@ -69,10 +70,11 @@ async function checkSampleImage() {
 
 export async function GET() {
   const started = Date.now();
-  const [database, bucket, sampleImage] = await Promise.all([
+  const [database, bucket, sampleImage, queryHealth] = await Promise.all([
     checkDatabase(),
     checkBucket(),
     checkSampleImage(),
+    getQueryHealth(),
   ]);
 
   const checks = { database, bucket, sampleImage };
@@ -83,6 +85,7 @@ export async function GET() {
       ok,
       service: "welsh-motorhub",
       checks,
+      queryHealth,
       durationMs: Date.now() - started,
       commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) || null,
       region: process.env.VERCEL_REGION || null,

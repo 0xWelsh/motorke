@@ -371,16 +371,35 @@ export default function CarsInfiniteGrid({
           <div className="mx-auto mb-4 w-12 h-12 flex items-center justify-center">
             <span className="text-lg font-black tracking-[0.2em] text-slate-300">B</span>
           </div>
-          <h2 className="text-xl font-black text-slate-900 tracking-tight mb-2">No matches found</h2>
-          <p className="text-slate-500 font-medium mb-6">Try adjusting your filters or resetting your search.</p>
+          <h2 className="text-xl font-black text-slate-900 tracking-tight mb-2">
+            {noFiltersActive ? "New stock lands here" : "No matches found"}
+          </h2>
+          <p className="text-slate-500 font-medium mb-6">
+            {noFiltersActive
+              ? "Dealers are uploading inventory now. Tell us the car you want and we'll source it."
+              : "Try adjusting your filters or resetting your search."}
+          </p>
           <div className="flex flex-wrap items-center justify-center gap-2">
-            <Link href="/cars" className="btn btn-primary btn-sm">
-              Browse all cars
-            </Link>
-            {!noFiltersActive && (
-              <Link href="/cars" className="btn btn-neutral btn-sm">
-                Clear filters
-              </Link>
+            {noFiltersActive ? (
+              <>
+                <Link href="/request-car" className="btn btn-primary btn-sm">
+                  Request a car
+                </Link>
+                <Link href="/dealers" className="btn btn-neutral btn-sm">
+                  Browse dealers
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/cars" className="btn btn-primary btn-sm">
+                  Browse all cars
+                </Link>
+                {!noFiltersActive && (
+                  <Link href="/cars" className="btn btn-neutral btn-sm">
+                    Clear filters
+                  </Link>
+                )}
+              </>
             )}
           </div>
         </div>

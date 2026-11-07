@@ -175,7 +175,7 @@ function FAQCategory({ category, items }) {
             key={idx}
             className={`border transition-all duration-300 ${
               openId === idx 
-                ? "border-[var(--accent)]/30 bg-slate-50" 
+                ? "border-accent-glow bg-slate-50" 
                 : "border-slate-200 hover:border-slate-300"
             }`}
             style={{ borderRadius: 'var(--radius)' }}

@@ -13,7 +13,7 @@ import DealerShowroomShare from "@/components/DealerShowroomShare";
 import MobileBottomBarSignal from "@/components/MobileBottomBarSignal";
 import DealerProfileHeroPanel from "@/components/DealerProfileHeroPanel";
 import { calculateDistance } from "@/lib/geolocation";
-import { absoluteUrl, BRAND_OG_IMAGE } from "@/lib/site-url";
+import { absoluteUrl, BRAND_HEADER_LOGO, BRAND_OG_IMAGE } from "@/lib/site-url";
 import { carListingPath } from "@/lib/car-listing-url";
 import { PUBLIC_SUPPORT_WHATSAPP, PUBLIC_SUPPORT_PHONE } from "@/lib/site-contact";
 import { whatsappLink } from "@/lib/utils";
@@ -203,7 +203,7 @@ export default async function DealerPage(props) {
       : `${dealer.name} specializes in inspected imports, SUVs and family cars in ${dealer.location || dealer.county || "Kenya"}.`;
 
   const absAsset = (u) => {
-    if (!u) return absoluteUrl("/headerlogo.png");
+    if (!u) return absoluteUrl(BRAND_HEADER_LOGO);
     if (/^https?:\/\//i.test(u)) return u;
     return absoluteUrl(u.startsWith("/") ? u : `/${u}`);
   };
@@ -373,7 +373,7 @@ export default async function DealerPage(props) {
                         href={teamWhatsappHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent)]/80 text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors rounded-xl"
+                        className="inline-flex items-center justify-center gap-1.5 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] transition-colors rounded-xl"
                       >
                         <MessageCircle className="w-3.5 h-3.5" /> WhatsApp
                       </a>

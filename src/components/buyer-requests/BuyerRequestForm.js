@@ -11,7 +11,7 @@ import {
 } from "@/lib/buyer-request";
 
 const inputCls =
-  "w-full border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm font-medium text-slate-900 outline-none focus:border-sky-400 transition-colors";
+  "w-full border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm font-medium text-slate-900 outline-none focus:border-[var(--accent)] transition-colors";
 const labelCls = "text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 mb-1 block";
 
 export default function BuyerRequestForm() {
@@ -89,7 +89,7 @@ export default function BuyerRequestForm() {
       <div
         className="border border-slate-200 bg-white p-6 sm:p-8 text-center rounded-xl"
       >
-        <CheckCircle className="w-12 h-12 text-sky-300 mx-auto mb-4" aria-hidden />
+        <CheckCircle className="w-12 h-12 text-accent mx-auto mb-4" aria-hidden />
         <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
           Request received
         </h2>
@@ -427,7 +427,7 @@ export default function BuyerRequestForm() {
                 onClick={() => toggleFeature(feature)}
                 className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide border transition-colors rounded-xl ${
                   active
-                    ? "bg-[#2563eb] border-[#2563eb] text-white"
+                    ? "bg-accent border-accent text-white"
                     : "bg-slate-50 border-slate-300 text-slate-500"
                 }`}
               >
@@ -474,7 +474,7 @@ export default function BuyerRequestForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#2563eb] hover:bg-[#1d4ed8] disabled:opacity-60 text-white px-8 py-3.5 text-xs font-black uppercase tracking-widest transition-colors rounded-xl"
+        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent-hover disabled:opacity-60 text-white px-8 py-3.5 text-xs font-black uppercase tracking-widest transition-colors rounded-xl"
       >
         {loading ? (
           <>

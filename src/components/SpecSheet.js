@@ -14,13 +14,13 @@ export default function SpecSheet({ car }) {
   return (
     <div id="spec-sheet" className="hidden print:block bg-white text-black p-8 font-sans min-h-[297mm] w-[210mm] mx-auto border border-gray-100">
       {/* Header */}
-      <div className="flex justify-between items-start border-b-4 border-orange-600 pb-6 mb-8 mt-4">
+      <div className="flex justify-between items-start border-b-4 border-accent pb-6 mb-8 mt-4">
         <div>
           <h1 className="text-4xl font-black uppercase tracking-tighter text-black">
-            Motor<span className="text-orange-600">ke</span>
+            BID<span className="text-accent">GARI</span>
           </h1>
           <p className="text-[11px] font-bold uppercase tracking-widest text-gray-500 mt-1">
-            Premium Secondary Marketplace, Kenya
+            Verified car marketplace, Kenya
           </p>
         </div>
         <div className="text-right">
@@ -38,7 +38,7 @@ export default function SpecSheet({ car }) {
              </div>
            )}
            <div className="mt-8">
-             <h3 className="text-xs font-bold uppercase tracking-widest text-orange-600 mb-2">Sold by</h3>
+             <h3 className="text-xs font-bold uppercase tracking-widest text-accent mb-2">Sold by</h3>
              <p className="text-xl font-black text-black">BIDGARI</p>
               <p className="text-sm text-gray-600">Vehicle Sales &amp; Buyer Support, Kenya</p>
               <p className="mt-4 text-sm font-bold text-gray-600">Contact BIDGARI for more details.</p>
@@ -48,7 +48,7 @@ export default function SpecSheet({ car }) {
         <div className="flex flex-col">
           <h2 className="text-3xl font-sans font-bold mb-2 leading-tight">{title}</h2>
           <div className="flex items-baseline gap-2 mb-8">
-             <p className="text-4xl font-black text-orange-600">{formatCarPrice(car)}</p>
+             <p className="text-4xl font-black text-accent">{formatCarPrice(car)}</p>
              {car.negotiable && <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">(Negotiable)</span>}
           </div>
 
@@ -73,7 +73,7 @@ export default function SpecSheet({ car }) {
       {/* Features */}
       {printFeatures.length > 0 && (
         <div className="mb-10">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-orange-600 mb-4">Included Features</h3>
+          <h3 className="text-xs font-bold uppercase tracking-widest text-accent mb-4">Included Features</h3>
           <div className="grid grid-cols-4 gap-2">
 {printFeatures.map((f, i) => (
               <div key={`${f}-${i}`} className="text-[11px] font-bold bg-gray-50 border border-gray-100 px-3 py-2 text-gray-700">

@@ -75,7 +75,7 @@ export function CompareBar() {
             <Link
               key={`empty-${i}`}
               href="/cars"
-              className="w-12 h-12 border border-dashed border-slate-300 hover:border-[var(--accent)]/50 flex items-center justify-center text-slate-400 hover:text-[var(--accent)] transition-colors rounded-lg"
+              className="w-12 h-12 border border-dashed border-slate-300 hover:border-accent-glow flex items-center justify-center text-slate-400 hover:text-[var(--accent)] transition-colors rounded-lg"
               title="Add another car"
             >
               <span className="text-xl">+</span>
@@ -109,7 +109,7 @@ export function CompareBar() {
                 <Link
                   key={`mobile-empty-${i}`}
                   href="/cars"
-                  className="inline-flex items-center justify-center w-7 h-7 border border-dashed border-slate-300 text-slate-400 hover:text-[var(--accent)] hover:border-[var(--accent)]/50 rounded-lg"
+                  className="inline-flex items-center justify-center w-7 h-7 border border-dashed border-slate-300 text-slate-400 hover:text-[var(--accent)] hover:border-accent-glow rounded-lg"
                   title="Add another car"
                 >
                   +
@@ -204,7 +204,7 @@ export function CompareButton({ car, className = "" }) {
         )}
       </span>
       {!selected && !isFull && (
-      <div className="absolute inset-0 bg-gradient-to-r from-[var(--accent)]/0 via-[var(--accent)]/5 to-[var(--accent)]/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-wash to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
       )}
     </button>
     {fullHint && (

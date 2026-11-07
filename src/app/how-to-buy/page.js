@@ -109,7 +109,7 @@ export default function HowToBuyPage() {
               key={m.title}
               className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-sm transition-all hover:border-slate-300 hover:shadow-glass"
             >
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-accent-wash text-[var(--accent)]">
                 {m.icon}
               </div>
               <h2 className="text-xl font-black text-slate-900 tracking-tight">{m.title}</h2>

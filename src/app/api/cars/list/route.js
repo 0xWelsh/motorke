@@ -13,25 +13,37 @@ const CACHE_HEADERS = {
   "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
 };
 
-// `publicDetailVisibilityClause()` embeds the current time in its sold-grace
-// cutoff. Left as-is, every request has a different where-clause JSON and the
-// Data Cache below never gets a hit (and grows one useless entry per request).
-// Bucket the cutoff to the hour so identical filter sets share a cache entry.
+// Bucket the sold-grace cutoff to the hour so identical filter sets share a cache entry
 const VISIBILITY_BUCKET_MS = 60 * 60 * 1000;
 
 function stableVisibilityNow() {
   return new Date(Math.floor(Date.now() / VISIBILITY_BUCKET_MS) * VISIBILITY_BUCKET_MS);
 }
 
-// Cached page fetch: the same searchParams combo is hit by many users + every
-// infinite-scroll page, so memoize findMany+count for 60s. `where` is serialized
-// to a stable JSON key; the result payload mirrors what the client already got
-// (ISO date strings), so nothing downstream changes shape.
+// Generate stable cache key from search params (not full where clause)
+function buildCacheKey(params) {
+  const {
+    page, make, model, bodyType, fuelType, transmission, steering,
+    county, minPrice, maxPrice, minYOM, maxYOM, vehicleType,
+    condition, search, featured, sort, color, sunroof, seats
+  } = params;
+
+  return [
+    page || 1,
+    make || "", model || "", bodyType || "", fuelType || "", transmission || "",
+    steering || "", county || "", minPrice || "", maxPrice || "",
+    minYOM || "", maxYOM || "", vehicleType || "", condition || "",
+    search || "", featured || "", sort || "", color || "", sunroof || "", seats || ""
+  ].join("|");
+}
+
+// Cached page fetch - keyed by normalized search params
 const getCarPage = unstable_cache(
-  async (whereJson, sort, page) => {
-    const where = JSON.parse(whereJson);
+  async (cacheKey, where, sort, page) => {
     const orderBy = buildCarsOrderBy(sort);
     const skip = (page - 1) * PER_PAGE;
+    
+    // Run findMany and count in parallel
     const [cars, total] = await Promise.all([
       db.car.findMany({
         where,
@@ -68,7 +80,6 @@ const getCarPage = unstable_cache(
               location: true,
               type: true,
               verificationStatus: true,
-              verified: true,
             },
           },
         },
@@ -108,9 +119,14 @@ export async function GET(req) {
     const sunroof = searchParams.get("sunroof") === "1";
     const seats = parseInt(searchParams.get("seats") || "", 10) || undefined;
 
+    // Build where clause - use verificationStatus consistently
+    const dealerVerificationFilter = PUBLIC_ONLY_VERIFIED_DEALERS
+      ? { dealer: { verificationStatus: "VERIFIED" } }
+      : {};
+
     const where = {
       ...publicDetailVisibilityClause(stableVisibilityNow()),
-      ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+      ...dealerVerificationFilter,
       ...buildMakeWhere(make),
       ...(featured && { featured: true }),
       ...(model && { model: { equals: model, mode: "insensitive" } }),
@@ -124,7 +140,7 @@ export async function GET(req) {
       ...(condition && { condition }),
       ...(county && {
         dealer: {
-          ...(PUBLIC_ONLY_VERIFIED_DEALERS && { verified: true }),
+          ...dealerVerificationFilter.dealer,
           county: { equals: county, mode: "insensitive" },
         },
       }),
@@ -138,18 +154,21 @@ export async function GET(req) {
       ...(seats ? { seats: { gte: seats } } : {}),
     };
 
-    const skip = (page - 1) * PER_PAGE;
+    // Generate stable cache key from search params
+    const cacheKey = buildCacheKey({
+      page, make, model, bodyType, fuelType, transmission, steering,
+      county, minPrice, maxPrice, minYOM, maxYOM, vehicleType,
+      condition, search, featured, sort, color, sunroof, seats
+    });
 
-    const { cars, total } = await getCarPage(JSON.stringify(where), sort, page);
-
-    const data = cars;
+    const { cars, total } = await getCarPage(cacheKey, where, sort, page);
 
     return NextResponse.json(
       {
-        cars: data,
+        cars,
         total,
         page,
-        hasMore: skip + cars.length < total,
+        hasMore: (page - 1) * PER_PAGE + cars.length < total,
       },
       { headers: CACHE_HEADERS }
     );

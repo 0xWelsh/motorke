@@ -47,7 +47,7 @@ export default function DealerBillingPlans({
         <div className="mt-4 grid gap-4 sm:grid-cols-3">
           <div>
             <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">Status</p>
-            <p className="mt-1 text-lg font-bold text-[#2F855A]">
+            <p className="mt-1 text-lg font-bold text-[var(--accent)]">
               {DEALER_PRICING_EARLY_ACCESS ? "Early access" : "Active"}
             </p>
             <p className="mt-0.5 text-xs text-slate-500">
@@ -131,18 +131,18 @@ export default function DealerBillingPlans({
                 className={[
                   "relative flex flex-col rounded-xl border p-4 sm:p-5",
                   isSuggested
-                    ? "border-[#2F855A] ring-1 ring-[#2F855A]/30"
+                    ? "border-[var(--accent)] ring-1 ring-[var(--accent-dim)]"
                     : "border-slate-200",
                   "bg-white",
                 ].join(" ")}
               >
                 {isPopular && (
-                  <span className="absolute -top-2.5 left-4 bg-[#2F855A] px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-white">
+                  <span className="absolute -top-2.5 left-4 bg-[var(--accent)] px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-white">
                     Popular
                   </span>
                 )}
                 {isSuggested && !isPopular && (
-                  <span className="absolute -top-2.5 left-4 bg-[#2F855A] px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-white">
+                  <span className="absolute -top-2.5 left-4 bg-[var(--accent)] px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-white">
                     Fits your stock
                   </span>
                 )}

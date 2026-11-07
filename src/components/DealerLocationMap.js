@@ -27,17 +27,17 @@ export default function DealerLocationMap({ dealer }) {
   const googleHref = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
 
   return (
-    <div className="border border-[#ddd4c8] border-slate-800 bg-white overflow-hidden">
+    <div className="border border-[var(--border)] bg-surface overflow-hidden">
       <div className="px-5 pt-5 pb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MapPin className="w-4 h-4 text-[#ff5a2f]" />
+          <MapPin className="w-4 h-4 text-[var(--accent)]" />
           <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-700">Location</p>
         </div>
         <a
           href={googleHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-[#ff5a2f] transition-colors"
+          className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-[var(--accent)] transition-colors"
         >
           Open in Google <ExternalLink className="w-3 h-3" />
         </a>

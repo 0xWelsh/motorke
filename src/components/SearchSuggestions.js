@@ -19,7 +19,7 @@ export default function SearchSuggestions({
   if (!suggestions.length && !loading) return null;
 
   const suggestionTypes = {
-    make: { icon: <Tag className="w-4 h-4 text-[#ff5a2f]" />, label: "Make" },
+    make: { icon: <Tag className="w-4 h-4 text-[var(--accent)]" />, label: "Make" },
     model: { icon: <Car className="w-4 h-4 text-amber-600" />, label: "Model" },
     variant: { icon: <Tag className="w-4 h-4 text-slate-500" />, label: "Variant" },
     car: { icon: <Car className="w-4 h-4 text-green-600" />, label: "Car" },
@@ -80,7 +80,7 @@ export default function SearchSuggestions({
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-2 mb-0.5">
-                        <h3 className="font-sans font-semibold text-slate-900 text-xs group-hover:text-[#ff5a2f] transition truncate">
+                        <h3 className="font-sans font-semibold text-slate-900 text-xs group-hover:text-[var(--accent)] transition truncate">
                           {car.value}
                         </h3>
                       </div>
@@ -155,7 +155,7 @@ export default function SearchSuggestions({
                         {hasInput && matchIndex >= 0 ? (
                           <>
                             {beforeMatch}
-                            <mark className="bg-blue-500/20 text-blue-300 no-underline">{matchText}</mark>
+                            <mark className="bg-accent-dim text-slate-900 no-underline">{matchText}</mark>
                             {afterMatch}
                           </>
                         ) : (

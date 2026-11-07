@@ -78,7 +78,7 @@ export default function AnalyticsBarChart({ data }) {
           <Bar
             dataKey="leads"
             name="Leads"
-            fill="#ff5a2f"
+            fill="var(--accent)"
             radius={[2, 2, 0, 0]}
             maxBarSize={24}
           />

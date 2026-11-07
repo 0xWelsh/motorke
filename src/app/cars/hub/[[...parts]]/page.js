@@ -482,7 +482,7 @@ export default async function CarHubPage({ params, searchParams }) {
             <span key={c.href + i} className="flex items-center gap-1.5">
               {i > 0 ? <ChevronRight className="size-3" /> : null}
               {i < crumbs.length - 1 ? (
-                <Link href={c.href} className="hover:text-[#38A169]">
+                <Link href={c.href} className="hover:text-[var(--accent)]">
                   {c.name}
                 </Link>
               ) : (
@@ -493,13 +493,13 @@ export default async function CarHubPage({ params, searchParams }) {
         </nav>
 
         <header className="mb-6 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 sm:px-6">
-            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#38A169]">
+            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[var(--accent)]">
             Verified inventory, Kenya
             </p>
           <h1 className="mt-2 text-2xl font-black tracking-tight text-slate-900 sm:text-3xl">{h1}</h1>
           <p className="mt-2 max-w-2xl text-sm text-slate-600">
             {introCopy || hubTitleAndDescription(resolved, total).description}{" "}
-            <Link href={qsAllFilters()} className="font-semibold text-[#38A169] underline-offset-4 hover:underline">
+            <Link href={qsAllFilters()} className="font-semibold text-[var(--accent)] underline-offset-4 hover:underline">
               Open advanced filters
             </Link>
           </p>
@@ -573,7 +573,7 @@ export default async function CarHubPage({ params, searchParams }) {
                     <Link
                       key={s.model}
                       href={`/compare?a=${modelAggs.firstCarId}&b=${s.carId}`}
-                      className="rounded-lg border border-[#38A169]/20 bg-[#38A169]/5 px-2.5 py-1 text-xs font-semibold text-[#38A169] hover:bg-[#38A169]/10"
+                      className="rounded-lg border border-[var(--accent-dim)] bg-accent-wash px-2.5 py-1 text-xs font-semibold text-accent hover:bg-accent-dim"
                     >
                       {resolved.model} vs {s.model}
                     </Link>
@@ -594,7 +594,7 @@ export default async function CarHubPage({ params, searchParams }) {
             <p className="text-slate-500 mb-6">Try the main inventory search. Stock changes daily.</p>
             <Link
               href="/cars"
-              className="inline-flex bg-[#38A169] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest"
+              className="inline-flex bg-[var(--accent)] text-white px-8 py-3 text-xs font-bold uppercase tracking-widest"
               style={{ borderRadius: "var(--radius)" }}
             >
               Browse all cars
@@ -636,13 +636,13 @@ export default async function CarHubPage({ params, searchParams }) {
           <section className="mt-14 border-t border-slate-200 pt-10">
             {countyLinks.length > 0 && (
               <div className="mb-8">
-                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-3">{resolved.make} by county</h2>
+                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)] mb-3">{resolved.make} by county</h2>
                 <div className="flex flex-wrap gap-2">
                   {countyLinks.map((l) => (
                     <Link
                       key={l.href}
                       href={`/cars/${slugifyCarSegment(resolved.make)}/${slugifyCarSegment(l.label)}`}
-                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169]"
+                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[var(--accent)]"
                     >
                       {l.label}
                     </Link>
@@ -652,13 +652,13 @@ export default async function CarHubPage({ params, searchParams }) {
             )}
             {siblingMakes.length > 0 ? (
               <div>
-                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-3">Popular makes</h2>
+                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)] mb-3">Popular makes</h2>
                 <div className="flex flex-wrap gap-2">
                   {siblingMakes.map((m) => (
                     <Link
                       key={m.href}
                       href={m.href}
-                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169]"
+                      className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[var(--accent)]"
                     >
                       {m.label}
                     </Link>
@@ -671,13 +671,13 @@ export default async function CarHubPage({ params, searchParams }) {
 
         {resolved.kind === "county" && popularMakes.length > 0 && (
           <section className="mt-10 border-t border-slate-200 pt-10">
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#38A169] mb-3">Browse by brand</h2>
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--accent)] mb-3">Browse by brand</h2>
             <div className="flex flex-wrap gap-2">
               {popularMakes.map((m) => (
                 <Link
                   key={m.href}
                   href={m.href}
-                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[#38A169]"
+                  className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:border-[var(--accent)]"
                 >
                   {m.label}
                 </Link>
@@ -685,7 +685,7 @@ export default async function CarHubPage({ params, searchParams }) {
             </div>
             <p className="mt-4 text-sm text-slate-600">
               Or open{" "}
-              <Link href="/cars" className="font-semibold text-[#38A169] underline-offset-4 hover:underline">
+              <Link href="/cars" className="font-semibold text-[var(--accent)] underline-offset-4 hover:underline">
                 advanced search
               </Link>{" "}
               with filters.

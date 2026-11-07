@@ -54,7 +54,7 @@ function formatDistance(km) {
 function responseTier(responseRate, totalLeads) {
   if (!totalLeads || totalLeads < 10) return null;
   if (responseRate >= 0.5) return { label: "Fast replies", tone: "text-[var(--accent)] bg-emerald-500/10" };
-  if (responseRate >= 0.2) return { label: "Responsive", tone: "text-sky-600 bg-sky-500/10" };
+  if (responseRate >= 0.2) return { label: "Responsive", tone: "text-accent bg-accent-wash" };
   return null;
 }
 
@@ -206,20 +206,20 @@ export default async function DealersPage({ searchParams }) {
               </p>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm">
-                  <Building2 className="w-3.5 h-3.5 text-[var(--accent)]" />
-                  <span className="text-[#ef3340] tabular-nums">{rankedDealers.length}</span> dealers
+                  <Building2 className="w-3.5 h-3.5 text-[var(--brand-green)]" />
+                  <span className="text-[var(--brand-green)] tabular-nums">{rankedDealers.length}</span> dealers
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
-                  <span className="text-[#ef3340] tabular-nums">{shownVerified}</span> verified
+                  <ShieldCheck className="w-3.5 h-3.5 text-[var(--brand-green)]" />
+                  <span className="text-[var(--brand-green)] tabular-nums">{shownVerified}</span> verified
                 </span>
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-black/35 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-white backdrop-blur-sm">
-                  <span className="font-black text-[#ef3340] tabular-nums">{shownCars}</span>
+                  <span className="font-black text-[var(--brand-green)] tabular-nums">{shownCars}</span>
                   <span className="text-white">cars</span>
                 </span>
               </div>
               {hasLocation ? (
-                <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-green-300">
+                <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.14em] text-brand-green">
                   Sorted by distance from you
                 </p>
               ) : (
@@ -244,7 +244,7 @@ export default async function DealersPage({ searchParams }) {
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
             <DealersSortSelect hasLocation={hasLocation} defaultValue={sortMode} />
             <div className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-500">
-              Showing <span className="text-[#ef3340] tabular-nums">{rankedDealers.length}</span> dealer{rankedDealers.length === 1 ? "" : "s"}
+              Showing <span className="text-[var(--accent)] tabular-nums">{rankedDealers.length}</span> dealer{rankedDealers.length === 1 ? "" : "s"}
             </div>
           </div>
         </div>
@@ -262,11 +262,11 @@ export default async function DealersPage({ searchParams }) {
                 <input type="hidden" name="sort" value={sortMode} />
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Search</label>
-                  <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all text-slate-900 placeholder:text-slate-400 rounded-xl" />
+                  <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all text-slate-900 placeholder:text-slate-400 rounded-xl" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Region</label>
-                  <select name="county" defaultValue={countyFilter} className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-slate-900 rounded-xl">
+                  <select name="county" defaultValue={countyFilter} className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all appearance-none cursor-pointer text-slate-900 rounded-xl">
                     <option value="" className="bg-white">All Regions</option>
                     {counties.map(c => <option key={c} value={c} className="bg-white">{c}</option>)}
                   </select>
@@ -277,7 +277,7 @@ export default async function DealersPage({ searchParams }) {
                 </label>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Inventory</label>
-                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-slate-900 rounded-xl">
+                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all appearance-none cursor-pointer text-slate-900 rounded-xl">
                     <option value="active">Active inventory only</option>
                     <option value="all">All dealers</option>
                   </select>
@@ -300,11 +300,11 @@ export default async function DealersPage({ searchParams }) {
                 <input type="hidden" name="sort" value={sortMode} />
                 <div className="space-y-2">
                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Search</label>
-                   <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all text-slate-900 placeholder:text-slate-400 rounded-xl" />
+                   <input name="search" defaultValue={search} type="text" placeholder="Dealer name..." className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all text-slate-900 placeholder:text-slate-400 rounded-xl" />
                 </div>
                 <div className="space-y-2">
                    <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Region</label>
-                   <select name="county" defaultValue={countyFilter} className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-slate-900 rounded-xl">
+                   <select name="county" defaultValue={countyFilter} className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all appearance-none cursor-pointer text-slate-900 rounded-xl">
                       <option value="" className="bg-white">All Regions</option>
                       {counties.map(c => <option key={c} value={c} className="bg-white">{c}</option>)}
                    </select>
@@ -315,7 +315,7 @@ export default async function DealersPage({ searchParams }) {
                 </label>
                 <div className="space-y-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Inventory</label>
-                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-slate-900 rounded-xl">
+                  <select name="inventory" defaultValue={withActiveInventoryOnly ? "active" : "all"} className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all appearance-none cursor-pointer text-slate-900 rounded-xl">
                     <option value="active">Active inventory only</option>
                     <option value="all">All dealers</option>
                   </select>
@@ -380,7 +380,7 @@ function DealerCard({ dealer }) {
     <Link
       href={`/dealers/${dealer.slug}`}
       aria-label={`${dealer.name} cars for sale in ${dealer.location || dealer.county || "Kenya"} | BIDGARI`}
-      className="group flex flex-col h-full bg-white shadow-sm hover:shadow-lg border border-slate-200 transition-all hover:border-[var(--accent)]/40 rounded-xl"
+      className="group flex flex-col h-full bg-white shadow-sm hover:shadow-lg border border-slate-200 transition-all hover:border-accent-glow rounded-xl"
     >
       <div className="relative aspect-[2.2/1] min-h-[88px] bg-slate-50 overflow-hidden rounded-t-xl">
         <img
@@ -426,7 +426,7 @@ function DealerCard({ dealer }) {
 
         <div className="mt-auto pt-2.5 flex items-center justify-between border-t border-slate-200">
            <span className="text-[9px] font-black uppercase tracking-widest tabular-nums">
-             <span className="text-[#ef3340]">{dealer.activeCars || 0}</span>{" "}
+             <span className="text-[var(--accent)]">{dealer.activeCars || 0}</span>{" "}
              <span className="text-slate-500 font-bold">cars</span>
            </span>
            <span className="text-[9px] font-black text-[var(--accent)] uppercase tracking-widest flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">

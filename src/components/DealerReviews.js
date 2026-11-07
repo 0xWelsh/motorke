@@ -116,7 +116,7 @@ export default function DealerReviews({
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <p className="text-sm font-bold text-slate-900 truncate">{review.user?.name || "Buyer"}</p>
-                      <span className="inline-flex items-center border border-[var(--accent)]/20 text-[var(--accent)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] rounded">
+                      <span className="inline-flex items-center border border-accent-dim text-[var(--accent)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] rounded">
                         Verified buyer
                       </span>
                     </div>
@@ -187,7 +187,7 @@ export default function DealerReviews({
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center justify-center bg-[var(--accent)] px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-white hover:bg-[var(--accent)]/80 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors rounded-xl"
+              className="inline-flex items-center justify-center bg-[var(--accent)] px-4 py-2.5 text-xs font-extrabold uppercase tracking-[0.12em] text-white hover:bg-[var(--accent-hover)] disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors rounded-xl"
             >
               {submitting ? "Saving..." : viewerReview ? "Update Review" : "Post Review"}
             </button>

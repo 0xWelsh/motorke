@@ -11,24 +11,27 @@ module.exports = {
     extend: {
       colors: {
         background: "var(--bg)",
-        surface:    "var(--surface)",
         brand: {
           DEFAULT: "var(--brand)",
           muted:   "var(--brand-muted)",
           dim:     "var(--brand-dim)",
+          green:   "var(--brand-green)",
+          ink:     "var(--brand-ink)",
         },
         accent: {
           DEFAULT: "var(--accent)",
           hover:   "var(--accent-hover)",
           dim:     "var(--accent-dim)",
+          wash:    "var(--accent-wash)",
+          glow:    "var(--accent-glow)",
           red:     "var(--accent-red)",
           orange:  "var(--accent-orange)",
           blue:    "var(--accent-blue)",
         },
         surface: {
-          glass:    "var(--surface-glass)",
-          hover:    "var(--surface-hover)",
-          overlay:  "var(--surface-overlay)",
+          DEFAULT: "var(--surface)",
+          hover:   "var(--surface-hover)",
+          overlay: "var(--surface-overlay)",
         },
         card: {
           bg:      "var(--card-bg)",
@@ -74,9 +77,9 @@ module.exports = {
         'full': '9999px',
       },
       boxShadow: {
-        'glow':       '0 0 20px rgba(22, 163, 74, 0.12), 0 0 60px rgba(22, 163, 74, 0.04)',
-        'glow-lg':    '0 0 40px rgba(22, 163, 74, 0.16), 0 0 80px rgba(22, 163, 74, 0.06)',
-        'glow-sm':    '0 0 12px rgba(22, 163, 74, 0.08)',
+        'glow':       '0 0 20px rgba(var(--accent-rgb), 0.12), 0 0 60px rgba(var(--accent-rgb), 0.04)',
+        'glow-lg':    '0 0 40px rgba(var(--accent-rgb), 0.16), 0 0 80px rgba(var(--accent-rgb), 0.06)',
+        'glow-sm':    '0 0 12px rgba(var(--accent-rgb), 0.08)',
         'glass':      '0 1px 2px rgba(17, 24, 39, 0.04), 0 8px 24px rgba(17, 24, 39, 0.08)',
         'glass-lg':   '0 2px 4px rgba(17, 24, 39, 0.05), 0 16px 48px rgba(17, 24, 39, 0.12)',
         'elevated':   '0 2px 12px rgba(17, 24, 39, 0.08)',
@@ -96,16 +99,16 @@ module.exports = {
       },
       keyframes: {
         glowPulse: {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(34, 197, 94, 0.1)' },
-          '50%': { boxShadow: '0 0 40px rgba(34, 197, 94, 0.25)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(var(--accent-rgb), 0.1)' },
+          '50%': { boxShadow: '0 0 40px rgba(var(--accent-rgb), 0.25)' },
         },
         float: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-6px)' },
         },
         borderGlow: {
-          '0%, 100%': { borderColor: 'rgba(34, 197, 94, 0.15)' },
-          '50%': { borderColor: 'rgba(34, 197, 94, 0.35)' },
+          '0%, 100%': { borderColor: 'rgba(var(--accent-rgb), 0.15)' },
+          '50%': { borderColor: 'rgba(var(--accent-rgb), 0.35)' },
         },
         fadeIn: {
           from: { opacity: '0' },

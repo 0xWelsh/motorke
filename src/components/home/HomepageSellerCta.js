@@ -16,7 +16,7 @@ export default function HomepageSellerCta() {
       <div className="home-shell">
         <div className="rounded-xl border border-slate-200 bg-white p-6 sm:p-10 lg:p-12 relative overflow-hidden shadow-sm">
           {/* Accent glow */}
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-[var(--accent)]/5 rounded-full blur-3xl" aria-hidden />
+          <div className="absolute -top-24 -right-24 w-64 h-64 bg-accent-wash rounded-full blur-3xl" aria-hidden />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             <div>

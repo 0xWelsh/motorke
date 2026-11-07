@@ -53,7 +53,7 @@ export default function SearchMapLeaflet({ dealers }) {
           return `
           <a href="${href}" style="display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid #f1f5f9;text-decoration:none;color:inherit">
             <span style="font-size:11px;font-weight:700;color:#0f172a">${title}</span>
-            ${price ? `<span style="font-size:11px;font-weight:800;color:#ff5a2f;white-space:nowrap">${price}</span>` : ""}
+            ${price ? `<span style="font-size:11px;font-weight:800;color:var(--accent);white-space:nowrap">${price}</span>` : ""}
           </a>
         `;
         })
@@ -68,7 +68,7 @@ export default function SearchMapLeaflet({ dealers }) {
           </div>
           <div style="margin-bottom:8px">${carListHtml}</div>
           ${moreCount > 0 ? `<p style="font-size:10px;color:#94a3b8;margin:4px 0 6px">+${moreCount} more ${moreCount === 1 ? "car" : "cars"}</p>` : ""}
-          <a href="/dealers/${escapeMapHtml(dealer.slug)}" style="font-size:11px;font-weight:800;color:#ff5a2f;text-decoration:none;text-transform:uppercase;letter-spacing:0.08em">
+          <a href="/dealers/${escapeMapHtml(dealer.slug)}" style="font-size:11px;font-weight:800;color:var(--accent);text-decoration:none;text-transform:uppercase;letter-spacing:0.08em">
             View Dealer →
           </a>
         </div>

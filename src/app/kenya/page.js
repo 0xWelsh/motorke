@@ -139,7 +139,7 @@ export default async function KenyaPage() {
             {STEPS.map((s, i) => (
               <div key={s.title} className="relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="mb-3 flex items-center justify-between">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-wash text-[var(--accent)]">
                     {s.icon}
                   </div>
                   <span className="text-[28px] font-black leading-none text-slate-100">0{i + 1}</span>

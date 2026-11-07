@@ -1,0 +1,143 @@
+name: Scheduled Cron Jobs
+
+on:
+  schedule:
+    # better-deals: daily at 22:00 UTC (00:00 EAT)
+    - cron: '0 22 * * *'
+    # engagements: daily at 08:00 UTC (10:00 EAT)
+    - cron: '0 8 * * *'
+    # auto-expire-local: daily at 12:00 UTC (14:00 EAT)
+    - cron: '0 12 * * *'
+    # watch-alerts: every 2 days at 09:00 UTC (11:00 EAT)
+    - cron: '0 9 */2 * *'
+    # image-health: daily at 06:30 UTC (08:30 EAT)
+    - cron: '30 6 * * *'
+    # seo-monitor: daily at 03:00 UTC (05:00 EAT)
+    - cron: '0 3 * * *'
+    # whatsapp-digest: daily at 07:00 UTC (09:00 EAT)
+    - cron: '0 7 * * *'
+    # seo-crawl: daily at 02:00 UTC (04:00 EAT)
+    - cron: '0 2 * * *'
+    # seo-gsc: daily at 04:00 UTC (06:00 EAT)
+    - cron: '0 4 * * *'
+    # seo-content: daily at 01:00 UTC (03:00 EAT)
+    - cron: '0 1 * * *'
+    # fetch-news: daily at 05:00 UTC (07:00 EAT)
+    - cron: '0 5 * * *'
+    # view-organic: daily at 06:00 UTC (08:00 EAT)
+    - cron: '0 6 * * *'
+    # admin-daily-report: daily at 20:00 UTC (22:00 EAT)
+    - cron: '0 20 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CRON_SECRET: ${{ secrets.CRON_SECRET }}
+      SITE_URL: https://bidgari.com
+    steps:
+      - name: Call better-deals cron
+        if: github.event.schedule == '0 22 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/better-deals" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call engagements cron
+        if: github.event.schedule == '0 8 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/engagements" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call auto-expire-local cron
+        if: github.event.schedule == '0 12 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/auto-expire-local" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call watch-alerts cron
+        if: github.event.schedule == '0 9 */2 * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/watch-alerts" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call image-health cron
+        if: github.event.schedule == '30 6 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/image-health" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call seo-monitor cron
+        if: github.event.schedule == '0 3 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/seo-monitor" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call whatsapp-digest cron
+        if: github.event.schedule == '0 7 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/whatsapp-digest" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call seo-crawl cron
+        if: github.event.schedule == '0 2 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/seo-crawl" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call seo-gsc cron
+        if: github.event.schedule == '0 4 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/seo-gsc" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call seo-content cron
+        if: github.event.schedule == '0 1 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/seo-content" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call fetch-news cron
+        if: github.event.schedule == '0 5 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/fetch-news" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call view-organic cron
+        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/view-organic" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300
+
+      - name: Call admin-daily-report cron
+        if: github.event.schedule == '0 20 * * *' || github.event_name == 'workflow_dispatch'
+        run: |
+          curl -X GET "${{ env.SITE_URL }}/api/cron/admin-daily-report" \
+            -H "Authorization: Bearer ${{ env.CRON_SECRET }}" \
+            -H "User-Agent: GitHub-Actions-Cron" \
+            --fail --silent --show-error --max-time 300

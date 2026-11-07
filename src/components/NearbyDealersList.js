@@ -180,7 +180,7 @@ export default function NearbyDealersList() {
                 <Link
                   key={dealer.id}
                   href={`/dealers/${dealer.slug}`}
-                  className="flex items-center justify-between gap-3 p-3 border border-slate-200 hover:border-[var(--accent)]/40 hover:bg-slate-100 transition rounded-xl"
+                  className="flex items-center justify-between gap-3 p-3 border border-slate-200 hover:border-accent-glow hover:bg-slate-100 transition rounded-xl"
                 >
                   <div className="flex-1 min-w-0">
                     <h3 className="text-sm font-bold text-slate-900 truncate">{dealer.name}</h3>
@@ -193,7 +193,7 @@ export default function NearbyDealersList() {
                   </div>
 
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--accent)] border border-[var(--accent)]/30 bg-[var(--accent)]/5">
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--accent)] border border-accent-glow bg-accent-wash">
                       <MapPin className="w-3 h-3" />
                       {formatDistance(dealer.distance)}
                     </span>

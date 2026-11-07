@@ -103,7 +103,7 @@ function VerifyForm() {
     );
   }
 
-  const inputCls = "w-full bg-slate-50 border-b-2 border-slate-300 rounded-none px-5 py-4 text-2xl sm:text-3xl tracking-[0.3em] font-black text-center text-slate-900 outline-none focus:border-[#ff5a2f] transition-all placeholder:text-slate-400";
+  const inputCls = "w-full bg-slate-50 border-b-2 border-slate-300 rounded-none px-5 py-4 text-2xl sm:text-3xl tracking-[0.3em] font-black text-center text-slate-900 outline-none focus:border-[var(--accent)] transition-all placeholder:text-slate-400";
 
   return (
     <>
@@ -114,14 +114,14 @@ function VerifyForm() {
           <p className="text-xs font-bold text-slate-500">Step 2 of 2</p>
         </div>
         <div className="w-full bg-slate-200 rounded-none h-1.5 overflow-hidden">
-          <div className="h-full bg-[#ff5a2f] w-1/2 transition-all"></div>
+          <div className="h-full bg-[var(--accent)] w-1/2 transition-all"></div>
         </div>
       </div>
 
       {/* Header */}
       <div className="text-center mb-8 sm:mb-10">
         <div className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-5 sm:mb-6">
-          <ShieldCheck size={32} className="text-[#ff5a2f]" />
+          <ShieldCheck size={32} className="text-[var(--accent)]" />
         </div>
         <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-2 uppercase">Verify Your Email</h1>
         <p className="text-sm text-slate-500 font-bold uppercase tracking-widest">We sent a 6-digit code to your email address</p>
@@ -149,7 +149,7 @@ function VerifyForm() {
 
       {/* Success Message */}
       {successMsg && (
-        <div className="mb-6 p-4 bg-[var(--accent)]/10 rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 shadow-sm">
+        <div className="mb-6 p-4 bg-accent-wash rounded-xl flex items-start gap-3 animate-in fade-in slide-in-from-top-2 shadow-sm">
           <div className="w-5 h-5 bg-[var(--accent)] rounded-full flex items-center justify-center text-white shrink-0 mt-0.5">
             <Check size={14} strokeWidth={3} />
           </div>
@@ -170,7 +170,7 @@ function VerifyForm() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#ff5a2f] mb-3">
+          <label className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[var(--accent)] mb-3">
             <Mail size={14} /> Enter 6-Digit Code
           </label>
           <input 
@@ -235,7 +235,7 @@ function VerifyForm() {
         </div>
         <Link 
           href="/contact" 
-          className="inline-block text-[10px] font-black tracking-widest uppercase text-[#ff5a2f] hover:text-[var(--accent)] transition-colors mt-3"
+          className="inline-block text-[10px] font-black tracking-widest uppercase text-[var(--accent)] hover:text-[var(--accent)] transition-colors mt-3"
         >
           Contact Support →
         </Link>
@@ -250,7 +250,7 @@ export default function VerifyPage() {
       <div className="w-full max-w-md bg-white sm:border border-slate-200 rounded-xl p-6 sm:p-10 shadow-sm relative z-10 animate-in slide-in-from-bottom-8 fade-in duration-500 min-h-screen sm:min-h-0">
         <Suspense fallback={
           <div className="flex flex-col items-center justify-center py-12">
-            <Loader2 className="animate-spin text-[#ff5a2f] mb-4" size={40} />
+            <Loader2 className="animate-spin text-[var(--accent)] mb-4" size={40} />
             <p className="text-slate-500 font-medium">Loading verification...</p>
           </div>
         }>

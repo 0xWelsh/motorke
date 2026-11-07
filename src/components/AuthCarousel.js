@@ -52,7 +52,7 @@ export default function AuthCarousel() {
         {SLIDES.map((_, i) => (
           <div 
             key={i} 
-            className={`h-1.5 rounded-full transition-all duration-500 ${i === index ? 'w-12 bg-[#38A169]' : 'w-3 bg-white/20'}`}
+            className={`h-1.5 rounded-full transition-all duration-500 ${i === index ? 'w-12 bg-[var(--accent)]' : 'w-3 bg-white/20'}`}
           />
         ))}
       </div>

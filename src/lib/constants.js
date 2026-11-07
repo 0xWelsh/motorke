@@ -63,11 +63,12 @@ export const CAR_STATUS_LABELS = {
   AT_PORT: "At Port",
 };
 
+// Rendered on light surfaces (car detail status chips).
 export const CAR_STATUS_COLORS = {
-  IN_YARD: "bg-blue-900/20 text-blue-300 border-blue-200",
-  WITH_OWNER: "bg-purple-900/20 text-purple-300 border-purple-200",
-  IN_TRANSIT: "bg-amber-900/20 text-amber-300 border-amber-200",
-  AT_PORT: "bg-cyan-900/20 text-cyan-300 border-cyan-200",
+  IN_YARD: "bg-accent-wash text-accent border border-[var(--accent-dim)]",
+  WITH_OWNER: "bg-purple-50 text-purple-700 border border-purple-200",
+  IN_TRANSIT: "bg-amber-50 text-amber-700 border border-amber-200",
+  AT_PORT: "bg-cyan-50 text-cyan-700 border border-cyan-200",
 };
 
 export const BADGE_OPTIONS = {

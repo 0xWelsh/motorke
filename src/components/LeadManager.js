@@ -22,7 +22,7 @@ const STATUS_META = {
   CONTACTED:   { label: "Contacted",   bg: "bg-white/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
   INTERESTED:  { label: "Interested",  bg: "bg-white/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
   NEGOTIATING: { label: "Negotiating", bg: "bg-white/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
-  SOLD:        { label: "Deal Won",  bg: "bg-[var(--accent)]/10",   text: "text-[var(--accent)]",   border: "border-[var(--accent)]/20" },
+  SOLD:        { label: "Deal Won",  bg: "bg-accent-wash",   text: "text-[var(--accent)]",   border: "border-accent-dim" },
   DEAD:        { label: "Deal Lost", bg: "bg-rose-500/10",      text: "text-rose-400",      border: "border-rose-500/20" },
 };
 

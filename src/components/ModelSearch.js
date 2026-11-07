@@ -39,7 +39,7 @@ export default function ModelSearch({ makes, makeModelPairs, counts }) {
             placeholder="Search make or model (e.g. Toyota Harrier, Subaru...)"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full rounded-2xl border border-slate-300 bg-slate-50 py-3.5 pl-12 pr-10 text-sm font-medium text-slate-900 shadow-sm transition-all placeholder:text-zinc-400 hover:border-slate-300 focus:border-[var(--accent)] focus:outline-none focus:ring-4 focus:ring-[var(--accent)]/10"
+            className="w-full rounded-2xl border border-slate-300 bg-slate-50 py-3.5 pl-12 pr-10 text-sm font-medium text-slate-900 shadow-sm transition-all placeholder:text-zinc-400 hover:border-slate-300 focus:border-[var(--accent)] focus:outline-none focus:ring-4 focus:ring-accent-glow"
           />
           {query && (
             <button
@@ -59,7 +59,7 @@ export default function ModelSearch({ makes, makeModelPairs, counts }) {
               <button
                 key={term}
                 onClick={() => setQuery(term)}
-                className="rounded-full bg-slate-50 px-2.5 py-1 font-semibold text-slate-500 border border-slate-200 transition-all hover:bg-[var(--accent)]/10 hover:text-[var(--accent)] hover:border-[var(--accent)]/20"
+                className="rounded-full bg-slate-50 px-2.5 py-1 font-semibold text-slate-500 border border-slate-200 transition-all hover:bg-accent-wash hover:text-[var(--accent)] hover:border-accent-dim"
               >
                 {term}
               </button>
@@ -80,7 +80,7 @@ export default function ModelSearch({ makes, makeModelPairs, counts }) {
               <Link
                 key={`${item.make}-${item.model}`}
                 href={`/cars?make=${encodeURIComponent(item.make)}&model=${encodeURIComponent(item.model)}`}
-                className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-all hover:border-[var(--accent)]/40 hover:shadow-md hover:-translate-y-0.5"
+                className="group flex items-center justify-between rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-all hover:border-accent-glow hover:shadow-md hover:-translate-y-0.5"
               >
                 <div className="min-w-0">
                   <p className="truncate text-xs font-bold text-slate-500 uppercase tracking-wider">{item.make}</p>
@@ -106,9 +106,9 @@ export default function ModelSearch({ makes, makeModelPairs, counts }) {
               <Link
                 key={make}
                 href={`/cars?make=${encodeURIComponent(make)}`}
-                className="group rounded-xl border border-slate-200 bg-white p-4 text-center transition-all hover:border-[var(--accent)]/40 hover:shadow-md hover:-translate-y-0.5"
+                className="group rounded-xl border border-slate-200 bg-white p-4 text-center transition-all hover:border-accent-glow hover:shadow-md hover:-translate-y-0.5"
               >
-                <div className="mx-auto mb-2.5 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--accent)]/10 text-base font-black text-[var(--accent)] group-hover:bg-[var(--accent)]/20 transition-all">
+                <div className="mx-auto mb-2.5 flex h-14 w-14 items-center justify-center rounded-full bg-accent-wash text-base font-black text-[var(--accent)] group-hover:bg-accent-dim transition-all">
                   {make[0]}
                 </div>
                 <p className="text-sm font-bold text-slate-900 group-hover:text-[var(--accent)]">

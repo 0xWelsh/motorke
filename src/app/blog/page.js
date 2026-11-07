@@ -35,13 +35,13 @@ export default async function BlogIndexPage() {
                 className="group flex flex-col bg-white border border-slate-200 rounded-sm hover:shadow-md hover:border-slate-300 transition-all"
               >
                 <div className="flex-1 flex flex-col p-5 sm:p-6">
-                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[#38A169] mb-2.5">
+                  <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] mb-2.5">
                     <Calendar className="w-3 h-3" aria-hidden />
                     {post.publishedAt
                       ? new Date(post.publishedAt).toLocaleDateString("en-KE", { year: "numeric", month: "short", day: "numeric" })
                       : null}
                   </div>
-                  <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[#38A169] transition-colors leading-snug">
+                  <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[var(--accent)] transition-colors leading-snug">
                     {post.title}
                   </h2>
                   {post.description ? (
@@ -50,7 +50,7 @@ export default async function BlogIndexPage() {
                     </p>
                   ) : null}
                   <div className="mt-auto pt-4">
-                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-[#38A169] transition-colors">
+                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-[var(--accent)] transition-colors">
                       Read <ArrowRight className="w-3 h-3" />
                     </span>
                   </div>
@@ -61,11 +61,11 @@ export default async function BlogIndexPage() {
         )}
 
         <p className="mt-10 text-sm text-slate-500">
-          <Link href="/guides" className="text-[#2F855A] font-semibold hover:opacity-80">
+          <Link href="/guides" className="text-[var(--accent)] font-semibold hover:opacity-80">
             Browse all guides
           </Link>
           {", "}
-          <Link href="/cars" className="text-[#2F855A] font-semibold hover:opacity-80">
+          <Link href="/cars" className="text-[var(--accent)] font-semibold hover:opacity-80">
             Search cars
           </Link>
         </p>

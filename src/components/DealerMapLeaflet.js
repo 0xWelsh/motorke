@@ -67,7 +67,7 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
           <p class="text-xs text-slate-500">${escapeMapHtml(dealer.location || "")}</p>
           ${
             dealer.distance
-              ? `<div class="flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] bg-[var(--accent)]/10 px-2 py-1 rounded">
+              ? `<div class="flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] bg-accent-wash px-2 py-1 rounded">
                    <span>📍</span> ${formatDistance(dealer.distance)}
                  </div>`
               : ''

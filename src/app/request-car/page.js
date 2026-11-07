@@ -33,7 +33,7 @@ export default function RequestCarPage() {
           <p className="mt-3 text-xs text-slate-500">
             Requests stay live for <strong className="text-slate-700">7 days</strong>.
             Are you a seller?{" "}
-            <Link href="/requests" className="font-bold text-sky-600 hover:underline">
+            <Link href="/requests" className="font-bold text-accent hover:underline">
               Browse open requests
             </Link>
           </p>

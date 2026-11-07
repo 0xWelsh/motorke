@@ -1,11 +1,11 @@
 export const UI_TOKENS = {
   colors: {
-    primaryBg: "bg-[#2F855A]",
-    primaryBgHover: "hover:bg-[#38A169]",
-    primaryText: "text-[#2F855A]",
-    primaryBorderHover: "hover:border-[#2F855A]",
-    primaryTextHover: "hover:text-[#2F855A]",
-    focusRing: "focus-visible:ring-[#2F855A]",
+    primaryBg: "bg-[var(--accent)]",
+    primaryBgHover: "hover:bg-[var(--accent-hover)]",
+    primaryText: "text-[var(--accent)]",
+    primaryBorderHover: "hover:border-[var(--accent)]",
+    primaryTextHover: "hover:text-[var(--accent)]",
+    focusRing: "focus-visible:ring-[var(--accent)]",
   },
   surfaces: {
     card: "rounded-2xl border border-zinc-800 bg-[#1e1e1e] shadow-sm",

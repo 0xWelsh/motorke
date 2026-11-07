@@ -1,7 +1,7 @@
 // src/lib/mail.js
 import { db } from "@/lib/db";
-import nodemailer from "nodemailer";
 import crypto from "crypto";
+import nodemailer from "nodemailer";
 import { getSiteOrigin } from "@/lib/site-url";
 import {
   getSupportEmail,
@@ -13,6 +13,7 @@ import {
 } from "@/lib/site-contact";
 import { carListingPath } from "@/lib/car-listing-url";
 
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const SMTP_USER = process.env.SMTP_USER;
 const SMTP_PASS = process.env.SMTP_PASS?.replace(/\s+/g, "");
 const SMTP_HOST = process.env.SMTP_HOST || "smtp.gmail.com";
@@ -20,6 +21,16 @@ const SMTP_PORT = Number(process.env.SMTP_PORT || 465);
 const SMTP_SECURE = process.env.SMTP_SECURE
   ? process.env.SMTP_SECURE === "true"
   : SMTP_PORT === 465;
+
+let resend;
+if (RESEND_API_KEY) {
+  try {
+    const { Resend } = require("resend");
+    resend = new Resend(RESEND_API_KEY);
+  } catch {
+    console.warn("Resend not available, falling back to SMTP");
+  }
+}
 
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
@@ -46,11 +57,55 @@ function buildEmailFooter() {
   `;
 }
 
+async function sendEmail({ from, to, subject, html, text, replyTo }) {
+  // Try Resend first if configured
+  if (resend) {
+    try {
+      const data = await resend.emails.send({
+        from,
+        to: Array.isArray(to) ? to : [to],
+        subject,
+        html,
+        text,
+        reply_to: replyTo,
+      });
+      return { success: true, messageId: data.data?.id, provider: "resend" };
+    } catch (err) {
+      console.error("Resend send failed, falling back to SMTP:", err.message);
+    }
+  }
+
+  // Fallback to SMTP
+  if (SMTP_USER && SMTP_PASS) {
+    try {
+      const info = await transporter.sendMail({
+        from,
+        to: Array.isArray(to) ? to.join(",") : to,
+        subject,
+        html,
+        text,
+        replyTo,
+      });
+      return { success: true, messageId: info.messageId, provider: "smtp" };
+    } catch (err) {
+      console.error("SMTP send failed:", err);
+      return { success: false, error: err.message };
+    }
+  }
+
+  // Mock mode for development
+  console.log("✉️ ======================================");
+  console.log(`✉️ MOCK EMAIL TO: ${to}`);
+  console.log(`✉️ SUBJECT: ${subject}`);
+  console.log(text || html?.slice(0, 200));
+  console.log("✉️ ======================================");
+  return { success: true, mocked: true };
+}
+
 export async function createEmailOTP(email) {
   const otp = String(crypto.randomInt(100000, 999999));
   const expires = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
 
-  // Delete existing tokens for this email
   await db.verificationToken.deleteMany({ where: { identifier: email } });
 
   await db.verificationToken.create({
@@ -60,31 +115,18 @@ export async function createEmailOTP(email) {
   return otp;
 }
 
-/**
- * Sent once after email is verified (password signup) or after a brand-new Google account.
- * From hello@ by default — must be an allowed sender for your SMTP mailbox (Zoho).
- */
-/**
- * Internal system alert (e.g. image health check, cron failures).
- * Goes to the support inbox; not for marketing or transactional traffic.
- */
 export async function sendSystemAlertEmail({ subject, summary, details = {} }) {
   const support = getSupportEmail();
   if (!support) return { success: false, skipped: "no_support_email" };
 
-  if (!SMTP_USER || !SMTP_PASS) {
-    console.log("SYSTEM ALERT (MOCK):", { subject, summary, details });
-    return { success: true, mocked: true };
-  }
-
   const escapeHtml = (value) =>
     (value || "")
       .toString()
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
+      .replace(/&/g, "&")
+      .replace(/</g, "<")
+      .replace(/>/g, ">")
+      .replace(/"/g, "\"")
+      .replace(/'/g, "'");
 
   const detailRows = Object.entries(details || {})
     .map(
@@ -113,30 +155,27 @@ export async function sendSystemAlertEmail({ subject, summary, details = {} }) {
     </div>
   `;
 
-  try {
-    const info = await transporter.sendMail({
-      from: getMailFromAlerts(),
-      to: support,
-      subject: `[BIDGARI] ${subject}`,
-      html,
-      replyTo: support,
-    });
-    return { success: true, messageId: info.messageId };
-  } catch (err) {
-    console.error("sendSystemAlertEmail error:", err);
-    return { success: false, error: err.message };
-  }
+  const text = `System Alert: ${subject}\n\n${summary}\n\n${Object.entries(details || {}).map(([k, v]) => `${k}: ${v}`).join("\n")}`;
+
+  return sendEmail({
+    from: getMailFromAlerts(),
+    to: support,
+    subject: `[BIDGARI] ${subject}`,
+    html,
+    text,
+    replyTo: support,
+  });
 }
 
 export async function sendWelcomeEmail({ email, name, role }) {
   const escapeHtml = (value) =>
     (value || "")
       .toString()
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
+      .replace(/&/g, "&")
+      .replace(/</g, "<")
+      .replace(/>/g, ">")
+      .replace(/"/g, "\"")
+      .replace(/'/g, "'");
 
   const rawFirst = (name || "there").toString().split(" ")[0];
   const firstName = escapeHtml(rawFirst);
@@ -176,7 +215,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
               <td style="background:#111827;padding:28px 28px 22px;text-align:left;">
                 <p style="margin:0;font-size:11px;font-weight:800;letter-spacing:0.22em;text-transform:uppercase;color:#6ee7b7;">BIDGARI</p>
                 <p style="margin:10px 0 0;font-size:22px;font-weight:800;letter-spacing:-0.03em;line-height:1.1;color:#ffffff;">Welcome aboard</p>
-                <div style="margin-top:14px;height:3px;width:48px;background:#38A169;border-radius:2px;"></div>
+                <div style="margin-top:14px;height:3px;width:48px;background:#06691C;border-radius:2px;"></div>
               </td>
             </tr>
             <tr>
@@ -195,7 +234,7 @@ export async function sendWelcomeEmail({ email, name, role }) {
                 <table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:22px;">
                   <tr>
                     <td style="padding:0 0 10px;">
-                      <a href="${ctaBrowse}" style="display:block;text-align:center;background:#38A169;color:#ffffff;text-decoration:none;padding:14px 18px;border-radius:6px;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;">Browse inventory</a>
+                      <a href="${ctaBrowse}" style="display:block;text-align:center;background:#06691C;color:#ffffff;text-decoration:none;padding:14px 18px;border-radius:6px;font-size:12px;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;">Browse inventory</a>
                     </td>
                   </tr>
                   <tr>
@@ -234,47 +273,25 @@ export async function sendWelcomeEmail({ email, name, role }) {
   </div>
   `;
 
-  if (!SMTP_USER || !SMTP_PASS) {
-    console.log("✉️ ======================================");
-    console.log(`✉️ MOCK WELCOME EMAIL TO: ${email}`);
-    console.log(plainText);
-    console.log("✉️ ======================================");
-    return { success: true, mocked: true };
-  }
-
-  try {
-    await transporter.sendMail({
-      from: getMailFromHello(),
-      replyTo: support,
-      to: email,
-      subject: "Welcome to BIDGARI",
-      text: plainText,
-      html: htmlContent,
-    });
-    return { success: true };
-  } catch (error) {
-    console.error("Welcome email failed:", error);
-    return { success: false, error };
-  }
+  return sendEmail({
+    from: getMailFromHello(),
+    replyTo: support,
+    to: email,
+    subject: "Welcome to BIDGARI",
+    text: plainText,
+    html: htmlContent,
+  });
 }
 
 export async function sendVerificationEmail(email, name, otp) {
-  if (!SMTP_USER || !SMTP_PASS) {
-    console.log("✉️ ======================================");
-    console.log(`✉️ MOCK EMAIL TO: ${email}`);
-    console.log(`✉️ CODE: ${otp}`);
-    console.log("✉️ ======================================");
-    return { success: true, mocked: true };
-  }
-
   const escapeHtml = (value) =>
     (value || "")
       .toString()
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
+      .replace(/&/g, "&")
+      .replace(/</g, "<")
+      .replace(/>/g, ">")
+      .replace(/"/g, "\"")
+      .replace(/'/g, "'");
   const firstName = escapeHtml((name || "there").toString().split(" ")[0]);
   const origin = getSiteOrigin();
   const support = getSupportEmail();
@@ -298,19 +315,16 @@ export async function sendVerificationEmail(email, name, otp) {
     </div>
   `;
 
-  try {
-    await transporter.sendMail({
-      from: getMailFromVerification(),
-      replyTo: getSupportEmail(),
-      to: email,
-      subject: "Your BIDGARI verification code",
-      html: htmlContent,
-    });
-    return { success: true };
-  } catch (error) {
-    console.error("Nodemailer failed:", error);
-    return { success: false, error };
-  }
+  const text = `BIDGARI Verification Code\n\nHi ${firstName},\n\nYour verification code is: ${otp}\n\nThis code expires in 30 minutes.\n\nIf you did not sign up, ignore this email.\n\n${support}`;
+
+  return sendEmail({
+    from: getMailFromVerification(),
+    replyTo: getSupportEmail(),
+    to: email,
+    subject: "Your BIDGARI verification code",
+    html: htmlContent,
+    text,
+  });
 }
 
 export async function sendLeadAlertEmail({
@@ -327,11 +341,11 @@ export async function sendLeadAlertEmail({
   const escapeHtml = (value) =>
     (value || "")
       .toString()
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\"/g, "&quot;")
-      .replace(/'/g, "&#39;");
+      .replace(/&/g, "&")
+      .replace(/</g, "<")
+      .replace(/>/g, ">")
+      .replace(/"/g, "\"")
+      .replace(/'/g, "'");
 
   const safeDealerName = escapeHtml(dealerName || "Dealer Team");
   const safeCarTitle = escapeHtml(carTitle || "Listing");
@@ -344,20 +358,6 @@ export async function sendLeadAlertEmail({
 
   const recipients = [...new Set((to || []).filter(Boolean))];
   if (recipients.length === 0) return { success: true, skipped: true };
-
-  if (!SMTP_USER || !SMTP_PASS) {
-    console.log("LEAD ALERT EMAIL (MOCK):", {
-      to: recipients,
-      dealerName,
-      carTitle,
-      buyerName,
-      buyerPhone,
-      buyerEmail,
-      channel,
-      leadId,
-    });
-    return { success: true, mocked: true };
-  }
 
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
@@ -385,25 +385,22 @@ export async function sendLeadAlertEmail({
         <p style="margin: 10px 0 0;"><strong>Message:</strong> ${safeBuyerMessage}</p>
       </div>
 
-      <a href="${getSiteOrigin()}/admin/cars" style="display:inline-block;background:#1e1e1e;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Admin Panel</a>
+      <a href="${getSiteOrigin()}/admin/cars" style="display:inline-block;background:#06691C;color:#fff;text-decoration:none;padding:12px 18px;border-radius:0px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Open Admin Panel</a>
 
       <p style="margin-top: 20px; color: #94a3b8; font-size: 12px;">Lead Ref: ${safeLeadId}</p>
       ${buildEmailFooter()}
     </div>
   `;
 
-  try {
-    await transporter.sendMail({
-      from: getMailFromAlerts(),
-      to: recipients.join(","),
-      subject: `New Buyer Enquiry - ${carTitle || "Vehicle"}`,
-      html: htmlContent,
-    });
-    return { success: true };
-  } catch (error) {
-    console.error("Lead alert email failed:", error);
-    return { success: false, error };
-  }
+  const text = `New Buyer Enquiry\n\nDealer: ${safeDealerName}\nVehicle: ${safeCarTitle}\nBuyer: ${safeBuyerName}\nPhone: ${safeBuyerPhone}\nEmail: ${safeBuyerEmail}\nChannel: ${safeChannel}\nMessage: ${safeBuyerMessage}\n\nLead Ref: ${safeLeadId}\n\n${getSiteOrigin()}/admin/cars`;
+
+  return sendEmail({
+    from: getMailFromAlerts(),
+    to: recipients,
+    subject: `New Buyer Enquiry - ${carTitle || "Vehicle"}`,
+    html: htmlContent,
+    text,
+  });
 }
 
 export async function createPasswordResetToken(email) {
@@ -429,19 +426,11 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
   const escapeHtml = (value) =>
     (value || "")
       .toString()
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/\"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-
-  if (!SMTP_USER || !SMTP_PASS) {
-    console.log("RESET EMAIL (MOCK):", {
-      email,
-      resetUrl,
-    });
-    return { success: true, mocked: true };
-  }
+      .replace(/&/g, "&")
+      .replace(/</g, "<")
+      .replace(/>/g, ">")
+      .replace(/"/g, "\"")
+      .replace(/'/g, "'");
 
   const safeName = escapeHtml((name || "there").toString().split(" ")[0]);
   const htmlContent = `
@@ -453,38 +442,25 @@ export async function sendPasswordResetEmail({ email, name, resetToken }) {
         <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.6;">For your security, this link expires in 30 minutes. If you did not request this reset, you can ignore this email.</p>
       </div>
 
-      <a href="${resetUrl}" style="display:inline-block; background:#1e1e1e; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:0px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Reset Password</a>
+      <a href="${resetUrl}" style="display:inline-block; background:#06691C; color:#ffffff; text-decoration:none; padding:12px 18px; border-radius:0px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;">Reset Password</a>
 
       <p style="margin-top: 20px; font-size: 12px; color: #64748b; word-break: break-all;">${resetUrl}</p>
       ${buildEmailFooter()}
     </div>
   `;
 
-  try {
-    await transporter.sendMail({
-      from: getMailFromNoReply(),
-      to: email,
-      subject: "Reset your BIDGARI password",
-      html: htmlContent,
-    });
-    return { success: true };
-  } catch (error) {
-    console.error("Password reset email failed:", error);
-    return { success: false, error };
-  }
+  const text = `Reset your BIDGARI password\n\nHi ${safeName},\n\nReset your password: ${resetUrl}\n\nThis link expires in 30 minutes.\n\nIf you did not request this, ignore this email.`;
+
+  return sendEmail({
+    from: getMailFromNoReply(),
+    to: email,
+    subject: "Reset your BIDGARI password",
+    html: htmlContent,
+    text,
+  });
 }
 
 export async function sendBetterDealEmail({ userEmail, userName, previousCar, newCar, savings }) {
-  if (!SMTP_USER || !SMTP_PASS) {
-    console.log("✉️ ======================================");
-    console.log(`✉️ BETTER DEAL EMAIL TO: ${userEmail}`);
-    console.log(`✉️ Previous: ${previousCar.year} ${previousCar.make} ${previousCar.model}`);
-    console.log(`✉️ New: ${newCar.year} ${newCar.make} ${newCar.model}`);
-    console.log(`✉️ Savings: KES ${savings.toLocaleString("en-KE")}`);
-    console.log("✉️ ======================================");
-    return { success: true };
-  }
-
   const siteUrl = getSiteOrigin();
   const newCarUrl = `${siteUrl.replace(/\/$/, "")}${carListingPath(newCar)}`;
   const savingsPercent = ((savings / previousCar.price) * 100).toFixed(1);
@@ -514,7 +490,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
               <p style="margin: 0 0 8px; font-size: 13px; color: #64748b;">
                 ${newCar.mileage ? `${parseInt(newCar.mileage).toLocaleString()} km, ` : ''}${newCar.location}
               </p>
-              <p style="margin: 0; font-size: 20px; font-weight: 900; color: #ff5a2f;">
+              <p style="margin: 0; font-size: 20px; font-weight: 900; color: #06691C;">
                 KES ${parseInt(newCar.price).toLocaleString("en-KE")}
               </p>
             </div>
@@ -530,7 +506,7 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
           </p>
         </div>
 
-        <a href="${newCarUrl}" style="display: inline-block; width: 100%; text-align: center; background: #1e1e1e; color: white; padding: 14px 24px; border-radius: 0px; font-size: 14px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; margin: 24px 0; transition: background 0.2s;">
+        <a href="${newCarUrl}" style="display: inline-block; width: 100%; text-align: center; background: #06691C; color: white; padding: 14px 24px; border-radius: 0px; font-size: 14px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.05em; margin: 24px 0; transition: background 0.2s;">
           View This Car
         </a>
 
@@ -543,32 +519,22 @@ export async function sendBetterDealEmail({ userEmail, userName, previousCar, ne
     </div>
   `;
 
-  try {
-    await transporter.sendMail({
-      from: getMailFromMarketing(),
-      to: userEmail,
-      subject: `Better deal: ${newCar.year} ${newCar.make} - Save KES ${parseInt(savings).toLocaleString("en-KE")}`,
-      html: htmlContent,
-    });
-    return { success: true };
-  } catch (error) {
-    console.error("Better deal email failed:", error);
-    return { success: false, error };
-  }
+  const text = `Better Deal Found!\n\nHi ${userName},\n\nYou viewed the ${previousCar.year} ${previousCar.make} ${previousCar.model}.\nWe found a better deal:\n\n${newCar.year} ${newCar.make} ${newCar.model}\n${newCar.mileage ? `${parseInt(newCar.mileage).toLocaleString()} km, ` : ''}${newCar.location}\nKES ${parseInt(newCar.price).toLocaleString("en-KE")}\n\nSave KES ${parseInt(savings).toLocaleString("en-KE")} (${savingsPercent}%)\n\nView: ${newCarUrl}\n\n${siteUrl}/cars`;
+
+  return sendEmail({
+    from: getMailFromMarketing(),
+    to: userEmail,
+    subject: `Better deal: ${newCar.year} ${newCar.make} - Save KES ${parseInt(savings).toLocaleString("en-KE")}`,
+    html: htmlContent,
+    text,
+  });
 }
 
 export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitle, dealerName }) {
-  if (!SMTP_USER || !SMTP_PASS) {
-    console.log("✉️ ======================================");
-    console.log(`✉️ MOCK ENGAGEMENT EMAIL TO: ${userEmail}`);
-    console.log("✉️ ======================================");
-    return { success: true };
-  }
-
   const escapeHtml = (value) =>
     (value || "")
       .toString()
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+      .replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
 
   const safeName = escapeHtml((userName || "there").split(" ")[0]);
   const safeCar = escapeHtml(carTitle);
@@ -577,7 +543,7 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1e1e1e;">
       <div style="background: #1e1e1e; padding: 40px; border-radius: 0px; text-align: center;">
-        <span style="font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em; color: white;">MOTOR<span style="color: #ff5a2f;">SKE</span></span>
+        <span style="font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em; color: white;">BID<span style="color: #00C010;">GARI</span></span>
       </div>
       <div style="padding: 40px; border: 1px solid #e2e8f0; border-top: none;">
         <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 900;">Still interested in the ${safeCar}?</h1>
@@ -588,7 +554,7 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
         </p>
 
         <div style="text-align: center; margin: 32px 0;">
-          <a href="${getSiteOrigin()}/cars" style="display: inline-block; background: #ff5a2f; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
+          <a href="${getSiteOrigin()}/cars" style="display: inline-block; background: #06691C; color: white; padding: 16px 32px; border-radius: 0px; font-size: 13px; font-weight: 900; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: background 0.2s;">
             Browse More Vehicles
           </a>
         </div>
@@ -602,29 +568,20 @@ export async function sendEngagementFollowUpEmail({ userEmail, userName, carTitl
     </div>
   `;
 
-  try {
-    await transporter.sendMail({
-      from: getMailFromMarketing(),
-      to: userEmail,
-      subject: `Still looking for the ${safeCar}?`,
-      html: htmlContent,
-    });
-    return { success: true };
-  } catch (error) {
-    return { success: false, error };
-  }
+  const text = `Still interested in the ${safeCar}?\n\nHi ${safeName},\n\nYou reached out to ${safeDealer} regarding the ${safeCar}.\n\nBrowse more vehicles: ${getSiteOrigin()}/cars\n\nIf the dealer hasn't responded, you can browse other verified inventory.`;
+
+  return sendEmail({
+    from: getMailFromMarketing(),
+    to: userEmail,
+    subject: `Still looking for the ${safeCar}?`,
+    html: htmlContent,
+    text,
+  });
 }
 
 export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName }) {
-   if (!SMTP_USER || !SMTP_PASS) {
-      console.log("✉️ ======================================");
-      console.log(`✉️ MOCK FEEDBACK EMAIL TO: ${userEmail}`);
-      console.log("✉️ ======================================");
-      return { success: true };
-   }
-
   const escapeHtml = (value) =>
-    (value || "").toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    (value || "").toString().replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">");
 
   const safeName = escapeHtml((userName || "there").split(" ")[0]);
   const safeDealer = escapeHtml(dealerName);
@@ -632,7 +589,7 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
   const htmlContent = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1e1e1e;">
       <div style="background: #1e1e1e; padding: 40px; border-radius: 0px; text-align: center;">
-        <span style="font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em; color: white;">MOTOR<span style="color: #ff5a2f;">SKE</span></span>
+        <span style="font-weight: 900; font-size: 24px; text-transform: uppercase; letter-spacing: -0.05em; color: white;">BID<span style="color: #00C010;">GARI</span></span>
       </div>
       <div style="padding: 40px; border: 1px solid #e2e8f0; border-top: none;">
         <h1 style="margin: 0 0 16px; font-size: 24px; font-weight: 900;">How was the service?</h1>
@@ -656,17 +613,15 @@ export async function sendServiceFeedbackEmail({ userEmail, userName, dealerName
     </div>
   `;
 
-  try {
-    await transporter.sendMail({
-      from: getMailFromMarketing(),
-      to: userEmail,
-      subject: `How was your experience with ${safeDealer}?`,
-      html: htmlContent,
-    });
-    return { success: true };
-  } catch (error) {
-    return { success: false, error };
-  }
+  const text = `How was the service?\n\nHi ${safeName},\n\nYou recently contacted ${safeDealer} through BIDGARI.\n\nLeave feedback: ${getSiteOrigin()}/contact`;
+
+  return sendEmail({
+    from: getMailFromMarketing(),
+    to: userEmail,
+    subject: `How was your experience with ${safeDealer}?`,
+    html: htmlContent,
+    text,
+  });
 }
 
 export async function sendWatchAlertEmail({
@@ -689,11 +644,6 @@ export async function sendWatchAlertEmail({
   const isPriceDrop = type === "PRICE_DROP";
   const isSimilarListing = type === "SIMILAR_LISTING";
   const dropAmount = isPriceDrop && previousPrice ? Math.max(0, previousPrice - car.price) : 0;
-
-  if (!SMTP_USER || !SMTP_PASS) {
-    console.log("WATCH ALERT EMAIL (MOCK):", { userEmail, type, title, previousPrice, current: car.price });
-    return { success: true, mocked: true };
-  }
 
   const heading = isPriceDrop
     ? "Price drop on your watchlist car"
@@ -728,29 +678,21 @@ export async function sendWatchAlertEmail({
     </div>
   `;
 
-  try {
-    await transporter.sendMail({
-      from: getMailFromAlerts(),
-      to: userEmail,
-      subject: isPriceDrop
-        ? `Price drop: ${title}`
-        : isSimilarListing
-          ? `New similar listing: ${similarTitle}`
-          : `Back in stock: ${title}`,
-      html,
-    });
-    return { success: true };
-  } catch (error) {
-    console.error("Watch alert email failed:", error);
-    return { success: false, error };
-  }
+  const text = `${heading}\n\nHi ${firstName}, ${summary}\n\n${title}\n${isPriceDrop ? `Previous: KES ${previousPrice.toLocaleString("en-KE")}\nCurrent: KES ${car.price.toLocaleString("en-KE")}` : isSimilarListing ? `Watchlist: ${title}\nNew similar: ${similarTitle}\nPrice: KES ${(similarCar?.price ?? 0).toLocaleString("en-KE")}` : `Current: KES ${car.price.toLocaleString("en-KE")}`}\n\nOpen: ${isSimilarListing && similarCar?.id ? similarListingUrl : carUrl}`;
+
+  return sendEmail({
+    from: getMailFromAlerts(),
+    to: userEmail,
+    subject: isPriceDrop
+      ? `Price drop: ${title}`
+      : isSimilarListing
+        ? `New similar listing: ${similarTitle}`
+        : `Back in stock: ${title}`,
+    html,
+    text,
+  });
 }
 
-/**
- * Sends contact-form submissions to the public support inbox
- * (hello@welshmotorhub.co.ke by default; overridable via MAIL_SUPPORT).
- * The visitor's email is set as Reply-To so support can hit reply directly.
- */
 export async function sendContactFormEmail({
   name,
   email,
@@ -761,11 +703,11 @@ export async function sendContactFormEmail({
   const escapeHtml = (value) =>
     (value || "")
       .toString()
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
+      .replace(/&/g, "&")
+      .replace(/</g, "<")
+      .replace(/>/g, ">")
+      .replace(/"/g, "\"")
+      .replace(/'/g, "'");
 
   const safeName = escapeHtml(name || "Anonymous");
   const safeEmail = escapeHtml(email || "");
@@ -806,24 +748,14 @@ export async function sendContactFormEmail({
     .filter((l) => l !== null)
     .join("\n");
 
-  if (!SMTP_USER || !SMTP_PASS) {
-    console.log("CONTACT FORM EMAIL (MOCK):", {
-      to: supportInbox,
-      subject: subjectLabel,
-      from: { name, email },
-      message,
-    });
-    return { success: true, mocked: true };
-  }
-
   const html = `
     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 640px; margin: 0 auto; padding: 28px; color: #111827;">
-      <p style="margin: 0 0 6px; font-size: 11px; color: #38A169; text-transform: uppercase; letter-spacing: .12em; font-weight: 800;">BIDGARI · Contact Form</p>
+      <p style="margin: 0 0 6px; font-size: 11px; color: #06691C; text-transform: uppercase; letter-spacing: .12em; font-weight: 800;">BIDGARI · Contact Form</p>
       <h1 style="margin: 0 0 18px; font-size: 22px; font-weight: 800;">${subjectLabel}</h1>
 
       <div style="border: 1px solid #e2e8f0; padding: 16px; margin-bottom: 12px;">
         <p style="margin: 0 0 6px; font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700;">From</p>
-        <p style="margin: 0;"><strong>${safeName}</strong> &lt;<a href="mailto:${safeEmail}" style="color: #0f172a;">${safeEmail}</a>&gt;</p>
+        <p style="margin: 0;"><strong>${safeName}</strong> <<a href="mailto:${safeEmail}" style="color: #0f172a;">${safeEmail}</a>></p>
       </div>
 
       <div style="border: 1px solid #e2e8f0; padding: 16px; margin-bottom: 12px;">
@@ -838,11 +770,11 @@ export async function sendContactFormEmail({
 
       ${(safeIp || safeUa || safeReferer)
         ? `<details style="margin-bottom: 16px; border: 1px solid #e2e8f0; padding: 12px;">
-             <summary style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; cursor: pointer;">Request metadata</summary>
-             ${safeIp ? `<p style="margin: 8px 0 0; font-size: 12px; color: #475569;"><strong>IP:</strong> ${safeIp}</p>` : ""}
-             ${safeReferer ? `<p style="margin: 4px 0 0; font-size: 12px; color: #475569;"><strong>Referer:</strong> ${safeReferer}</p>` : ""}
-             ${safeUa ? `<p style="margin: 4px 0 0; font-size: 12px; color: #475569;"><strong>User-Agent:</strong> ${safeUa}</p>` : ""}
-           </details>`
+              <summary style="font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .08em; font-weight: 700; cursor: pointer;">Request metadata</summary>
+              ${safeIp ? `<p style="margin: 8px 0 0; font-size: 12px; color: #475569;"><strong>IP:</strong> ${safeIp}</p>` : ""}
+              ${safeReferer ? `<p style="margin: 4px 0 0; font-size: 12px; color: #475569;"><strong>Referer:</strong> ${safeReferer}</p>` : ""}
+              ${safeUa ? `<p style="margin: 4px 0 0; font-size: 12px; color: #475569;"><strong>User-Agent:</strong> ${safeUa}</p>` : ""}
+            </details>`
         : ""}
 
       <p style="margin: 0; font-size: 12px; color: #64748b;">
@@ -856,20 +788,14 @@ export async function sendContactFormEmail({
     </div>
   `;
 
-  try {
-    await transporter.sendMail({
-      from: getMailFromHello(), // hello@welshmotorhub.co.ke
-      to: supportInbox,         // delivers to the support inbox
-      replyTo: email
-        ? `${name ? `"${name.replace(/"/g, "")}" ` : ""}<${email}>`
-        : undefined,
-      subject: `[Contact] ${subjectLabel} — ${name || "Anonymous"}`,
-      text: plainText,
-      html,
-    });
-    return { success: true };
-  } catch (error) {
-    console.error("Contact form email failed:", error);
-    return { success: false, error };
-  }
+  return sendEmail({
+    from: getMailFromHello(),
+    to: supportInbox,
+    replyTo: email
+      ? `${name ? `"${name.replace(/"/g, "")}" ` : ""}<${email}>`
+      : undefined,
+    subject: `[Contact] ${subjectLabel} — ${name || "Anonymous"}`,
+    text: plainText,
+    html,
+  });
 }

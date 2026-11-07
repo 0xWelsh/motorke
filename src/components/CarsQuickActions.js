@@ -163,11 +163,11 @@ function CarsQuickActionsInner() {
                   prefetch
                   aria-busy={loading}
                   onClick={(e) => handleNavigate(href, e)}
-                  className={`inline-flex items-center justify-center gap-1.5 min-h-8 px-3 border border-blue-500/20 bg-blue-500/10 text-[10px] font-black uppercase tracking-[0.11em] text-blue-300 hover:bg-blue-500/20 transition-colors${loading ? " opacity-80" : ""}`}
+                  className={`inline-flex items-center justify-center gap-1.5 min-h-8 px-3 border border-[var(--accent-dim)] bg-accent-wash text-[10px] font-black uppercase tracking-[0.11em] text-accent hover:bg-accent-dim transition-colors${loading ? " opacity-80" : ""}`}
                   style={{ borderRadius: "999px" }}
                 >
                   {loading ? (
-                    <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-blue-300" aria-hidden />
+                    <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-accent" aria-hidden />
                   ) : null}
                   <span>{item.label}</span>
                 </Link>

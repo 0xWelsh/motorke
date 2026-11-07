@@ -32,14 +32,14 @@ function CompactListing({ car }) {
         )}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-bold text-slate-900 truncate group-hover:text-[#b91c1c] transition-colors">
+        <p className="text-sm font-bold text-slate-900 truncate group-hover:text-accent transition-colors">
           {title}
         </p>
         <p className="text-[11px] text-slate-500 mt-0.5">
           {car.engineCC ? `${car.engineCC}cc` : "n/a"}, {FUEL_LABELS[car.fuelType] || car.fuelType}
           {car.mileage ? `, ${formatMileage(car.mileage)}` : ""}
         </p>
-        <p className="text-sm font-bold text-[#b91c1c] mt-1 tabular-nums">
+        <p className="text-sm font-bold text-accent mt-1 tabular-nums">
           {formatCarPrice(car)}
         </p>
       </div>
@@ -121,7 +121,7 @@ export default function DutySimilarStock({ make, model }) {
             href={hubPath}
             eventName="duty_similar_stock_view_all"
             eventPayload={{ make, model: model || "" }}
-            className="mt-4 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-[#b91c1c] hover:opacity-80"
+            className="mt-4 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-widest text-accent hover:opacity-80"
           >
             View all {make} {model || "cars"} <ArrowUpRight className="w-3.5 h-3.5" />
           </TrackedLink>

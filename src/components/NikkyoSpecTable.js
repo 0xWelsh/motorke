@@ -153,7 +153,7 @@ export default function NikkyoSpecTable({ car, title = null }) {
           last ? "" : "border-b border-slate-200"
         }`}
       >
-        <span className="flex items-center gap-2 bg-sky-50 border-r border-slate-200 px-3 py-2.5 font-bold uppercase tracking-wide text-slate-500">
+        <span className="flex items-center gap-2 bg-accent-wash border-r border-slate-200 px-3 py-2.5 font-bold uppercase tracking-wide text-slate-500">
           <Icon className="w-3.5 h-3.5 shrink-0 text-slate-400" aria-hidden />
           <span className="truncate">{row.label}</span>
         </span>

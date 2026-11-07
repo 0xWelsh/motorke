@@ -267,7 +267,7 @@ export default function CarsSearch({
                   }}
                   className={`border py-2.5 text-[10px] font-bold uppercase tracking-tight transition-all active:scale-[0.98] ${
                     String(minPrice) === String(btn.min) && String(maxPrice) === String(btn.max)
-                      ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20"
+                      ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-accent-glow"
                       : "border-slate-200 bg-white text-slate-500 hover:border-[var(--accent)] rounded-xl"
                   }`}
                   style={{ borderRadius: "4px" }}
@@ -284,7 +284,7 @@ export default function CarsSearch({
                 }}
                 className={`border py-2.5 text-[10px] font-bold uppercase tracking-tight transition-all ${
                   minPrice === "13000000" && !maxPrice
-                    ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20"
+                    ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-accent-glow"
                     : "border-slate-200 bg-white text-slate-500 hover:border-[var(--accent)] rounded-xl"
                 }`}
                 style={{ borderRadius: "4px" }}
@@ -430,7 +430,7 @@ export default function CarsSearch({
                     }}
                     className={`border py-2.5 text-[10px] font-bold uppercase tracking-tight transition-all ${
                       steering === side
-                        ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-[var(--accent)]/20"
+                        ? "border-[var(--accent)] bg-[var(--accent)] text-white shadow-md shadow-accent-glow"
                         : "border-slate-200 bg-white text-slate-500"
                     }`}
                     style={{ borderRadius: "4px" }}

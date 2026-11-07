@@ -21,18 +21,32 @@
   --brand-muted:     #52525b;
   --brand-dim:       #71717a;
 
-  /* Single source of red for CTAs, prices, active/selected states. */
-  --accent:          #A01A1A;
-  --accent-hover:    #7E1414;
-  --accent-dim:      rgba(160, 26, 26, 0.12);
-  --accent-glow:     rgba(160, 26, 26, 0.2);
+  /* BIDGARI brand green, sampled from the logo (#00C010). Bright enough to be
+     AA only on dark surfaces (7.9:1 on --brand-ink) and only 2.3:1 on --bg,
+     so it is a fill/mark colour, never body or price text on light. */
+  --brand-green:      #00C010;
+  --brand-green-dim:  rgba(0, 192, 16, 0.14);
+  --brand-ink:        #0b0f0c;
 
-  /* Structural navy (section bars) + brand text navy for make/model. */
-  --sidebar-bar:       #13356f;
-  --sidebar-bar-hover: #1a3f7a;
-  --brand-navy:        #13356f;
+  /* Single source for CTAs, prices, active/selected states. Darkened brand
+     green: 6.4:1 on --bg, 6.9:1 on white, so it clears AA as text and as a
+     filled button behind white labels. */
+  --accent:          #06691C;
+  --accent-hover:    #045015;
+  --accent-dim:      rgba(6, 105, 28, 0.12);
+  /* Full-bleed wash under hero bands and tinted panels — dim is too heavy at that area. */
+  --accent-wash:     rgba(6, 105, 28, 0.06);
+  --accent-glow:     rgba(6, 105, 28, 0.2);
+  /* RGB triplet so Tailwind shadows/keyframes can build rgba() per theme. */
+  --accent-rgb:      6, 105, 28;
+
+  /* Structural dark band (header/nav) + strong label colour. */
+  --sidebar-bar:       #111713;
+  --sidebar-bar-hover: #1c251f;
+  --brand-navy:        #0d2a14;
 
   --accent-red:      #dc2626;
+  --accent-red-hover:#b91c1c;
   --accent-red-dim:  rgba(220, 38, 38, 0.12);
   --accent-orange:   #ea580c;
   --accent-blue:     #2563eb;
@@ -52,11 +66,12 @@
   --radius-lg:  8px;
   --radius-xl:  8px;
 
-  --mk-primary:      #A01A1A;
-  --mk-primary-hover:#7E1414;
-  --mk-primary-600:  #A01A1A;
+  /* Aliases kept so existing call sites resolve; they must not drift. */
+  --mk-primary:      var(--accent);
+  --mk-primary-hover:var(--accent-hover);
+  --mk-primary-600:  var(--accent);
 
-  --brand-primary:   #A01A1A;
+  --brand-primary:   var(--accent);
   --brand-faint:     #e2e8f0;
   --text-main:       #18181b;
 
@@ -83,12 +98,21 @@
   --accent:          #22C55E;
   --accent-hover:    #16A34A;
   --accent-dim:      rgba(34, 197, 94, 0.15);
+  --accent-wash:     rgba(34, 197, 94, 0.08);
   --accent-glow:     rgba(34, 197, 94, 0.25);
+  --accent-rgb:      34, 197, 94;
 
   --accent-red:      #EF4444;
+  --accent-red-hover:#dc2626;
   --accent-red-dim:  rgba(239, 68, 68, 0.15);
   --accent-orange:   #F97316;
   --accent-blue:     #3B82F6;
+
+  /* Pinned so the public palette change does not reach the admin/portal
+     shell, which keeps its own navy structure. */
+  --sidebar-bar:       #13356f;
+  --sidebar-bar-hover: #1a3f7a;
+  --brand-navy:        #13356f;
 
   --text:            #f7f6f3;
   --text-secondary:  #d4d4d8;
@@ -266,10 +290,9 @@ h1, h2, h3, h4, h5, h6 {
    smoothly scrolled 3000px. Anything that genuinely wants easing passes
    `behavior: "smooth"` at the call site (CarForm, DutyCalculator, etc). */
 
-/* ─── Windows 7 Aero Button System ───────────────────────────────────────
-   Every button: 8px radius, 1px border darker than the surface, subtle
-   vertical gradient, faint top gloss, tiny inset shadow, pressed state that
-   reverses the gradient and sinks 1px, and a blue keyboard focus glow.   */
+/* ─── BIDGARI Button System ──────────────────────────────────────────────
+   Flat, token-driven, one brand CTA colour. Admin/portal picks up its own
+   greens automatically because every fill below is a CSS variable.        */
 
 @layer components {
 .btn,
@@ -281,8 +304,6 @@ h1, h2, h3, h4, h5, h6 {
 .btn-outline,
 .btn-secondary,
 .btn-dark {
-  position: relative;
-  isolation: isolate;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -297,21 +318,17 @@ h1, h2, h3, h4, h5, h6 {
   white-space: nowrap;
   height: 36px;
   padding: 0 0.875rem;
-  border-radius: 4px;
+  border-radius: var(--radius);
   border: 1px solid transparent;
   cursor: pointer;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.8) inset,
-    0 -1px 0 rgba(0, 0, 0, 0.08) inset,
-    0 1px 2px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(17, 24, 39, 0.08);
   transition:
-    filter 0.15s ease,
-    border-color 0.15s ease,
     background 0.15s ease,
-    box-shadow 0.15s ease,
-    transform 0.15s ease;
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 @media (min-width: 640px) {
   .btn,
@@ -329,26 +346,6 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0 1.25rem;
   }
 }
-.btn::before,
-.btn-primary::before,
-.btn-accent::before,
-.btn-success::before,
-.btn-danger::before,
-.btn-neutral::before,
-.btn-outline::before,
-.btn-secondary::before,
-.btn-dark::before {
-  content: "";
-  position: absolute;
-  top: 1px;
-  left: 1px;
-  right: 1px;
-  height: 30%;
-  border-radius: 3px 3px 0 0;
-  background: linear-gradient(rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.06));
-  pointer-events: none;
-  z-index: 1;
-}
 .btn svg,
 .btn-primary svg,
 .btn-accent svg,
@@ -363,72 +360,55 @@ h1, h2, h3, h4, h5, h6 {
   flex-shrink: 0;
 }
 
-/* ── Primary (Blue) ── */
+/* ── Primary · accent · success — one brand CTA ── */
 .btn-primary,
-.btn-accent {
-  background: linear-gradient(#4e8fd8, #2f6cb5);
-  border-color: #295b9d;
+.btn-accent,
+.btn-success {
+  background: var(--accent);
+  border-color: var(--accent-hover);
   color: #fff;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
 }
 .btn-primary:hover,
-.btn-accent:hover {
-  background: linear-gradient(#5d9bdd, #3b77c1);
-  border-color: #3a72b8;
-}
-
-/* ── Success (Green) — WhatsApp, Get Quote, Submit ── */
-.btn-success {
-  background: linear-gradient(#5aae2b, #3e8915);
-  border-color: #2f6e0e;
-  color: #fff;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
-}
+.btn-accent:hover,
 .btn-success:hover {
-  background: linear-gradient(#66ba35, #4c9a1f);
-  border-color: #388217;
+  background: var(--accent-hover);
 }
 
-/* ── Danger (Red) ── */
+/* ── Danger ── */
 .btn-danger {
-  background: linear-gradient(#e84d43, #c92a20);
-  border-color: #b0231a;
+  background: var(--accent-red);
+  border-color: var(--accent-red-hover);
   color: #fff;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
 }
 .btn-danger:hover {
-  background: linear-gradient(#ef5a50, #d6342a);
-  border-color: #c32a20;
+  background: var(--accent-red-hover);
 }
 
-/* ── Neutral (Gray Aero) ── */
+/* ── Neutral · outline · secondary ── */
 .btn-neutral,
 .btn-outline,
 .btn-secondary {
-  background: linear-gradient(#f8fafc, #dce6f1);
-  border-color: #c2ccd9;
-  color: #33404f;
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--text);
 }
 .btn-neutral:hover,
 .btn-outline:hover,
 .btn-secondary:hover {
-  background: linear-gradient(#fbfcff, #e3eaf4);
-  border-color: #b9c6d8;
-  color: #1d2a3a;
+  background: var(--surface-hover);
 }
 
-/* ── Dark (kept for legacy btn-dark) ── */
+/* ── Dark (structural band) ── */
 .btn-dark {
-  background: linear-gradient(#4a4a4e, #26262a);
-  border-color: #151517;
-  color: #f5f5f5;
+  background: var(--brand-ink);
+  border-color: var(--brand-ink);
+  color: #fff;
 }
 .btn-dark:hover {
-  background: linear-gradient(#56565b, #303036);
-  border-color: #1c1c20;
+  background: var(--sidebar-bar-hover);
 }
 
-/* ── Pressed state: reverse gradient, inset shadow, sink 1px ── */
+/* ── Pressed state ── */
 .btn-primary:active,
 .btn-accent:active,
 .btn-success:active,
@@ -437,39 +417,10 @@ h1, h2, h3, h4, h5, h6 {
 .btn-outline:active,
 .btn-secondary:active,
 .btn-dark:active {
-  transform: translateY(1px);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.28) inset;
-}
-.btn-primary:active,
-.btn-accent:active {
-  background: linear-gradient(#2f6cb5, #4e8fd8);
-}
-.btn-success:active {
-  background: linear-gradient(#3e8915, #5aae2b);
-}
-.btn-danger:active {
-  background: linear-gradient(#c92a20, #e84d43);
-}
-.btn-neutral:active,
-.btn-outline:active,
-.btn-secondary:active {
-  background: linear-gradient(#dce6f1, #f8fafc);
-}
-.btn-dark:active {
-  background: linear-gradient(#26262a, #4a4a4e);
-}
-.btn-primary:active::before,
-.btn-accent:active::before,
-.btn-success:active::before,
-.btn-danger:active::before,
-.btn-neutral:active::before,
-.btn-outline:active::before,
-.btn-secondary:active::before,
-.btn-dark:active::before {
-  opacity: 0;
+  box-shadow: 0 1px 2px rgba(17, 24, 39, 0.18) inset;
 }
 
-/* ── Keyboard focus: classic Windows blue glow ── */
+/* ── Keyboard focus ── */
 .btn-primary:focus-visible,
 .btn-accent:focus-visible,
 .btn-success:focus-visible,
@@ -478,12 +429,11 @@ h1, h2, h3, h4, h5, h6 {
 .btn-outline:focus-visible,
 .btn-secondary:focus-visible,
 .btn-dark:focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 3px #7db7ff,
-    0 0 0 1px #7db7ff inset,
-    0 1px 0 rgba(255, 255, 255, 0.8) inset,
-    0 -1px 0 rgba(0, 0, 0, 0.08) inset;
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.btn-danger:focus-visible {
+  outline-color: var(--accent-red);
 }
 
 /* ── Sizes ── */
@@ -523,17 +473,12 @@ h1, h2, h3, h4, h5, h6 {
 .btn-outline:disabled,
 .btn-secondary:disabled,
 .btn-dark:disabled {
-  background: linear-gradient(#e9ebee, #d4d8dd);
-  border-color: #c3c8cf;
-  color: #9ca1a9;
-  text-shadow: none;
+  background: var(--surface-overlay);
+  border-color: var(--border);
+  color: var(--text-muted);
   box-shadow: none;
   cursor: not-allowed;
   pointer-events: none;
-}
-.btn:disabled::before,
-.btn[aria-disabled="true"]::before {
-  opacity: 0;
 }
 
 /* ── Icon positioning: flush 10px from the left edge ── */

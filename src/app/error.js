@@ -10,23 +10,17 @@ export default function GlobalError({ error, reset }) {
   }, [error]);
 
   return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
-      <p className="text-6xl mb-4">⚠️</p>
-      <h1 className="text-2xl font-black mb-2">Something went wrong</h1>
-      <p className="text-white/40 text-sm mb-8 max-w-sm">
+    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 py-16">
+      <p className="text-5xl font-black text-[var(--accent)] mb-3">!</p>
+      <h1 className="text-2xl font-black mb-2 text-slate-900">Something went wrong</h1>
+      <p className="text-slate-500 text-sm mb-8 max-w-sm">
         An unexpected error occurred. This has been logged and we'll look into it.
       </p>
       <div className="flex gap-3">
-        <button
-          onClick={reset}
-          className="bg-[#f97316] hover:bg-[#ea6c0b] text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm"
-        >
+        <button onClick={reset} className="btn btn-primary btn-sm">
           Try again
         </button>
-        <a
-          href="/"
-          className="border border-white/10 hover:border-white/20 text-white/60 hover:text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm"
-        >
+        <a href="/" className="btn btn-neutral btn-sm">
           Go home
         </a>
       </div>

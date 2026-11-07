@@ -10,7 +10,7 @@ export const metadata = {
 };
 
 const dataCategories = [
-  { label: "Account Data", items: ["Name", "Email", "Phone", "Password (hashed)"], color: "bg-blue-50 border-blue-200" },
+  { label: "Account Data", items: ["Name", "Email", "Phone", "Password (hashed)"], color: "bg-accent-wash border-[var(--accent-dim)]" },
   { label: "Profile Data", items: ["Avatar", "Business Name", "Location", "Verification Status"], color: "bg-emerald-50 border-emerald-200" },
   { label: "Inventory Data", items: ["Vehicle Details", "Photos", "Availability", "Pricing"], color: "bg-amber-50 border-amber-200" },
   { label: "Activity Data", items: ["Enquiries Made", "Lead Interactions", "Login History", "Device Info"], color: "bg-purple-50 border-purple-200" },

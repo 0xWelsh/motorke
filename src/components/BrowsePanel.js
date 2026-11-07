@@ -15,7 +15,7 @@ function formatChipCount(count) {
 }
 
 const CHIP_CLASS =
-  "group flex flex-col items-center justify-center gap-1 p-2.5 sm:p-3 w-[76px] sm:w-[82px] lg:w-[88px] min-h-[92px] h-[92px] shrink-0 rounded-lg border border-slate-200 bg-white hover:border-[var(--accent)]/40 hover:bg-slate-50 transition-all duration-300";
+  "group flex flex-col items-center justify-center gap-1 p-2.5 sm:p-3 w-[76px] sm:w-[82px] lg:w-[88px] min-h-[92px] h-[92px] shrink-0 rounded-lg border border-slate-200 bg-white hover:border-accent-glow hover:bg-slate-50 transition-all duration-300";
 
 function ChipCount({ count, className = "text-[9px]" }) {
   return (
@@ -213,7 +213,7 @@ export default function BrowsePanel({ layout = "full", inventoryCounts = null })
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="What car are you looking for?"
-          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl py-3.5 sm:py-4 pl-14 pr-[120px] font-bold text-base focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 transition-all placeholder:font-normal placeholder:text-slate-400 shadow-sm"
+          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl py-3.5 sm:py-4 pl-14 pr-[120px] font-bold text-base focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:font-normal placeholder:text-slate-400 shadow-sm"
         />
         {/* The label no longer changes on submit — the click already navigated,
             so a "Locating..." label on a still-live button read as frozen. */}

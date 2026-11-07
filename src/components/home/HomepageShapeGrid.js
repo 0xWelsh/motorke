@@ -34,7 +34,7 @@ export default function HomepageShapeGrid({ heading = "Search by Shape" }) {
           <Link
             key={shape.value}
             href={`/cars?bodyType=${shape.value}`}
-            className="group flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-1 py-3 transition-colors hover:border-[var(--accent)] hover:bg-[#f5f7ff]"
+            className="group flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-1 py-3 transition-colors hover:border-[var(--accent)] hover:bg-accent-wash"
           >
             <img
               src={shape.img}

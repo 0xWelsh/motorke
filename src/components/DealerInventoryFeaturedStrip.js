@@ -55,7 +55,7 @@ export default function DealerInventoryFeaturedStrip({ car, freshnessLabel }) {
               <ImageOff className="h-5 w-5" aria-hidden />
             </div>
           )}
-          <span className="absolute left-1.5 top-1.5 z-10 bg-[#ef3340] px-1.5 py-0.5 text-[8px] font-black uppercase tracking-[0.14em] text-white">
+          <span className="absolute left-1.5 top-1.5 z-10 bg-[var(--accent)] px-1.5 py-0.5 text-[8px] font-black uppercase tracking-[0.14em] text-white">
             Latest
           </span>
           {imageUrls.length > 1 ? (

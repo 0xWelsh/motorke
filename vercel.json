@@ -23,10 +23,6 @@
       "schedule": "0 8 * * *"
     },
     {
-      "path": "/api/cron/view-organic",
-      "schedule": "0 14 * * *"
-    },
-    {
       "path": "/api/cron/auto-expire-local",
       "schedule": "0 12 * * *"
     },

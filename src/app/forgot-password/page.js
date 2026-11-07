@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
 
         <div className="mt-6 rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
           <div className="mb-6">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--accent)]/10 text-[var(--accent)]">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-wash text-[var(--accent)]">
               <ShieldCheck size={20} />
             </div>
             <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-900">Forgot your password?</h1>
@@ -66,7 +66,7 @@ export default function ForgotPasswordPage() {
           </div>
 
           {error && <p className="mb-4 rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-400">{error}</p>}
-          {success && <p className="mb-4 rounded-xl border border-[var(--accent)]/20 bg-[var(--accent)]/10 px-4 py-3 text-sm font-semibold text-[var(--accent)]">{success}</p>}
+          {success && <p className="mb-4 rounded-xl border border-accent-dim bg-accent-wash px-4 py-3 text-sm font-semibold text-[var(--accent)]">{success}</p>}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input

@@ -218,7 +218,7 @@ export default function SafetyPage() {
                   href={ch.href}
                   target={ch.href.startsWith("http") ? "_blank" : undefined}
                   rel={ch.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="group rounded-xl border border-slate-200 bg-white p-6 text-center hover:border-[var(--accent)]/40 hover:shadow-lg transition-all"
+                  className="group rounded-xl border border-slate-200 bg-white p-6 text-center hover:border-accent-glow hover:shadow-lg transition-all"
                 >
                   <ch.icon className="w-6 h-6 text-[var(--accent)] mx-auto mb-3" strokeWidth={1.5} />
                   <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">{ch.label}</p>

@@ -159,7 +159,7 @@ export default async function ShowroomLocationPage({ params }) {
                 <li key={d.id}>
                   <Link
                     href={`/dealers/${d.slug}`}
-                    className="block p-4 bg-white border border-slate-200 rounded-xl hover:border-[var(--accent)]/40 transition-colors"
+                    className="block p-4 bg-white border border-slate-200 rounded-xl hover:border-accent-glow transition-colors"
                   >
                     <p className="font-bold text-slate-900">{d.name}</p>
                     <p className="text-xs text-slate-500 mt-1">{d.location || hub.label}</p>

@@ -42,7 +42,7 @@ export default function DutySeoContent() {
               className="p-5 bg-slate-50 border border-slate-200 rounded-xl"
             >
               <div className="flex items-start gap-3 mb-2">
-                <Icon className="w-5 h-5 shrink-0 mt-0.5 text-red-500" aria-hidden />
+                <Icon className="w-5 h-5 shrink-0 mt-0.5 text-accent" aria-hidden />
                 <h3 className="text-sm font-bold text-slate-900">{section.title}</h3>
               </div>
               <p className="text-sm text-slate-500 leading-relaxed ml-8">{section.body}</p>

@@ -25,7 +25,7 @@ export function PWARegister() {
       setTimeout(() => {
         const banner = document.createElement("div");
         banner.className =
-          "fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between gap-4 bg-[#2F855A] p-4 text-white shadow-[0_-4px_24px_rgba(0,0,0,0.12)]";
+          "fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between gap-4 bg-[var(--accent)] p-4 text-white shadow-[0_-4px_24px_rgba(0,0,0,0.12)]";
         banner.innerHTML = `
           <div class="min-w-0 flex-1 pr-2">
             <p class="text-sm font-semibold">Install BIDGARI</p>

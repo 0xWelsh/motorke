@@ -240,7 +240,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
             }}
             autoComplete="off"
             placeholder="Search make, model, body, or color..."
-            className="w-full border border-[var(--brand-faint)] bg-[var(--surface)] py-4 pl-11 pr-12 text-sm font-bold text-[var(--text-main)] outline-none placeholder:text-zinc-400 focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-[var(--brand-primary)]/5 transition-all rounded-xl"
+            className="w-full border border-[var(--brand-faint)] bg-[var(--surface)] py-4 pl-11 pr-12 text-sm font-bold text-[var(--text-main)] outline-none placeholder:text-zinc-400 focus:border-[var(--brand-primary)] focus:ring-2 focus:ring-accent-glow transition-all rounded-xl"
           />
           {search ? (
             <button
@@ -273,7 +273,7 @@ export default function CarsInventorySearch({ initialSearch = "", mergeFromUrl =
         </div>
         <button
           type="submit"
-          className="inline-flex shrink-0 items-center justify-center gap-2 bg-[var(--brand-primary)] px-8 py-3.5 text-[11px] font-black uppercase tracking-[0.2em] text-white transition-all hover:brightness-110 active:scale-95 shadow-lg shadow-[var(--brand-primary)]/10 rounded-xl"
+          className="inline-flex shrink-0 items-center justify-center gap-2 bg-[var(--brand-primary)] px-8 py-3.5 text-[11px] font-black uppercase tracking-[0.2em] text-white transition-all hover:brightness-110 active:scale-95 shadow-lg shadow-accent-glow rounded-xl"
         >
           <Search className="h-4 w-4" aria-hidden />
           Search

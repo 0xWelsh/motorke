@@ -99,7 +99,7 @@ export default function SearchAlertButton({ filters = {} }) {
             <div className="p-8">
               {status === "success" ? (
                 <div className="text-center py-4">
-                  <div className="w-16 h-16 bg-[var(--accent)]/10 rounded-md flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-accent-wash rounded-md flex items-center justify-center mx-auto mb-4">
                     <CheckCircle className="w-8 h-8 text-[var(--accent)]" />
                   </div>
                   <h4 className="text-lg font-bold text-slate-900 mb-2">You're all set!</h4>

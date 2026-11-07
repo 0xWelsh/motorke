@@ -17,7 +17,7 @@ import { CarNavPendingProvider } from "@/components/CarNavPending";
 import { Suspense } from "react";
 import { Lato, Montserrat } from "next/font/google";
 
-import { BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
+import { BRAND_HEADER_LOGO, BRAND_OG_IMAGE, getSiteOrigin } from "@/lib/site-url";
 import { IMAGE_BASE_URL } from "@/lib/image-host";
 
 // Empty when R2_PUBLIC_URL is unset — the preconnect is simply skipped rather
@@ -153,7 +153,7 @@ export default async function RootLayout({ children }) {
     legalName: "BIDGARI Ltd",
     alternateName: ["BIDGARI Kenya"],
     url: origin,
-    logo: `${origin}/headerlogo.png`,
+    logo: `${origin}${BRAND_HEADER_LOGO}`,
     image: `${origin}${BRAND_OG_IMAGE}`,
     description:
       "BIDGARI is Kenya's verified car marketplace, with one trusted team handling every sale for buyers across the country.",
@@ -183,7 +183,7 @@ export default async function RootLayout({ children }) {
     name: "BIDGARI",
     description: "Kenya's verified car marketplace — every car verified, every sale handled.",
     url: origin,
-    logo: `${origin}/headerlogo.png`,
+    logo: `${origin}${BRAND_HEADER_LOGO}`,
     image: `${origin}${BRAND_OG_IMAGE}`,
     address: {
       "@type": "PostalAddress",

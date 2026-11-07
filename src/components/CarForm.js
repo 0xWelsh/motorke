@@ -1098,7 +1098,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
                   onClick={() => setVehicleType(value)}
                   className={`px-4 py-1.5 text-[10px] font-black uppercase tracking-wider rounded-md border transition-all ${
                     vehicleType === value
-                      ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
+                      ? "border-[var(--accent)] bg-accent-wash text-[var(--accent)]"
                       : "border-white/[0.06] text-zinc-400"
                   }`}
                 >
@@ -1328,7 +1328,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             <p className="text-[11px] font-black uppercase tracking-[0.18em] text-zinc-400 mb-2">Description</p>
             <textarea name="description" rows={4} defaultValue={formSeed.description}
               placeholder="Condition, service history, tyres, known issues…"
-              className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#222222] outline-none focus:border-[var(--accent)]/50 transition-all resize-y min-h-[6rem] placeholder:text-zinc-600"
+              className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#222222] outline-none focus:border-accent-glow transition-all resize-y min-h-[6rem] placeholder:text-zinc-600"
             />
           </div>
           <div>
@@ -1337,7 +1337,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
               key={`features-${car?.id ?? "new"}-${formInstanceKey}`}
               defaultValue={initialFeaturesDisplay} onInput={bumpFeaturesInput} rows={2}
               placeholder="Leather seats, Sunroof, Reverse camera…"
-              className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#222222] outline-none focus:border-[var(--accent)]/50 transition-all resize-y min-h-[3.5rem] placeholder:text-zinc-600"
+              className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#222222] outline-none focus:border-accent-glow transition-all resize-y min-h-[3.5rem] placeholder:text-zinc-600"
             />
             <p className="mt-1.5 text-[10px] text-zinc-500">{parsedFeatures.length} feature{parsedFeatures.length === 1 ? "" : "s"} — comma-separated</p>
             {parsedFeatures.length > 0 && (

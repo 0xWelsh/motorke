@@ -116,7 +116,7 @@ export default function LocationSearch() {
       <form 
         ref={formRef}
         onSubmit={handleSubmit} 
-        className="flex flex-col sm:flex-row sm:items-center bg-[#1e1e1e] border border-slate-800 rounded-2xl p-2.5 sm:p-2 focus-within:border-[var(--brand-accent)]/30 transition-all duration-300"
+        className="flex flex-col sm:flex-row sm:items-center bg-[#1e1e1e] border border-slate-800 rounded-2xl p-2.5 sm:p-2 focus-within:border-accent-glow transition-all duration-300"
       >
         <div className="flex-1 flex items-center px-3 sm:px-4 gap-3 min-w-0">
           <Search className="w-5 h-5 text-slate-400 shrink-0" />
@@ -148,7 +148,7 @@ export default function LocationSearch() {
 
           <button 
             type="submit" 
-            className="h-11 bg-[#ff5a2f] hover:bg-[#e54a1f] text-white px-5 sm:px-8 rounded-2xl font-black text-sm transition-all duration-300 w-full sm:w-auto"
+            className="h-11 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-5 sm:px-8 rounded-2xl font-black text-sm transition-all duration-300 w-full sm:w-auto"
           >
             Search
           </button>

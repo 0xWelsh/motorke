@@ -350,7 +350,7 @@ export default function CompareClient({ initialCars }) {
   if (!isInitialized) return <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center"><p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 animate-pulse">Initializing engine…</p></div>;
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] pb-24 lg:pb-12 selection:bg-[var(--accent)]/30">
+    <div className="min-h-screen bg-[var(--bg)] pb-24 lg:pb-12 selection:bg-accent-dim">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 lg:pt-10">
         
         {/* Header */}

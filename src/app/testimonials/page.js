@@ -49,7 +49,7 @@ function Avatar({ name }) {
     .join("")
     .toUpperCase();
   return (
-    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--accent)]/10 text-sm font-bold text-[var(--accent)]">
+    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-wash text-sm font-bold text-[var(--accent)]">
       {initials}
     </div>
   );
@@ -170,7 +170,7 @@ export default async function TestimonialsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {stats.map((s) => (
               <div key={s.label} className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--accent)]/10 text-[var(--accent)]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-wash text-[var(--accent)]">
                   <s.icon className="h-5 w-5" strokeWidth={2} />
                 </div>
                 <div>

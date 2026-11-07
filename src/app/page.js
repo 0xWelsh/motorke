@@ -216,19 +216,30 @@ async function HeroSlot({ bundlePromise }) {
 
 async function GridsSlot({ bundlePromise }) {
   const s = deriveHomeSections(await bundlePromise);
+  const hasStock = [s.recommendedCars, s.newArrivalCars, s.dealCars, s.luxury].some(
+    (list) => (list || []).length > 0
+  );
+  if (!hasStock) return null;
   return (
-    <HomepageNikkyoGrids
-      recommended={s.recommendedCars}
-      newArrivals={s.newArrivalCars}
-      deals={s.dealCars}
-      luxury={s.luxury}
-    />
+    <div className="cv-auto">
+      <HomepageNikkyoGrids
+        recommended={s.recommendedCars}
+        newArrivals={s.newArrivalCars}
+        deals={s.dealCars}
+        luxury={s.luxury}
+      />
+    </div>
   );
 }
 
 async function TrendingSlot({ bundlePromise }) {
   const { frequentCars } = deriveHomeSections(await bundlePromise);
-  return <HomepageTrending cars={frequentCars} />;
+  if (!(frequentCars || []).length) return null;
+  return (
+    <div className="cv-auto">
+      <HomepageTrending cars={frequentCars} />
+    </div>
+  );
 }
 
 async function SidebarSlot({ countsPromise }) {
@@ -372,7 +383,7 @@ export default async function HomePage() {
               </div>
 
               {/* Inventory sections */}
-              <div className="mt-7 sm:mt-8 cv-auto">
+              <div className="mt-7 sm:mt-8">
                 <Suspense fallback={<HomeGridsSkeleton />}>
                   <GridsSlot bundlePromise={bundlePromise} />
                 </Suspense>
@@ -400,7 +411,7 @@ export default async function HomePage() {
         </div>
       </div>
 
-      <div className="cv-auto">
+      <div>
         <Suspense
           fallback={
             <div className="border-b border-slate-200 bg-[var(--bg)] py-6 sm:py-8">

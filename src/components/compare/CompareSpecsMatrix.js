@@ -84,7 +84,7 @@ export default function CompareSpecsMatrix({
                     setSearchSlotError("");
                     setActiveSlot(mobileEmptySlots[0]);
                   }}
-                  className="shrink-0 px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest border border-dashed border-[var(--accent)]/70 text-[var(--accent)] bg-[var(--accent)]/10"
+                  className="shrink-0 px-3 py-2.5 text-[10px] font-bold uppercase tracking-widest border border-dashed border-accent text-[var(--accent)] bg-accent-wash"
                   style={{ borderRadius: "var(--radius)" }}
                 >
                   + Add car
@@ -107,7 +107,7 @@ export default function CompareSpecsMatrix({
                         {SLOT_KEYS.map((_, idx) => {
                           const c = comparedSlots[idx];
                           return (
-                            <div key={idx} className={`px-1.5 py-1.5 border-r border-slate-200 last:border-r-0 min-w-0 ${idx === activeMobileSlot ? "bg-[var(--accent)]/20" : ""}`}>
+                            <div key={idx} className={`px-1.5 py-1.5 border-r border-slate-200 last:border-r-0 min-w-0 ${idx === activeMobileSlot ? "bg-accent-dim" : ""}`}>
                               {c ? (
                                 <p className="text-[9px] font-bold uppercase tracking-wide text-slate-500 truncate">
                                   {c.make} {c.model}
@@ -165,7 +165,7 @@ export default function CompareSpecsMatrix({
                           <div
                             key={spec.id}
                             className={`flex items-start justify-between gap-2 py-2 ${
-                              diff ? "bg-[var(--accent)]/8 -mx-2 px-2 rounded-sm border-l-2 border-[var(--accent)]" : ""
+                              diff ? "bg-accent-wash -mx-2 px-2 rounded-sm border-l-2 border-[var(--accent)]" : ""
                             }`}
                           >
                             <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider min-w-0 max-w-[48%] leading-snug">
@@ -227,7 +227,7 @@ export default function CompareSpecsMatrix({
                         )}
                       </div>
                     ) : (
-                      <div className="relative group flex flex-col items-center justify-center py-8 border-2 border-dashed border-slate-300 transition-colors hover:border-[var(--accent)]/40" style={{ borderRadius: 'var(--radius)' }}>
+                      <div className="relative group flex flex-col items-center justify-center py-8 border-2 border-dashed border-slate-300 transition-colors hover:border-accent-glow" style={{ borderRadius: 'var(--radius)' }}>
                         <button onClick={() => { setSearchSlotError(""); setActiveSlot(idx); }} className="w-12 h-12 bg-white border border-slate-200 flex items-center justify-center transition-transform group-hover:scale-110 shadow-sm" style={{ borderRadius: 'var(--radius)' }}>
                           <Search className="w-4 h-4 text-slate-400" />
                         </button>
@@ -256,7 +256,7 @@ export default function CompareSpecsMatrix({
                     if (showDiffOnly && !diff && fullComparedCars.length > 1) return null;
 
                     return (
-                      <div key={spec.label} className={`grid grid-cols-[minmax(112px,140px)_1fr_1fr_1fr] sm:grid-cols-[minmax(160px,220px)_1fr_1fr_1fr] transition-colors ${diff ? 'bg-[var(--accent)]/5' : 'hover:bg-slate-50'}`}>
+                      <div key={spec.label} className={`grid grid-cols-[minmax(112px,140px)_1fr_1fr_1fr] sm:grid-cols-[minmax(160px,220px)_1fr_1fr_1fr] transition-colors ${diff ? 'bg-accent-wash' : 'hover:bg-slate-50'}`}>
                         <div className="px-3 py-2.5 sm:px-4 sm:py-3 border-r border-slate-200 flex items-center justify-between bg-white sticky left-0 z-30 min-w-0">
                           <span className="text-[9px] sm:text-[10px] font-bold text-slate-500 uppercase tracking-wider leading-snug">{spec.label}</span>
                           {diff && <span className="w-1 h-1 shrink-0 bg-[var(--accent)] rounded-full" />}

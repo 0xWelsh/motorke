@@ -152,16 +152,16 @@ export default function ContactPage() {
                 )}
                 <div className="space-y-2 sm:space-y-3 min-w-0">
                    <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Your name</label>
-                   <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Jane Doe" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-[var(--accent)]/50 transition-all rounded-xl" />
+                   <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="Jane Doe" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-accent-glow transition-all rounded-xl" />
                 </div>
                 <div className="space-y-2 sm:space-y-3 min-w-0">
                    <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Your email</label>
-                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@email.com" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-[var(--accent)]/50 transition-all rounded-xl" />
+                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@email.com" className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-accent-glow transition-all rounded-xl" />
                 </div>
                 <div className="md:col-span-2 space-y-2 sm:space-y-3 min-w-0">
                    <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">What is this about?</label>
                    <div className="relative group">
-                     <select value={subject} onChange={(e) => setSubject(e.target.value)} required className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 pr-10 text-sm font-bold text-slate-900 outline-none appearance-none cursor-pointer focus:bg-white focus:border-[var(--accent)]/50 transition-all rounded-xl">
+                     <select value={subject} onChange={(e) => setSubject(e.target.value)} required className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 pr-10 text-sm font-bold text-slate-900 outline-none appearance-none cursor-pointer focus:bg-white focus:border-accent-glow transition-all rounded-xl">
                         <option value="">Pick a reason...</option>
                         <option value="bug">Something is broken</option>
                         <option value="partnership">Partnership</option>
@@ -175,7 +175,7 @@ export default function ContactPage() {
                 </div>
                 <div className="md:col-span-2 space-y-2 sm:space-y-3 min-w-0">
                    <label className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-500">Your message</label>
-                    <textarea value={message} onChange={(e) => setMessage(e.target.value)} required rows={5} placeholder="Tell us what is going on..." className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-[var(--accent)]/50 transition-all resize-none rounded-xl"></textarea>
+                    <textarea value={message} onChange={(e) => setMessage(e.target.value)} required rows={5} placeholder="Tell us what is going on..." className="w-full bg-slate-50 border border-slate-300 px-4 py-3.5 sm:px-5 sm:py-5 text-sm font-bold text-slate-900 outline-none focus:bg-white focus:border-accent-glow transition-all resize-none rounded-xl"></textarea>
                 </div>
                 <div className="md:col-span-2">
                    <button type="submit" disabled={loading} className="btn btn-primary w-full disabled:opacity-50">

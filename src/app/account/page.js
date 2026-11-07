@@ -102,7 +102,7 @@ export default async function AccountPage({ searchParams }) {
               <div className="flex-1 w-full min-w-0">
                 <div className="hidden sm:flex flex-row items-center gap-3 mb-2">
                   <h2 className="text-2xl font-bold text-slate-900">{user.name}</h2>
-                  <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-600 px-2.5 py-1 rounded-none text-[11px] font-bold uppercase tracking-wider border border-blue-100">
+                  <span className="inline-flex items-center gap-1 bg-accent-wash text-accent px-2.5 py-1 rounded-none text-[11px] font-bold uppercase tracking-wider border border-[var(--accent-dim)]">
                     <ShieldCheck size={12} /> Verified
                   </span>
                 </div>
@@ -114,7 +114,7 @@ export default async function AccountPage({ searchParams }) {
                     {savedCars.length} Saved
                   </div>
                   <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3 bg-slate-50 rounded-none text-[10px] sm:text-[11px] uppercase font-black tracking-[0.10em] sm:tracking-[0.15em] text-slate-600 border border-slate-200">
-                    <MessageSquare size={14} className="text-[#ff5a2f]" />
+                    <MessageSquare size={14} className="text-[var(--accent)]" />
                     {enquiries.length} Enquiries
                   </div>
                 </div>

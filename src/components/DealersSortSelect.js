@@ -21,7 +21,7 @@ export default function DealersSortSelect({ hasLocation, defaultValue = "recomme
         aria-label="Sort dealers"
         defaultValue={defaultValue}
         onChange={onChange}
-        className="bg-slate-50 border border-slate-300 px-4 py-2.5 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/25 transition-all appearance-none cursor-pointer text-slate-900"
+        className="bg-slate-50 border border-slate-300 px-4 py-2.5 text-sm font-medium outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all appearance-none cursor-pointer text-slate-900"
         style={{ borderRadius: "var(--radius)" }}
       >
         <option value="recommended">Recommended</option>

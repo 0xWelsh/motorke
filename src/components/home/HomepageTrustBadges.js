@@ -25,7 +25,7 @@ export default function HomepageTrustBadges() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
           {BADGES.map((badge, i) => (
             <div key={i} className="flex items-start gap-4 sm:flex-col sm:items-center sm:text-center group">
-              <div className="shrink-0 w-12 h-12 rounded-xl bg-[var(--accent)]/10 border border-[var(--accent)]/20 flex items-center justify-center group-hover:bg-[var(--accent)]/15 transition-colors">
+              <div className="shrink-0 w-12 h-12 rounded-xl bg-accent-wash border border-accent-dim flex items-center justify-center group-hover:bg-accent-dim transition-colors">
                 <badge.icon className="w-5 h-5 text-[var(--accent)]" strokeWidth={1.5} />
               </div>
               <div>

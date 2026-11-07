@@ -75,4 +75,7 @@ HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
   CMD node -e "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
 
 ENTRYPOINT ["dumb-init","--"]
-CMD ["node","server.js"]
+# `output: "standalone"` emits the server at .next/standalone/server.js. The
+# full production node_modules from the deps stage stays alongside it so native
+# modules (sharp, the Prisma engine) resolve by walking up from /app.
+CMD ["node",".next/standalone/server.js"]

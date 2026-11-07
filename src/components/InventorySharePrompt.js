@@ -77,7 +77,7 @@ export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
             onClick={() => setTemplate(item.key)}
             className={`inline-flex items-center rounded-lg border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] transition-colors ${
               template === item.key
-                ? "border-[#2F855A] bg-[#2F855A] text-white"
+                ? "border-[var(--accent)] bg-[var(--accent)] text-white"
                 : "border-[#ddd4c8] bg-white text-slate-600 hover:text-slate-900"
             }`}
           >

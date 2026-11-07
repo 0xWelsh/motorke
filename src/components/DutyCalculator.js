@@ -515,7 +515,7 @@ export default function DutyCalculator({
           >
             <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-500 mb-1">
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-1">
                   Your estimate
                 </p>
                 <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">{estimate.label}</h2>
@@ -546,7 +546,7 @@ export default function DutyCalculator({
               className={`p-5 sm:p-6 ${
                 estimate.importEligibility?.status === "ineligible"
                   ? "bg-zinc-600"
-                  : "bg-[#b91c1c]"
+                  : "bg-accent"
               } text-white rounded-xl`}
             >
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/80 mb-1">
@@ -593,7 +593,7 @@ export default function DutyCalculator({
                   <p className="text-[10px] text-slate-500 uppercase tracking-wide">{line.label}</p>
                   <p
                     className={`text-sm font-bold tabular-nums ${
-                      line.highlight ? "text-red-500" : "text-slate-900"
+                      line.highlight ? "text-accent" : "text-slate-900"
                     }`}
                   >
                     {line.value}
@@ -682,7 +682,7 @@ export default function DutyCalculator({
         <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur-md p-3 sm:hidden space-y-2 duty-print-hide" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
           <p className="text-center text-[10px] font-bold uppercase tracking-widest text-slate-500">
             Est. KRA taxes{" "}
-            <span className="text-red-500 tabular-nums">
+            <span className="text-accent tabular-nums">
               {formatPrice(estimate.breakdown.totalTaxes)}
             </span>
           </p>

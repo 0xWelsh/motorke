@@ -30,16 +30,16 @@ export default function DutyPopularChips({ vehicles = [], activeId = null, onSel
               onClick={() => onSelect?.(vehicle)}
               className={`text-left flex items-center gap-3 px-4 py-3 border transition-all disabled:opacity-50 hover:scale-[0.98] active:scale-95 ${
                 isActive
-                  ? "border-[var(--accent)] bg-[var(--accent)]/5"
+                  ? "border-[var(--accent)] bg-accent-wash"
                   : "border-slate-200 bg-white hover:border-slate-400"
               }`}
               style={{ borderRadius: "var(--radius)" }}
             >
               <div className={`w-9 h-9 flex items-center justify-center shrink-0 ${
-                isActive ? "bg-red-600" : "bg-red-100"
+                isActive ? "bg-accent" : "bg-accent-dim"
               }`} style={{ borderRadius: "var(--radius)" }}>
                 <Calculator className={`w-4 h-4 ${
-                  isActive ? "text-white" : "text-red-600"
+                  isActive ? "text-white" : "text-accent"
                 }`} aria-hidden />
               </div>
               <div className="min-w-0">

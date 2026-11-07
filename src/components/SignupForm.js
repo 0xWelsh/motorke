@@ -24,10 +24,10 @@ function PasswordMeter({ password }) {
   }
 
   const segments = [
-    score >= 1 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[#38A169]")) : "bg-slate-200",
-    score >= 2 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[#38A169]")) : "bg-slate-200",
-    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-[#38A169]") : "bg-slate-200",
-    score >= 4 ? "bg-[#38A169]" : "bg-slate-200"
+    score >= 1 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[var(--accent)]")) : "bg-slate-200",
+    score >= 2 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[var(--accent)]")) : "bg-slate-200",
+    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-[var(--accent)]") : "bg-slate-200",
+    score >= 4 ? "bg-[var(--accent)]" : "bg-slate-200"
   ];
 
   let label = "";
@@ -141,7 +141,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             className={clsx(
               "flex-1 py-1.5 px-3 font-bold text-[11px] transition-all rounded-md",
               role === "DEALER"
-                ? "bg-[#38A169] text-white shadow-sm"
+                ? "bg-[var(--accent)] text-white shadow-sm"
                 : "text-slate-500 hover:text-slate-500"
             )}
           >
@@ -165,7 +165,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
         ) : (
           <p className="mb-3 text-[11px] font-medium text-slate-500 leading-relaxed">
             Dealerships sign up with email so we can verify your business.
-            Switch to <button type="button" onClick={() => setRole("BUYER")} className="underline underline-offset-2 text-[#38A169] hover:no-underline">Personal</button> for Google one-tap.
+            Switch to <button type="button" onClick={() => setRole("BUYER")} className="underline underline-offset-2 text-[var(--accent)] hover:no-underline">Personal</button> for Google one-tap.
           </p>
         )}
 
@@ -184,7 +184,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="you@email.com"
-              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
           </div>
 
@@ -196,7 +196,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
               type="text"
               required
               placeholder="John Doe"
-              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
           </div>
 
@@ -211,7 +211,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
-                className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 pr-9 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+                className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 pr-9 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
               />
               <button
                 type="button"
@@ -232,7 +232,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
               type={showPassword ? "text" : "password"}
               required
               placeholder="\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022"
-              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
           </div>
 
@@ -251,7 +251,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                   type="text"
                   required
                   placeholder="Japanese Car Exports"
-                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
                 />
               </div>
 
@@ -265,7 +265,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                   autoComplete="tel"
                   required
                   placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
-                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all placeholder:text-zinc-600"
+                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
                 />
                 <p className="mt-1 text-[9px] font-medium text-slate-400">{PHONE_COUNTRY_CODE_HELPER}</p>
               </div>
@@ -276,7 +276,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
                   id="county"
                   name="county"
                   required
-                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[#38A169] focus:ring-1 focus:ring-[#38A169]/30 transition-all appearance-none cursor-pointer"
+                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all appearance-none cursor-pointer"
                 >
                   <option value="" className="bg-slate-100 text-slate-500">Select a county</option>
                   {COUNTIES.map((c) => (
@@ -304,7 +304,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
 
         <p className="mt-4 text-center text-xs font-medium text-slate-500">
           Already have an account?{" "}
-          <Link href="/login" className="text-[#38A169] hover:underline underline-offset-2 font-semibold">
+          <Link href="/login" className="text-[var(--accent)] hover:underline underline-offset-2 font-semibold">
             Sign In
           </Link>
         </p>

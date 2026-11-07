@@ -36,7 +36,7 @@ export default function DealerLocationMapLeaflet({ lat, lng, name, address, coun
         <p style="font-weight:900;font-size:13px;margin:0 0 4px">${escapeMapHtml(name)}</p>
         ${address ? `<p style="font-size:11px;color:#64748b;margin:0 0 2px">${escapeMapHtml(address)}</p>` : ""}
         ${county ? `<p style="font-size:11px;color:#64748b;margin:0 0 8px">${escapeMapHtml(county)} County</p>` : ""}
-        ${slug ? `<a href="/dealers/${escapeMapHtml(slug)}" style="font-size:11px;font-weight:800;color:#ff5a2f;text-decoration:none;text-transform:uppercase;letter-spacing:0.08em">View Profile →</a>` : ""}
+        ${slug ? `<a href="/dealers/${escapeMapHtml(slug)}" style="font-size:11px;font-weight:800;color:var(--accent);text-decoration:none;text-transform:uppercase;letter-spacing:0.08em">View Profile →</a>` : ""}
       </div>
     `;
 

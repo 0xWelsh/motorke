@@ -42,9 +42,14 @@ export async function GET(request) {
 
   const idsArr = ids ? ids.split(",").map((s) => s.trim()).filter(Boolean) : null;
 
+  // Use verificationStatus consistently (replaces deprecated `verified` boolean)
+  const dealerVerificationFilter = PUBLIC_ONLY_VERIFIED_DEALERS
+    ? { dealer: { verificationStatus: "VERIFIED" } }
+    : {};
+
   const where = {
     ...(idsArr ? { id: { in: idsArr } } : { available: true }),
-    ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
+    ...dealerVerificationFilter,
     ...buildMakeWhere(make),
     ...(bodyType     && { bodyType }),
     ...(fuelType     && { fuelType }),
@@ -78,7 +83,7 @@ export async function GET(request) {
       where,
       include: {
         images:  { where: { isPrimary: true }, take: 1 },
-        dealer:  { select: { id: true, name: true, slug: true, location: true, verified: true } },
+        dealer:  { select: { id: true, name: true, slug: true, location: true, verificationStatus: true } },
       },
       orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
       skip:  (page - 1) * limit,

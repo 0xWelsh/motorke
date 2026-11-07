@@ -493,7 +493,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
               onClick={() => setActive(i)}
               className={`relative aspect-video w-16 shrink-0 overflow-hidden rounded-md border-2 transition-all ${
                 i === active
-                  ? "border-[var(--sidebar-bar)] ring-1 ring-[var(--sidebar-bar)]/50"
+                  ? "border-accent ring-2 ring-accent-glow"
                   : "border-transparent opacity-60"
               }`}
               aria-label={`Photo ${i + 1}`}
@@ -524,7 +524,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
               onMouseEnter={() => setActive(i)}
               className={`relative aspect-video rounded-md overflow-hidden border-2 transition-all ${
                 i === active
-                  ? "border-[var(--sidebar-bar)] ring-1 ring-[var(--sidebar-bar)]/50"
+                  ? "border-accent ring-2 ring-accent-glow"
                   : "border-transparent opacity-60 hover:opacity-100 hover:brightness-110"
               }`}
             >

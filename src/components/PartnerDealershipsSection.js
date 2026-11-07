@@ -44,7 +44,7 @@ export default function PartnerDealershipsSection({ dealers }) {
           className="object-cover opacity-[0.14]"
           sizes="(min-width: 1024px) 44vw, 0"
         />
-        <div className="absolute inset-0 bg-gradient-to-l from-[var(--bg)] via-[var(--bg)]/92 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-l from-[var(--bg)] via-[var(--bg)] to-transparent" />
       </div>
 
       <div className="home-shell relative z-10">
@@ -77,7 +77,7 @@ export default function PartnerDealershipsSection({ dealers }) {
                   "group relative flex h-full flex-col overflow-visible bg-white",
                   "border p-5 pt-7 transition-all hover:shadow-xl sm:p-6 sm:pt-8",
                   isFeatured
-                    ? "z-[1] border-[var(--accent)] shadow-md ring-2 ring-[var(--accent)]/35"
+                    ? "z-[1] border-[var(--accent)] shadow-md ring-2 ring-accent-glow"
                     : "border-slate-200",
                 ].join(" ")}
                 style={{ borderRadius }}

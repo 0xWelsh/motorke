@@ -9,7 +9,7 @@ export default function DutyImportEligibilityBanner({ eligibility, compact = fal
     if (compact) return null;
     return (
       <div
-        className="flex gap-3 p-4 border border-[var(--accent)]/20 bg-[var(--accent)]/5 rounded-xl"
+        className="flex gap-3 p-4 border border-accent-dim bg-accent-wash rounded-xl"
         role="status"
       >
         <CheckCircle2 className="w-5 h-5 text-[var(--accent)] shrink-0 mt-0.5" aria-hidden />

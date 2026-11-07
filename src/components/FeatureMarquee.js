@@ -4,9 +4,9 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { meaningfulFeatureList } from "@/lib/car-display";
 
 const CHIP_CARD =
-  "shrink-0 max-w-[200px] truncate inline-flex items-center bg-[var(--accent)]/10 text-[var(--accent)] text-[10px] font-bold px-2.5 py-1.5 border border-[var(--accent)]/20 whitespace-nowrap";
+  "shrink-0 max-w-[200px] truncate inline-flex items-center bg-accent-wash text-[var(--accent)] text-[10px] font-bold px-2.5 py-1.5 border border-accent-dim whitespace-nowrap";
 const CHIP_DETAIL =
-  "shrink-0 max-w-[min(280px,70vw)] truncate inline-flex items-center bg-[var(--accent)]/10 text-[var(--accent)] text-[11px] font-bold px-3 py-2 border border-[var(--accent)]/20 whitespace-nowrap";
+  "shrink-0 max-w-[min(280px,70vw)] truncate inline-flex items-center bg-accent-wash text-[var(--accent)] text-[11px] font-bold px-3 py-2 border border-accent-dim whitespace-nowrap";
 
 function Chips({ features, chipClass, keyPrefix }) {
   return features.map((f, i) => (

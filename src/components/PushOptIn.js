@@ -120,8 +120,8 @@ export default function PushOptIn({ variant = "banner" }) {
               <BellRing className="h-5 w-5 text-emerald-600" />
             </div>
           ) : (
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-rose-50">
-              <Bell className="h-5 w-5 text-rose-500" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100">
+              <Bell className="h-5 w-5 text-slate-500" />
             </div>
           )}
           <div className="min-w-0 flex-1">
@@ -140,7 +140,7 @@ export default function PushOptIn({ variant = "banner" }) {
             className={`shrink-0 rounded-lg px-3 py-2 text-[11px] font-bold transition-colors ${
               subscribed
                 ? "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                : "bg-rose-600 text-white hover:bg-rose-700"
+                : "bg-accent text-white hover:bg-accent-hover"
             } disabled:opacity-50`}
           >
             {loading ? "..." : subscribed ? "Disable" : "Enable"}

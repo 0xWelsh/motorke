@@ -102,7 +102,7 @@ export default function ResetPasswordPage() {
           )}
 
           {error && <p className="mb-4 rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm font-semibold text-rose-400">{error}</p>}
-          {success && <p className="mb-4 rounded-xl border border-[var(--accent)]/20 bg-[var(--accent)]/10 px-4 py-3 text-sm font-semibold text-[var(--accent)]">{success}</p>}
+          {success && <p className="mb-4 rounded-xl border border-accent-dim bg-accent-wash px-4 py-3 text-sm font-semibold text-[var(--accent)]">{success}</p>}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input

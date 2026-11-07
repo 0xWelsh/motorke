@@ -23,7 +23,7 @@ function isValidKenyanPhone(value) {
 }
 
 const inputCls =
-  "w-full rounded-lg border border-slate-300 bg-slate-50 px-3.5 py-2.5 text-[13px] text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:border-[var(--accent)] focus:bg-white focus:ring-1 focus:ring-[var(--accent)]/30";
+  "w-full rounded-lg border border-slate-300 bg-slate-50 px-3.5 py-2.5 text-[13px] text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:border-[var(--accent)] focus:bg-white focus:ring-1 focus:ring-accent-glow";
 
 /**
  * Compact "Request callback" form for the listing rail. Posts to the shared

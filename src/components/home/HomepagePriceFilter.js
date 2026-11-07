@@ -83,7 +83,7 @@ export default function HomepagePriceFilter() {
             onClick={() => toggleMake(make)}
             className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
               selectedMake === make
-                ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
+                ? "border-[var(--accent)] bg-accent-wash text-[var(--accent)]"
                 : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900"
             }`}
           >
@@ -96,7 +96,7 @@ export default function HomepagePriceFilter() {
             onClick={() => toggleExtra(chip.param, chip.value)}
             className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
               selectedExtra[chip.param] === chip.value
-                ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
+                ? "border-[var(--accent)] bg-accent-wash text-[var(--accent)]"
                 : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900"
             }`}
           >
@@ -113,7 +113,7 @@ export default function HomepagePriceFilter() {
             onClick={() => selectPreset(i)}
             className={`px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider border transition-all rounded-lg ${
               activePreset === i
-                ? "border-[var(--accent)] bg-[var(--accent)]/10 text-[var(--accent)]"
+                ? "border-[var(--accent)] bg-accent-wash text-[var(--accent)]"
                 : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900"
             }`}
           >
@@ -133,7 +133,7 @@ export default function HomepagePriceFilter() {
               setCustomMin(e.target.value);
               setActivePreset(null);
             }}
-            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 rounded-lg transition-all"
+            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow rounded-lg transition-all"
           />
           <span className="text-slate-400 text-xs font-medium">&ndash;</span>
           <input
@@ -144,7 +144,7 @@ export default function HomepagePriceFilter() {
               setCustomMax(e.target.value);
               setActivePreset(null);
             }}
-            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-[var(--accent)]/30 rounded-lg transition-all"
+            className="w-24 sm:w-28 px-2.5 py-1.5 text-xs border border-slate-200 bg-white text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow rounded-lg transition-all"
           />
         </div>
 

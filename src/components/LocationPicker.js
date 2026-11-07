@@ -23,7 +23,7 @@ export default function LocationPicker({ defaultLat, defaultLng }) {
           Pin Location (Optional)
         </label>
         {lat && lng && (
-          <span className="text-[11px] text-[#ff5a2f] font-bold uppercase tracking-widest px-2 py-0.5 bg-white border border-slate-200 rounded-2xl">
+          <span className="text-[11px] text-[var(--accent)] font-bold uppercase tracking-widest px-2 py-0.5 bg-white border border-slate-200 rounded-2xl">
             ✓ Pinned
           </span>
         )}

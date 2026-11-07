@@ -235,13 +235,13 @@ export default function Navbar({ user, navCounts }) {
                 onClick={(e) => navigateTo("/", e)}
                 className="flex shrink-0 items-center transition-transform active:scale-95"
               >
-                <div className="flex h-6 min-w-0 shrink-0 items-center lg:h-7">
+                <div className="flex h-7 min-w-0 shrink-0 items-center lg:h-9">
                   <Image
                     src={BRAND_HEADER_LOGO}
                     alt="BIDGARI"
                     priority
-                    width={480}
-                    height={70}
+                    width={1000}
+                    height={333}
                     className="h-full w-auto object-contain object-left"
                   />
                 </div>
@@ -358,7 +358,7 @@ export default function Navbar({ user, navCounts }) {
                   <Link
                     href="/signup"
                     onClick={(e) => navigateTo("/signup", e)}
-                    className="inline-flex h-[32px] items-center justify-center bg-[linear-gradient(to_bottom,#d92f2f,#b91520)] px-4 text-[12px] font-bold uppercase tracking-wide text-white shadow-[0_1px_2px_rgba(0,0,0,0.2)] transition-colors hover:brightness-105"
+                    className="inline-flex h-[32px] items-center justify-center bg-[var(--accent)] px-4 text-[12px] font-bold uppercase tracking-wide text-white shadow-[0_1px_2px_rgba(0,0,0,0.2)] transition-colors hover:brightness-105"
                   >
                     Register
                   </Link>
@@ -369,8 +369,8 @@ export default function Navbar({ user, navCounts }) {
         </div>
       </div>
 
-      {/* ─── DESKTOP: red nav bar with hover menus ─── */}
-      <div className="hidden md:block bg-[linear-gradient(to_bottom,#c62a36,#b51422)] shadow-[0_2px_6px_rgba(0,0,0,0.25)]">
+      {/* ─── DESKTOP: dark nav band with hover menus ─── */}
+      <div className="hidden md:block bg-[var(--brand-ink)] shadow-[0_2px_6px_rgba(0,0,0,0.25)]">
         <div className="home-shell">
           <div className="flex h-[30px] items-stretch text-white">
             {NAV_TABS.map((tab) => (
@@ -418,13 +418,13 @@ export default function Navbar({ user, navCounts }) {
               onClick={(e) => navigateTo("/", e)}
               className="relative z-20 flex shrink-0 items-center transition-transform active:scale-95"
             >
-              <div className="flex h-[18px] shrink-0 items-center">
+              <div className="flex h-6 shrink-0 items-center">
                 <Image
                   src={BRAND_HEADER_LOGO}
                   alt="BIDGARI"
                   priority
-                  width={480}
-                  height={70}
+                  width={1000}
+                  height={333}
                   className="h-full w-auto object-contain object-left"
                 />
               </div>
@@ -541,12 +541,12 @@ export default function Navbar({ user, navCounts }) {
                   onClick={(e) => navigateTo("/", e)}
                   className="flex min-w-0 shrink-0 items-center"
                 >
-                  <div className="flex h-4 shrink-0 items-center">
+                  <div className="flex h-5 shrink-0 items-center">
                     <Image
                       src={BRAND_HEADER_LOGO}
                       alt="BIDGARI"
-                      width={480}
-                      height={70}
+                      width={1000}
+                      height={333}
                       className="h-full w-auto object-contain object-left"
                     />
                   </div>
@@ -742,8 +742,8 @@ function DesktopTab({ label, href, triangle, active, onHover, onLeave, onClick, 
         className={clsx(
           "relative flex w-full items-center justify-center gap-1.5 px-3 text-[14px] font-medium uppercase tracking-[0.04em] transition-all",
           active
-            ? "bg-[linear-gradient(to_bottom,#d83b47,#c51f2d)] text-[#fff4a0]"
-            : "hover:bg-[linear-gradient(to_bottom,#d83b47,#c51f2d)] hover:text-[#fff4a0]"
+            ? "bg-[var(--sidebar-bar-hover)] text-[var(--brand-green)]"
+            : "hover:bg-[var(--sidebar-bar-hover)] hover:text-[var(--brand-green)]"
         )}
       >
         {label}
@@ -812,8 +812,8 @@ function SearchMegaMenu({ counts }) {
   }));
 
   return (
-    <div className="absolute left-0 top-full z-[60] w-[950px] max-w-[calc(100vw-2rem)] border border-[#aaa] bg-[#f4f4f4] shadow-[0_5px_12px_rgba(0,0,0,0.25)] rounded-b-[8px]">
-      <div className="grid grid-cols-5 divide-x divide-[#d0d0d0]">
+    <div className="absolute left-0 top-full z-[60] w-[950px] max-w-[calc(100vw-2rem)] border border-[var(--border-strong)] bg-[var(--surface-overlay)] shadow-[0_5px_12px_rgba(0,0,0,0.25)] rounded-b-[8px]">
+      <div className="grid grid-cols-5 divide-x divide-[var(--border)]">
         <MegaColumn title="Inventory">
           <MegaLink href="/cars" label="All Vehicles" />
           <MegaLink href="/cars?sort=newest" label="New Arrivals" />
@@ -840,7 +840,7 @@ function SearchMegaMenu({ counts }) {
           {KENYA_LOCATIONS.map((c) => (
             <MegaLink key={c} href={`/cars?county=${encodeURIComponent(c)}`} label={c} />
           ))}
-          <div className="mt-2 border-t border-[#d0d0d0] pt-2">
+          <div className="mt-2 border-t border-[var(--border)] pt-2">
             <MegaLink href="/how-to-buy" label="How To Buy" bold />
           </div>
         </MegaColumn>
@@ -863,7 +863,7 @@ function MegaLink({ href, label, count, bold }) {
     <Link
       href={href}
       className={clsx(
-        "group flex items-center justify-between gap-2 py-[3px] text-[13px] text-slate-700 transition-colors hover:text-[#b51422]",
+        "group flex items-center justify-between gap-2 py-[3px] text-[13px] text-slate-700 transition-colors hover:text-[var(--accent)]",
         bold && "font-bold"
       )}
     >
@@ -878,12 +878,12 @@ function MegaLink({ href, label, count, bold }) {
 /* ─── Compact About Us / New Member dropdown ─── */
 function MiniDropdown({ items }) {
   return (
-    <div className="absolute left-0 top-full z-[60] w-[210px] border border-[#aaa] bg-[#f4f4f4] shadow-[0_5px_12px_rgba(0,0,0,0.25)] rounded-b-[8px] py-1.5">
+    <div className="absolute left-0 top-full z-[60] w-[210px] border border-[var(--border-strong)] bg-[var(--surface-overlay)] shadow-[0_5px_12px_rgba(0,0,0,0.25)] rounded-b-[8px] py-1.5">
       {items.map((it) => (
         <Link
           key={it.href}
           href={it.href}
-          className="block px-4 py-2 text-[13px] font-medium text-slate-700 transition-colors hover:bg-white hover:text-[#b51422]"
+          className="block px-4 py-2 text-[13px] font-medium text-slate-700 transition-colors hover:bg-white hover:text-[var(--accent)]"
         >
           {it.label}
         </Link>
@@ -910,7 +910,7 @@ function MobileMenuRow({ icon, label, href, onClick, variant = "default", analyt
   const rowClass = clsx(
     "flex w-full min-h-[3.15rem] items-center justify-between gap-2 rounded-xl border px-3 py-2.5 text-left transition active:scale-[0.99]",
     primary
-      ? "border-[var(--accent)]/25 bg-[var(--accent)]/[0.06]"
+      ? "border-accent-dim bg-[var(--accent)]/[0.06]"
       : "border-slate-200 bg-white hover:bg-slate-50"
   );
   const iconWrap = clsx(

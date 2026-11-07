@@ -41,7 +41,7 @@ export default function HomepageMakeGrid({ heading = "Search by Make" }) {
           <Link
             key={make.slug}
             href={`/cars?make=${encodeURIComponent(make.slug)}`}
-            className="group flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-1 py-3 transition-colors hover:border-[var(--accent)] hover:bg-[#f5f7ff]"
+            className="group flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-1 py-3 transition-colors hover:border-[var(--accent)] hover:bg-accent-wash"
           >
             <img
               src={make.img}
