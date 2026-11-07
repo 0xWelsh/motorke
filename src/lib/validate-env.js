@@ -4,40 +4,24 @@
  */
 
 const REQUIRED_ENV = [
-  // Database (Neon PostgreSQL)
+  // Database
   "DATABASE_URL",
   "DIRECT_URL",
 
   // Authentication
   "AUTH_SECRET",
 
-  // Email (Resend - primary, Zoho SMTP as fallback)
-  "RESEND_API_KEY",
-  // SMTP fallback (optional if RESEND_API_KEY is set)
+  // Email (SMTP required, Resend optional)
   "SMTP_HOST",
   "SMTP_PORT",
   "SMTP_USER",
   "SMTP_PASS",
-
-  // Email sender addresses
-  "MAIL_FROM_VERIFICATION",
-  "MAIL_FROM_NOREPLY",
-  "MAIL_FROM_ALERTS",
-  "MAIL_FROM_MARKETING",
-  "MAIL_FROM_HELLO",
-  "MAIL_SUPPORT",
 
   // M-Pesa
   "MPESA_CONSUMER_KEY",
   "MPESA_CONSUMER_SECRET",
   "MPESA_PASSKEY",
   "MPESA_SHORTCODE",
-
-  // R2 (Image Storage)
-  "R2_ENDPOINT",
-  "R2_ACCESS_KEY_ID",
-  "R2_SECRET_ACCESS_KEY",
-  "R2_PUBLIC_URL",
 
   // CAPTCHA
   "NEXT_PUBLIC_TURNSTILE_SITE_KEY",
@@ -48,7 +32,23 @@ const REQUIRED_ENV = [
 ];
 
 const OPTIONAL_ENV = [
-  // Google OAuth (optional - can be frontend only)
+  // Email (Resend - optional, SMTP is primary)
+  "RESEND_API_KEY",
+  "MAIL_FROM_VERIFICATION",
+  "MAIL_FROM_NOREPLY",
+  "MAIL_FROM_ALERTS",
+  "MAIL_FROM_MARKETING",
+  "MAIL_FROM_HELLO",
+  "MAIL_SUPPORT",
+
+  // R2 (Image Storage - optional, falls back to local)
+  "R2_ENDPOINT",
+  "R2_ACCESS_KEY_ID",
+  "R2_SECRET_ACCESS_KEY",
+  "R2_PUBLIC_URL",
+  "R2_BUCKET_NAME",
+
+  // Google OAuth (optional)
   "GOOGLE_CLIENT_ID",
   "NEXT_PUBLIC_GOOGLE_CLIENT_ID",
   "GOOGLE_CLIENT_SECRET",
@@ -100,6 +100,11 @@ export function validateEnv(options = {}) {
   // Email validation: either Resend OR SMTP must be configured
   if (!process.env.RESEND_API_KEY && (!process.env.SMTP_USER || !process.env.SMTP_PASS)) {
     warnings.push("Neither RESEND_API_KEY nor SMTP credentials configured - emails will be mocked");
+  }
+
+  // R2 warning
+  if (!process.env.R2_ENDPOINT && !process.env.R2_PUBLIC_URL) {
+    warnings.push("R2 not configured - images will use local storage fallback");
   }
 
   if (missing.length > 0) {
