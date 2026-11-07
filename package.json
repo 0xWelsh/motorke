@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && npx @opennextjs/cloudflare build",
+    "build": "prisma generate && next build",
     "build:vercel": "prisma generate && next build",
     "db:deploy": "bash scripts/migrate-deploy.sh",
     "build:local": "bash ./scripts/build-local.sh",
