@@ -26,7 +26,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Prisma needs the schema before `npm ci`, because the `postinstall` hook runs
 # `prisma generate`. Installing with scripts enabled is also required for
 # bcrypt (node-gyp) — `--ignore-scripts` silently produced a broken runtime.
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
 COPY prisma ./prisma
 RUN npm ci
 
@@ -45,7 +45,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       openssl ca-certificates python3 make g++ \
     && rm -rf /var/lib/apt/lists/*
 
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json .npmrc ./
 COPY prisma ./prisma
 # Scripts must run: the root `postinstall` generates the Prisma client.
 RUN npm ci
