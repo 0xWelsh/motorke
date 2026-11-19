@@ -12,7 +12,8 @@ ios
 public/uploads
 public/car_photos
 logs
-data
+data/*
+!data/seo
 waha-sessions
 .wwebjs_cache
 tmp-compare-client
