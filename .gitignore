@@ -63,6 +63,7 @@ ios/
 
 # Large DB dumps — use Supabase backups or external storage instead
 data/supabase-full.sql.gz
+data/db-migration/
 
 # Azure provisioning secrets
 infra/azure-secrets.env

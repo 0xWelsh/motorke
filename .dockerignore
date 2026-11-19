@@ -23,6 +23,11 @@ motorke_logo.png
 .env
 .env.*
 !.env.example
+# Exception: `next build` needs the production env (NEXT_PUBLIC_* are inlined
+# and the DB is queried to prerender static pages). This only reaches the
+# builder stage; the runner copies build artifacts, not dotfiles. Keep the
+# resulting image local to the VM.
+!.env.production
 infra/azure-secrets.env
 
 *.log

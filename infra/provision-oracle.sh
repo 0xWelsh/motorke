@@ -1,145 +1,210 @@
 #!/usr/bin/env bash
-# Provision an Oracle Cloud Always Free VM in Johannesburg and deploy BIDGARI.
+# Provision the BIDGARI VM on Oracle Cloud Always Free (Ampere A1, Johannesburg).
 #
-# Why Oracle: it is the only provider offering a genuinely free tier in an
-# African region. Always Free resources never expire and have no credit cliff —
-# the failure mode that suspended Supabase cannot happen here. Compute and
-# Postgres run on the same machine, so the database round trip stays local.
+# Creates, idempotently by display name:
+#   VCN        bidgari-vcn      10.0.0.0/16
+#   IGW        bidgari-igw      internet egress
+#   RouteTable bidgari-rt       0.0.0.0/0 -> IGW
+#   SecList    bidgari-sl       ingress 22/80/443, egress all
+#   Subnet     bidgari-subnet   10.0.0.0/24, public IPs allowed
 #
-# The Ampere A1 shape is ARM64. Docker builds run natively on the VM, so no
-# cross-compilation or QEMU emulation is involved.
+# Then launches VM.Standard.A1.Flex (2 OCPU / 12 GB) with a 50 GB boot volume.
+# Re-running is safe: existing network objects are reused by display name.
 #
-# You must supply OCI credentials with permission to create compute and a VCN.
+# HARD LIMITS — Always Free is 2 OCPU + 12 GB RAM + 200 GB block storage total.
+# Raising the values below is how people accidentally get billed.
 set -euo pipefail
 
-OCI_COMPARTMENT_ID="${OCI_COMPARTMENT_ID:?set OCI_COMPARTMENT_ID}"
-OCI_AD="${OCI_AD:-AD-1}"
+OCI_COMPARTMENT_ID="${OCI_COMPARTMENT_ID:?set OCI_COMPARTMENT_ID (tenancy OCID is fine)}"
 VM_SHAPE="${VM_SHAPE:-VM.Standard.A1.Flex}"
-VM_OCPUS="${VM_OCPUS:-2}"          # Always Free allows 2 OCPU total
-VM_MEMORY="${VM_MEMORY:-12}"       # Always Free allows 12 GB total
+VM_OCPUS="${VM_OCPUS:-2}"
+VM_MEMORY="${VM_MEMORY:-12}"
 VM_BOOT_VOLUME="${VM_BOOT_VOLUME:-50}"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/id_ed25519.pub}"
+VCN_CIDR="${VCN_CIDR:-10.0.0.0/16}"
+SUBNET_CIDR="${SUBNET_CIDR:-10.0.0.0/24}"
+INSTANCE_NAME="${INSTANCE_NAME:-bidgari}"
 
 log()  { printf '\n\033[1;36m▸ %s\033[0m\n' "$*"; }
 warn() { printf '\033[1;33m! %s\033[0m\n' "$*"; }
 die()  { printf '\033[1;31m✗ %s\033[0m\n' "$*" >&2; exit 1; }
 
-command -v oci >/dev/null || die "OCI CLI not found — see infra/README.md"
-oci --version >/dev/null 2>&1 || die "OCI CLI not configured — run: oci setup config"
+command -v oci >/dev/null || die "OCI CLI not found — see infra/DEPLOY.md"
+command -v jq  >/dev/null || die "jq not found — install it (dnf install jq / pacman -S jq)"
 [[ -f "$SSH_KEY" ]] || die "SSH public key not found at $SSH_KEY"
 
-# ── Locate the Johannesburg ADs ───────────────────────────────────────────────
-log "Finding Johannesburg availability domains"
-AD_LIST="$(oci compute availability-domain list --compartment-id "$OCI_COMPARTMENT_ID" \
-  --query 'data[?contains(name,"johannesburg")].name' -o text 2>/dev/null | tr -s ' ' '\n' | grep -i jhb | head -3)"
+if (( VM_OCPUS > 2 || VM_MEMORY > 12 )); then
+  die "VM_OCPUS=$VM_OCPUS VM_MEMORY=$VM_MEMORY exceeds Always Free (2 OCPU / 12 GB).
+This would be billed. Refusing."
+fi
+
+# ── Credentials + availability domains ───────────────────────────────────────
+log "Verifying credentials"
+AD_LIST="$(oci iam availability-domain list \
+  --compartment-id "$OCI_COMPARTMENT_ID" \
+  --query 'data[].name' -o text 2>/dev/null \
+  | tr -s ' ' '\n' | grep -i 'johannesburg' || true)"
 
 if [[ -z "$AD_LIST" ]]; then
-  die "No Johannesburg ADs found. Confirm your tenancy home region is
-af-johannesburg-1 — Always Free compute can only be created in the home region."
+  die "Could not list Johannesburg availability domains.
+Either the credentials are wrong, or the tenancy home region is not
+af-johannesburg-1. Always Free compute only exists in the home region."
 fi
-log "Available ADs: $(echo "$AD_LIST" | tr '\n' ' ')"
+log "ADs: $(echo "$AD_LIST" | tr '\n' ' ')"
 
-AD_OK=""
-while read -r ad; do
-  [[ -z "$ad" ]] && continue
-  log "Probing capacity in $ad"
-  if oci compute instance launch \
+# Warn (don't block) if other instances already exist: 2 OCPU is a tenancy-wide pool.
+RUNNING_JSON="$(oci compute instance list --compartment-id "$OCI_COMPARTMENT_ID" \
+  --lifecycle-state RUNNING --query 'data[].id' -o json 2>/dev/null || echo '[]')"
+RUNNING_COUNT="$(echo "$RUNNING_JSON" | jq 'length' 2>/dev/null || echo 0)"
+if (( RUNNING_COUNT > 0 )); then
+  warn "$RUNNING_COUNT instance(s) already running in this compartment."
+  warn "Always Free is 2 OCPU / 12 GB across the whole tenancy."
+fi
+
+# ── Network ──────────────────────────────────────────────────────────────────
+pick_or_create() { # $1=list-cmd output (id or null)
+  [[ -n "${1:-}" && "$1" != "null" ]]
+}
+
+log "Ensuring VCN"
+VCN_ID="$(oci network vcn list --compartment-id "$OCI_COMPARTMENT_ID" \
+  --display-name bidgari-vcn --lifecycle-state AVAILABLE \
+  --query 'data[0].id' -o text 2>/dev/null || true)"
+if pick_or_create "$VCN_ID"; then
+  log "Reusing VCN $VCN_ID"
+else
+  VCN_ID="$(oci network vcn create --compartment-id "$OCI_COMPARTMENT_ID" \
+    --cidr-block "$VCN_CIDR" --display-name bidgari-vcn --dns-label bidgarivcn \
+    --wait-for-state AVAILABLE --query 'data.id' -o text)"
+  log "Created VCN $VCN_ID"
+fi
+
+log "Ensuring internet gateway"
+IGW_ID="$(oci network internet-gateway list --compartment-id "$OCI_COMPARTMENT_ID" \
+  --vcn-id "$VCN_ID" --display-name bidgari-igw \
+  --query 'data[0].id' -o text 2>/dev/null || true)"
+if pick_or_create "$IGW_ID"; then
+  log "Reusing IGW $IGW_ID"
+else
+  IGW_ID="$(oci network internet-gateway create --compartment-id "$OCI_COMPARTMENT_ID" \
+    --vcn-id "$VCN_ID" --display-name bidgari-igw --is-enabled true \
+    --wait-for-state AVAILABLE --query 'data.id' -o text)"
+  log "Created IGW $IGW_ID"
+fi
+
+log "Ensuring route table"
+RT_ID="$(oci network route-table list --compartment-id "$OCI_COMPARTMENT_ID" \
+  --vcn-id "$VCN_ID" --display-name bidgari-rt \
+  --query 'data[0].id' -o text 2>/dev/null || true)"
+if pick_or_create "$RT_ID"; then
+  log "Reusing route table $RT_ID"
+else
+  RT_ID="$(oci network route-table create --compartment-id "$OCI_COMPARTMENT_ID" \
+    --vcn-id "$VCN_ID" --display-name bidgari-rt \
+    --route-rules "[{\"destination\":\"0.0.0.0/0\",\"destinationType\":\"CIDR_BLOCK\",\"networkEntityId\":\"$IGW_ID\"}]" \
+    --wait-for-state AVAILABLE --query 'data.id' -o text)"
+  log "Created route table $RT_ID"
+fi
+
+log "Ensuring security list (22, 80, 443 open)"
+SL_ID="$(oci network security-list list --compartment-id "$OCI_COMPARTMENT_ID" \
+  --vcn-id "$VCN_ID" --display-name bidgari-sl \
+  --query 'data[0].id' -o text 2>/dev/null || true)"
+if pick_or_create "$SL_ID"; then
+  log "Reusing security list $SL_ID"
+else
+  SL_ID="$(oci network security-list create --compartment-id "$OCI_COMPARTMENT_ID" \
+    --vcn-id "$VCN_ID" --display-name bidgari-sl \
+    --ingress-security-rules '[
+      {"protocol":"6","source":"0.0.0.0/0","description":"SSH","tcpOptions":{"destinationPortRange":{"min":22,"max":22}}},
+      {"protocol":"6","source":"0.0.0.0/0","description":"HTTP","tcpOptions":{"destinationPortRange":{"min":80,"max":80}}},
+      {"protocol":"6","source":"0.0.0.0/0","description":"HTTPS","tcpOptions":{"destinationPortRange":{"min":443,"max":443}}}
+    ]' \
+    --egress-security-rules '[{"protocol":"all","destination":"0.0.0.0/0","description":"all egress"}]' \
+    --wait-for-state AVAILABLE --query 'data.id' -o text)"
+  log "Created security list $SL_ID"
+fi
+
+log "Ensuring public subnet"
+SUBNET_ID="$(oci network subnet list --compartment-id "$OCI_COMPARTMENT_ID" \
+  --vcn-id "$VCN_ID" --display-name bidgari-subnet \
+  --query 'data[0].id' -o text 2>/dev/null || true)"
+if pick_or_create "$SUBNET_ID"; then
+  log "Reusing subnet $SUBNET_ID"
+else
+  SUBNET_ID="$(oci network subnet create --compartment-id "$OCI_COMPARTMENT_ID" \
+    --vcn-id "$VCN_ID" --cidr-block "$SUBNET_CIDR" --display-name bidgari-subnet \
+    --route-table-id "$RT_ID" --security-list-ids "[\"$SL_ID\"]" \
+    --dns-label bidgarisub --wait-for-state AVAILABLE --query 'data.id' -o text)"
+  log "Created subnet $SUBNET_ID"
+fi
+
+# ── Image ────────────────────────────────────────────────────────────────────
+log "Finding an arm64 image"
+IMAGE_ID="$(oci compute image list --compartment-id "$OCI_COMPARTMENT_ID" \
+  --operating-system "Oracle Linux" --shape "$VM_SHAPE" \
+  --sort-by TIMECREATED --sort-order DESC \
+  --query 'data[0].id' -o text 2>/dev/null || true)"
+if ! pick_or_create "$IMAGE_ID"; then
+  warn "No Oracle Linux image found for $VM_SHAPE; trying Ubuntu"
+  IMAGE_ID="$(oci compute image list --compartment-id "$OCI_COMPARTMENT_ID" \
+    --operating-system "Canonical Ubuntu" --shape "$VM_SHAPE" \
+    --sort-by TIMECREATED --sort-order DESC \
+    --query 'data[0].id' -o text 2>/dev/null || true)"
+fi
+pick_or_create "$IMAGE_ID" || die "No arm64 image available in this compartment."
+log "Image: $IMAGE_ID"
+
+# ── Launch ───────────────────────────────────────────────────────────────────
+# No capacity probe instance: a failed launch creates nothing, so just try each
+# AD in turn. A1 capacity is often exhausted — this is the expected failure mode.
+META="$(jq -n --arg k "$(tr -d '\n' < "$SSH_KEY")" '{ssh_authorized_keys:$k}')"
+INSTANCE_ID=""
+for ad in $AD_LIST; do
+  log "Launching in $ad"
+  if INSTANCE_ID="$(oci compute instance launch \
       --availability-domain "$ad" \
       --compartment-id "$OCI_COMPARTMENT_ID" \
       --shape "$VM_SHAPE" \
       --shape-config "ocpus=$VM_OCPUS,memoryInGBs=$VM_MEMORY" \
-      --image-id "$(oci compute image list --compartment-id "$OCI_COMPARTMENT_ID" \
-           --operating-system "Oracle Linux" --query 'data[0].id' -o text)" \
-      --display-name bidgari-probe \
-      --metadata "ssh_authorized_keys=$(cat "$SSH_KEY")" \
+      --image-id "$IMAGE_ID" \
+      --subnet-id "$SUBNET_ID" \
       --assign-public-ip true \
-      --wait-for-state RUNNING >/dev/null 2>&1; then
-    AD_OK="$ad"
-    warn "capacity found — deleting probe instance"
-    oci compute instance terminate --instance-id \
-      "$(oci compute instance list --compartment-id "$OCI_COMPARTMENT_ID" \
-         --display-name bidgari-probe --query 'data[0].id' -o text)" --wait >/dev/null 2>&1 || true
+      --boot-volume-size-in-gbs "$VM_BOOT_VOLUME" \
+      --display-name "$INSTANCE_NAME" \
+      --metadata "$META" \
+      --wait-for-state RUNNING \
+      --query 'data.id' -o text 2>/tmp/oci-launch.err)"; then
     break
-  else
-    warn "$ad is out of capacity (common for A1 — try again later or pick another AD)"
   fi
-done <<< "$AD_LIST"
+  INSTANCE_ID=""
+  warn "$ad: launch failed (usually 'Out of host capacity')"
+  head -3 /tmp/oci-launch.err 2>/dev/null | sed 's/^/    /' || true
+done
 
-[[ -n "$AD_OK" ]] || die "No capacity in any Johannesburg AD. Ampere A1 capacity
-is frequently exhausted — this is the single biggest risk with Oracle's free
-tier. Retry in a few hours, or fall back to Neon."
+[[ -n "$INSTANCE_ID" ]] || die "No AD had A1 capacity right now, or the shape is
+not Always Free eligible. Retry in a few hours — failed launches cost nothing."
 
-# ── Launch the real instance ──────────────────────────────────────────────────
-log "Launching BIDGARI VM in $AD_OK (${VM_OCPUS} OCPU / ${VM_MEMORY} GB)"
-IMAGE_ID="$(oci compute image list --compartment-id "$OCI_COMPARTMENT_ID" \
-  --operating-system "Oracle Linux" --query 'data[0].id' -o text)"
+log "Instance running: $INSTANCE_ID"
 
-INSTANCE_JSON="$(oci compute instance launch \
-  --availability-domain "$AD_OK" \
-  --compartment-id "$OCI_COMPARTMENT_ID" \
-  --shape "$VM_SHAPE" \
-  --shape-config "ocpus=$VM_OCPUS,memoryInGBs=$VM_MEMORY" \
-  --image-id "$IMAGE_ID" \
-  --display-name bidgari \
-  --metadata "ssh_authorized_keys=$(cat "$SSH_KEY")" \
-  --assign-public-ip true \
-  --wait-for-state RUNNING)"
-
-INSTANCE_ID="$(echo "$INSTANCE_JSON" | jq -r '.data.id')"
-log "Instance: $INSTANCE_ID"
-
-# ── Attach a 50 GB boot volume ────────────────────────────────────────────────
-log "Creating boot volume (${VM_BOOT_VOLUME} GB)"
-BOOT_VOLUME_ID="$(oci compute volume create \
-  --availability-domain "$AD_OK" \
-  --compartment-id "$OCI_COMPARTMENT_ID" \
-  --display-name bidgari-boot \
-  --size-in-gbs "$VM_BOOT_VOLUME" \
-  --vpus-per-gb 0 \
-  --image-id "$IMAGE_ID" \
-  --wait-for-state AVAILABLE \
-  --query 'data.id' -o text)"
-
-log "Attaching boot volume"
-if oci compute volume attachment create \
-    --compartment-id "$OCI_COMPARTMENT_ID" \
-    --availability-domain "$AD_OK" \
-    --instance-id "$INSTANCE_ID" \
-    --volume-id "$BOOT_VOLUME_ID" \
-    --device "/dev/oracleoci/oraclevdb" \
-    --is-boot-volume true \
-    --wait-for-state ATTACHED >/dev/null 2>&1; then
-  log "boot volume attached"
-else
-  warn "could not attach the volume automatically"
-  warn "the default boot volume is 50 GB — if you need more, resize it in the console"
-fi
-
-# ── Get the public IP ─────────────────────────────────────────────────────────
 PUBLIC_IP="$(oci compute instance list-vnics --instance-id "$INSTANCE_ID" \
   --query 'data[0]."public-ip"' -o text)"
 
 cat <<EOF
 
-$(log "VM ready")
-
   Instance ID : $INSTANCE_ID
   Public IP   : $PUBLIC_IP
-  AD          : $AD_OK
   Shape       : $VM_SHAPE (${VM_OCPUS} OCPU / ${VM_MEMORY} GB)
+  Boot volume : ${VM_BOOT_VOLUME} GB
+  Subnet      : $SUBNET_ID
 
-$(log "Manual step — open the firewall")
+  Ports 22/80/443 are already open in the cloud security list (bidgari-sl).
+  The VM's own firewalld still blocks 80/443 — open it on the host:
 
-  Oracle's default VCN security list only allows SSH. In the console:
+    ssh opc@$PUBLIC_IP
+    sudo firewall-cmd --permanent --add-service=http --add-service=https
+    sudo firewall-cmd --reload
 
-    Compute → Instances → bidgari → Primary VNIC → Subnet → Security List
-    Add an ingress rule:  TCP  80 and 443  source 0.0.0.0/0
-
-  Until you do, Cloudflare cannot reach the VM.
-
-Next, on the VM:
-
-  ssh -i ~/.ssh/id_ed25519 opc@$PUBLIC_IP
-  # then follow infra/DEPLOY.md
+  Then continue at infra/DEPLOY.md step 2 (install Docker).
 
 EOF

@@ -1,7 +1,11 @@
-# Caddy terminates TLS for the VM's own hostname. Cloudflare sits in front in
-# proxy mode, so this is the origin certificate only.
+# Caddy terminates TLS at the origin and obtains its own Let's Encrypt
+# certificate. Cloudflare sits in front in proxy mode with SSL mode
+# "Full (strict)", which validates this certificate.
 #
 # Cloudflare → (Full, strict) → Caddy :443 → app :3000
+#
+# First deploy: leave the DNS record DNS-only until Caddy has issued the
+# certificate, then switch the proxy on. See infra/DEPLOY.md.
 
 {
 	email {$ACME_EMAIL:admin@bidgari.com}
