@@ -109,17 +109,17 @@ ENV HOSTNAME=0.0.0.0
 # Standalone output is a self-contained app root: server.js, `.next/`, and a
 # traced node_modules. Unpack it at /app so `process.chdir(__dirname)` lands on
 # a complete tree.
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
 # Overlay the full production node_modules (Prisma engine, sharp, bcrypt) —
 # the traced set is a subset and misses some native optional deps.
-COPY --from=deps    --chown=nextjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nodejs /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=deps    --chown=nextjs:nextjs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nextjs /app/public ./public
+COPY --from=builder --chown=nextjs:nextjs /app/prisma ./prisma
 
 # ISR writes go to `.next/cache`; the app user must own it or every
 # regeneration fails at runtime.
-RUN mkdir -p .next/cache && chown -R nextjs:nodejs .next
+RUN mkdir -p .next/cache && chown -R nextjs:nextjs .next
 
 USER nextjs
 EXPOSE 3000
