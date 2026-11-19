@@ -1,8 +1,22 @@
 // next.config.js
+// In the Docker build, Next loads `.env.production` before this file, but make
+// it explicit so the validation below can't race the env-file loader.
+if (process.env.NODE_ENV === "production") {
+  try {
+    require("dotenv").config({ path: ".env.production", quiet: true });
+  } catch {
+    // dotenv is best-effort; real values may already be in process.env.
+  }
+}
+
 // Validate environment variables at build/start time
 const { validateEnv } = require('./src/lib/validate-env');
 try {
-  validateEnv({ strict: process.env.NODE_ENV === "production" });
+  // In container/CI builds, runtime secrets (SMTP, M-Pesa, Turnstile) are
+  // injected when the container starts, not when the image builds. BuildKit
+  // sets SKIP_BUILD_ENV_STRICT=1 in the builder stage to relax this check;
+  // the server.js boot still validates strictly against the real env.
+  validateEnv({ strict: process.env.NODE_ENV === "production" && !process.env.SKIP_BUILD_ENV_STRICT });
 } catch (error) {
   console.error(error.message);
   if (process.env.NODE_ENV === "production") {
@@ -12,9 +26,10 @@ try {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Cloudflare Pages uses @opennextjs/cloudflare adapter
-  // which handles the output format automatically
-  // output: "standalone", // REMOVED for Cloudflare Pages
+  // Self-hosted deploys (Docker on the Oracle VM) run `.next/standalone/server.js`.
+  // Vercel manages its own output and ignores this. The Cloudflare/OpenNext build
+  // sets BUILD_TARGET=opennext to opt out.
+  ...(process.env.BUILD_TARGET === "opennext" ? {} : { output: "standalone" }),
 
   images: {
     // Images served from Cloudflare R2 via public URL

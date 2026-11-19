@@ -53,6 +53,9 @@ RUN npm ci
 COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED=1
+# Relax build-time strict env validation (runtime secrets belong to the
+# container environment, not the image). See next.config.js.
+ENV SKIP_BUILD_ENV_STRICT=1
 # SKIP_PRISMA_MIGRATE_DEPLOY=1 — migrations run from the VM via a dedicated
 # one-shot container, not during the image build. The image must be buildable
 # without database access.
