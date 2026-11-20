@@ -25,11 +25,14 @@ export const getSimilarCars = unstable_cache(
         c."dealerId" as dealer_id,
         d.name as dealer_name, d.location as dealer_location,
         d.type as dealer_type, d."verificationStatus" as dealer_verification_status,
-        (SELECT json_agg(json_build_object('url', ci.url, 'alt', ci.alt, 'is_primary', ci."isPrimary", 'order', ci."order"))
-         FROM car_images ci
-         WHERE ci."carId" = c.id
-         ORDER BY ci."isPrimary" DESC, ci."order"
-         LIMIT 3) as images
+        (SELECT json_agg(json_build_object('url', s.url, 'alt', s.alt, 'is_primary', s."isPrimary", 'order', s."order"))
+         FROM (
+           SELECT ci.url, ci.alt, ci."isPrimary", ci."order"
+           FROM car_images ci
+           WHERE ci."carId" = c.id
+           ORDER BY ci."isPrimary" DESC, ci."order"
+           LIMIT 3
+         ) s) as images
       FROM cars c
       JOIN dealers d ON d.id = c."dealerId"
       WHERE c.available = true
@@ -75,11 +78,14 @@ export const getPeopleAlsoSearch = unstable_cache(
           d.name as dealer_name, d.location as dealer_location,
           d.type as dealer_type,
           d."verificationStatus" as dealer_verification_status,
-          (SELECT json_agg(json_build_object('url', ci.url, 'alt', ci.alt, 'is_primary', ci."isPrimary", 'order', ci."order"))
-           FROM car_images ci
-           WHERE ci."carId" = c.id
-           ORDER BY ci."order"
-           LIMIT 1) as images
+          (SELECT json_agg(json_build_object('url', s.url, 'alt', s.alt, 'is_primary', s."isPrimary", 'order', s."order"))
+           FROM (
+             SELECT ci.url, ci.alt, ci."isPrimary", ci."order"
+             FROM car_images ci
+             WHERE ci."carId" = c.id
+             ORDER BY ci."isPrimary" DESC, ci."order"
+             LIMIT 1
+           ) s) as images
         FROM cars c
         JOIN dealers d ON d.id = c."dealerId"
         WHERE c.available = true
