@@ -77,7 +77,7 @@ export default function CardGallery({ urls, alt, sizes, priority = false }) {
           />
         </div>
       ))}
-      <div className="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center gap-1">
+      <div className="pointer-events-none absolute inset-x-0 bottom-10 flex justify-center gap-1">
         {urls.map((_, i) => (
           <span
             key={i}

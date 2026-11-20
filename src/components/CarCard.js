@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MapPin, ImageOff, X, Heart, Share2, BadgeCheck } from "lucide-react";
+import { MapPin, ImageOff, X, Heart, Share2, Tag } from "lucide-react";
 import PictureImage from "@/components/PictureImage";
 import CardGallery from "@/components/card/CardGallery";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
@@ -302,8 +302,6 @@ function PremiumGridCard({
   const [galleryUrls, setGalleryUrls] = useState(null);
 
   const cardSizes = sizes || GRID_SIZES;
-  const dealerVerified =
-    car.dealer?.verified === true || car.dealer?.verificationStatus === "VERIFIED";
 
   // Spotlight cards pull the full image set lazily; other cards never pay
   // for it. Payloads that already ship several images (homepage featured)
@@ -332,30 +330,37 @@ function PremiumGridCard({
     ? (Date.now() - new Date(car.createdAt).getTime()) / 86_400_000
     : null;
 
+  // Top-right pills, C&B order of loudness. Max 2 — the strip owns the
+  // bottom of the image, so the corner stays calm.
   const badges = [];
-  if (boost.spotlight) badges.push({ key: "spot", label: "Spotlight", cls: "bg-slate-900/90 text-white" });
-  else if (boost.hot) badges.push({ key: "hot", label: "Hot", cls: "bg-red-600/90 text-white" });
+  if (boost.spotlight)
+    badges.push({ key: "feat", label: "Featured", cls: "bg-white/90 text-slate-900 tracking-[0.14em]" });
+  else if (boost.hot) badges.push({ key: "hot", label: "Hot", cls: "bg-red-600/95 text-white" });
   if (listedDays != null && listedDays <= 7)
-    badges.push({ key: "new", label: "New", cls: "bg-emerald-600/90 text-white" });
+    badges.push({ key: "new", label: "New", cls: "bg-emerald-600/95 text-white" });
   if (car.condition === "NEW")
     badges.push({ key: "brand", label: "Brand new", cls: "bg-white/85 text-slate-900" });
   if (car.dutyPaid === true)
     badges.push({ key: "duty", label: "Duty paid", cls: "bg-white/85 text-emerald-700" });
   else if (car.dutyPaid === false)
     badges.push({ key: "duty", label: "Duty payable", cls: "bg-white/85 text-amber-700" });
-  if (dealerVerified)
-    badges.push({ key: "ver", label: "Verified", cls: "bg-white/85 text-slate-700", icon: BadgeCheck });
-  if (car.negotiable === true)
-    badges.push({ key: "neg", label: "Negotiable", cls: "bg-white/85 text-slate-600" });
-  const shownBadges = badges.slice(0, 3);
+  const shownBadges = badges.slice(0, 2);
 
-  const metaBits = [
+  // One comma-separated spec sentence, like C&B's option list.
+  const specSentence = [
     car.mileage != null ? formatMileage(car.mileage) : null,
     car.engineCC ? `${Number(car.engineCC).toLocaleString("en-KE")} cc` : null,
     fuelLabel || null,
-    car.location || car.dealer?.location || null,
-    distanceLabel || null,
-  ].filter(Boolean);
+    car.transmission === "AUTOMATIC" ? "Automatic" : car.transmission === "MANUAL" ? "Manual" : car.transmission || null,
+    car.bodyType ? titleCase(String(car.bodyType).toLowerCase()) : null,
+    car.color ? titleCase(car.color) : null,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const locationLabel = [car.location || car.dealer?.location, distanceLabel]
+    .filter(Boolean)
+    .join(" · ");
 
   async function handleShare(e) {
     e.preventDefault();
@@ -387,15 +392,14 @@ function PremiumGridCard({
     }
   }
 
+  const listingHref = carListingPath(car);
+
   return (
-    <article
-      className="group relative flex flex-col"
-      data-boost={boost.active ? (boost.spotlight && boost.hot ? "spotlight-hot" : boost.spotlight ? "spotlight" : "hot") : undefined}
-    >
+    <article className="group relative flex flex-col">
       <Link
-        href={carListingPath(car)}
+        href={listingHref}
         onClick={() => onCarClick("card")}
-        className="flex flex-col"
+        className="block"
       >
         <div
           className={clsx(
@@ -430,6 +434,39 @@ function PremiumGridCard({
             </div>
           )}
 
+          {/* Price strip — the image owns the price, like C&B's bid bar. */}
+          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-2.5 pb-2 pt-7">
+            <span className="inline-flex min-w-0 items-center gap-1.5 text-white">
+              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/15">
+                <Tag className="h-3 w-3" aria-hidden />
+              </span>
+              <span className="truncate text-[13px] font-bold tabular-nums tracking-tight">
+                {formatCarPrice(car)}
+              </span>
+            </span>
+            {car.negotiable === true && (
+              <span className="shrink-0 text-[9.5px] font-bold uppercase tracking-[0.12em] text-white/75">
+                Negotiable
+              </span>
+            )}
+          </div>
+
+          {shownBadges.length > 0 && (
+            <div className="pointer-events-none absolute right-2 top-2 z-10 flex flex-col items-end gap-1">
+              {shownBadges.map((b) => (
+                <span
+                  key={b.key}
+                  className={clsx(
+                    "rounded-md px-2 py-1 text-[9.5px] font-black uppercase tracking-[0.1em] backdrop-blur-sm",
+                    b.cls,
+                  )}
+                >
+                  {b.label}
+                </span>
+              ))}
+            </div>
+          )}
+
           {sold && (
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-md bg-slate-900/85 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-white">
               Sold
@@ -437,98 +474,74 @@ function PremiumGridCard({
           )}
           <CarNavPendingSignal />
         </div>
-
-        <div className="min-w-0 px-0.5 pt-2.5">
-          <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
-            <h3
-              className="line-clamp-2 min-w-0 text-[14.5px] font-bold leading-snug tracking-tight text-slate-900 sm:line-clamp-1 sm:truncate"
-              title={`${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`}
-            >
-              {titleHtml || [car.year, make, model].filter(Boolean).join(" ")}
-            </h3>
-            <p className="shrink-0 text-[14.5px] font-bold tabular-nums tracking-tight text-slate-900">
-              {formatCarPrice(car)}
-            </p>
-          </div>
-
-          {metaBits.length > 0 && (
-            <p className="mt-1 truncate text-[12.5px] font-medium tabular-nums text-slate-500">
-              {metaBits.join(" · ")}
-            </p>
-          )}
-
-          {car.dealer?.name && (
-            <p className="mt-1 flex min-w-0 items-center gap-1 text-[11.5px] font-semibold text-slate-400">
-              <span className="min-w-0 truncate">{car.dealer.name}</span>
-              {dealerVerified && (
-                <BadgeCheck className="h-3.5 w-3.5 shrink-0 text-emerald-600" aria-hidden />
-              )}
-            </p>
-          )}
-        </div>
       </Link>
 
-      {/* Overlay badges — pointer-events-none so they never eat card clicks. */}
-      {shownBadges.length > 0 && (
-        <div className="pointer-events-none absolute left-2 top-2 z-10 flex max-w-[72%] flex-wrap gap-1">
-          {shownBadges.map((b) => {
-            const Icon = b.icon;
-            return (
-              <span
-                key={b.key}
-                className={clsx(
-                  "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.08em] backdrop-blur-sm",
-                  b.cls,
-                )}
-              >
-                {Icon && <Icon className="h-3 w-3" aria-hidden />}
-                {b.label}
-              </span>
-            );
-          })}
-        </div>
-      )}
+      <div className="flex items-start justify-between gap-1.5 px-0.5 pt-2.5">
+        <Link
+          href={listingHref}
+          onClick={() => onCarClick("card_text")}
+          className="min-w-0 flex-1"
+        >
+          <h3
+            className="line-clamp-2 text-[15px] font-bold leading-snug tracking-tight text-slate-900"
+            title={`${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`}
+          >
+            {titleHtml || [car.year, make, model].filter(Boolean).join(" ")}
+          </h3>
 
-      {/* Actions */}
-      <div className="absolute right-2 top-2 z-10 flex items-center gap-1.5">
-        {onRemove && (
+          {specSentence && (
+            <p className="mt-1 line-clamp-2 text-[13px] font-medium leading-relaxed text-slate-500">
+              {specSentence}
+            </p>
+          )}
+
+          {locationLabel && (
+            <p className="mt-1.5 text-[12.5px] font-semibold text-slate-400">{locationLabel}</p>
+          )}
+        </Link>
+
+        {/* Actions beside the title, off the image (C&B star placement). */}
+        <div className="flex shrink-0 flex-col items-center">
+          {onRemove && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onRemove(car.id);
+              }}
+              aria-label="Remove from watchlist"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-red-600"
+            >
+              <X className="h-[18px] w-[18px]" />
+            </button>
+          )}
           <button
             type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              onRemove(car.id);
-            }}
-            aria-label="Remove from watchlist"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200/60 bg-white/85 text-slate-500 shadow-sm backdrop-blur transition-colors hover:text-red-600"
+            onClick={handleSave}
+            aria-pressed={saved}
+            aria-label={saved ? "Remove from saved" : "Save this car"}
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-slate-900"
           >
-            <X className="h-4 w-4" />
+            <Heart className={clsx("h-[18px] w-[18px]", saved && "fill-slate-900 text-slate-900")} />
           </button>
-        )}
-        <button
-          type="button"
-          onClick={handleSave}
-          aria-pressed={saved}
-          aria-label={saved ? "Remove from saved" : "Save this car"}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200/60 bg-white/85 text-slate-500 shadow-sm backdrop-blur transition-colors hover:text-slate-900"
-        >
-          <Heart className={clsx("h-4 w-4", saved && "fill-slate-900 text-slate-900")} />
-        </button>
-        <button
-          type="button"
-          onClick={handleShare}
-          aria-label="Share this listing"
-          className="relative inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200/60 bg-white/85 text-slate-500 shadow-sm backdrop-blur transition-colors hover:text-slate-900"
-        >
-          <Share2 className="h-4 w-4" />
-          {copied && (
-            <span className="absolute right-0 top-9 whitespace-nowrap rounded-md bg-slate-900 px-2 py-1 text-[10px] font-bold text-white">
-              Link copied
-            </span>
-          )}
-        </button>
-        <AdminCardControls car={car} />
+          <button
+            type="button"
+            onClick={handleShare}
+            aria-label="Share this listing"
+            className="relative inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-slate-900"
+          >
+            <Share2 className="h-[18px] w-[18px]" />
+            {copied && (
+              <span className="absolute right-0 top-8 z-20 whitespace-nowrap rounded-md bg-slate-900 px-2 py-1 text-[10px] font-bold text-white">
+                Link copied
+              </span>
+            )}
+          </button>
+        </div>
       </div>
+
+      <AdminCardControls car={car} />
     </article>
   );
 }
