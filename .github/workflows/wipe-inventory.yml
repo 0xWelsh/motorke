@@ -1,0 +1,22 @@
+name: Wipe inventory (one-off)
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type WIPE to truncate all cars + dealers and their dependent rows"
+        required: true
+
+jobs:
+  wipe:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          [ "${{ inputs.confirm }}" = "WIPE" ] || { echo "not confirmed"; exit 1; }
+      - uses: actions/setup-node@v4
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client
+      - env:
+          DATABASE_URL: ${{ secrets.BUILD_DATABASE_URL }}
+        run: |
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "TRUNCATE TABLE cars CASCADE;"
+          psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -c "TRUNCATE TABLE dealers CASCADE;"
+          psql "$DATABASE_URL" -tAc "select 'cars='||(select count(*) from cars)||' dealers='||(select count(*) from dealers)||' users='||(select count(*) from users)||' specs='||(select count(*) from car_model_specs);"
