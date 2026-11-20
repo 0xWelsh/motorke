@@ -39,10 +39,24 @@ const GRID_SIZES =
 
 const titleCase = (s) =>
   String(s || "").replace(/\S+/g, (word) =>
-    word === word.toUpperCase() && word.length > 1
-      ? word
-      : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+    word
+      .split("-")
+      .map((part) =>
+        part === part.toUpperCase() && part.length > 1
+          ? part
+          : part.charAt(0).toUpperCase() + part.slice(1).toLowerCase(),
+      )
+      .join("-"),
   );
+
+// Short body-style words for the spec sentence — BODY_TYPE_LABELS is
+// built for filter chips ("SUV / 4x4") and too chatty inside a line.
+const BODY_SHORT = {
+  SEDAN: "Sedan", SUV: "SUV", HATCHBACK: "Hatchback", PICKUP: "Pickup",
+  VAN: "Van", WAGON: "Wagon", COUPE: "Coupe", CROSSOVER: "Crossover",
+  MPV: "MPV", MINIVAN: "Minivan", CONVERTIBLE: "Convertible",
+  ROADSTER: "Roadster", TRUCK: "Truck",
+};
 
 export default function CarCard({
   car,
@@ -352,7 +366,7 @@ function PremiumGridCard({
     car.engineCC ? `${Number(car.engineCC).toLocaleString("en-KE")} cc` : null,
     fuelLabel || null,
     car.transmission === "AUTOMATIC" ? "Automatic" : car.transmission === "MANUAL" ? "Manual" : car.transmission || null,
-    car.bodyType ? titleCase(String(car.bodyType).toLowerCase()) : null,
+    car.bodyType ? BODY_SHORT[String(car.bodyType).toUpperCase()] || titleCase(String(car.bodyType).toLowerCase()) : null,
     car.color ? titleCase(car.color) : null,
   ]
     .filter(Boolean)
