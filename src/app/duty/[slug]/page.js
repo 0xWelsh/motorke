@@ -11,7 +11,7 @@ import { getDutyRates } from "@/lib/duty-rates";
 import { getSiteOrigin } from "@/lib/site-url";
 import DutyJsonLd from "@/components/DutyJsonLd";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }) {
   try {

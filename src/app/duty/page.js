@@ -9,7 +9,7 @@ import DutyJsonLd from "@/components/DutyJsonLd";
 
 // No dynamic APIs used here and both data calls are already unstable_cache'd,
 // so force-dynamic only guaranteed a cache-bypassing render on every visit.
-export const revalidate = 600;
+export const revalidate = 3600;
 
 export default async function DutyCalculatorPage() {
   const [popularRows, ratesPayload] = await Promise.all([

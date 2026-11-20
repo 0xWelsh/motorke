@@ -13,7 +13,9 @@ import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 // client (see CarsListingRoot), so `/cars` itself is statically rendered and
 // CDN-cached. Filtered results come from the separately cached
 // `/api/cars/list` endpoint, whose responses carry their own CDN headers.
-export const revalidate = 60;
+// Inventory edits bust the "cars"/"cars-listing" tags, so this timer is only
+// a backstop. 60s caused a regeneration on nearly every crawl hit.
+export const revalidate = 600;
 
 export const metadata = {
   title: { absolute: "Cars for Sale in Kenya | BIDGARI" },
@@ -135,7 +137,7 @@ const getCachedCarsPage = unstable_cache(
     }
   },
   ["cars-page-v1"],
-  { revalidate: 60, tags: ["cars", "cars-listing"] },
+  { revalidate: 600, tags: ["cars", "cars-listing"] },
 );
 
 export default async function CarsPage() {

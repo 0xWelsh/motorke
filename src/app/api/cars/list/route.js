@@ -92,7 +92,7 @@ const getCarPage = unstable_cache(
     return { cars, total };
   },
   ["cars-list"],
-  { revalidate: 60, tags: ["cars", "cars-listing"] }
+  { revalidate: 300, tags: ["cars", "cars-listing"] }
 );
 
 export async function GET(req) {

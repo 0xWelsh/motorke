@@ -99,7 +99,7 @@ const getDealersBaseData = unstable_cache(
     });
   },
   ["dealers-index-base-v1"],
-  { revalidate: 60, tags: ["dealers-index"] }
+  { revalidate: 600, tags: ["dealers-index"] }
 );
 
 export default async function DealersPage({ searchParams }) {

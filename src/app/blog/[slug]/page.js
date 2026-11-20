@@ -10,7 +10,9 @@ import { buildListingMetadata } from "@/lib/seo-metadata";
 import { articleJsonLd } from "@/lib/seo-schema";
 import { absoluteUrl } from "@/lib/site-url";
 
-export const dynamic = "force-dynamic";
+// Content pages are read-heavy and rarely change. ISR turns crawler hits into
+// CDN cache hits instead of a full SSR render each time.
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;

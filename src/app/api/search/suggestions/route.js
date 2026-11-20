@@ -182,7 +182,7 @@ async function loadSuggestions(normalizedQuery, limit, showCars) {
 const getCachedSuggestions = unstable_cache(
   loadSuggestions,
   ["search-suggestions-v1"],
-  { revalidate: 90, tags: ["cars-listing", "search-suggestions"] },
+  { revalidate: 300, tags: ["cars-listing", "search-suggestions"] },
 );
 
 export async function GET(request) {

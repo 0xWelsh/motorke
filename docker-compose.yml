@@ -7,7 +7,9 @@
 
 services:
   db:
-    image: postgres:16-alpine
+    # Match the Supabase source version (17.6) so `pg_dump`/restore needs no
+    # cross-version workarounds.
+    image: postgres:17-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-bidgari}
@@ -31,16 +33,50 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
+    # Loopback only. The image build (network: host) and the DB migration
+    # script reach Postgres at 127.0.0.1:5432; nothing is exposed publicly.
+    ports:
+      - "127.0.0.1:5432:5432"
+    networks: [app]
+
+  # One-shot schema migrator. Prisma CLI is a devDependency, so it lives in
+  # the builder stage rather than the runtime image.
+  #   docker compose --profile tools run --rm migrate
+  migrate:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: builder
+      # The builder stage runs `next build`, which prerenders DB-backed pages.
+      network: host
+    command: ["npx", "prisma", "migrate", "deploy"]
+    profiles: ["tools"]
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env.production
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-bidgari}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-bidgari}?schema=public
+      DIRECT_URL: postgresql://${POSTGRES_USER:-bidgari}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-bidgari}?schema=public
     networks: [app]
 
   app:
     build:
       context: .
       dockerfile: Dockerfile
+      # `next build` prerenders DB-backed pages, so it must reach Postgres.
+      # Host networking lets the build hit the loopback-published db port.
+      network: host
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
+    # All runtime secrets/config live here (see .env.production.template).
+    # `environment` below wins over env_file for the loopback → service-name
+    # database URL swap.
+    env_file:
+      - .env.production
     environment:
       NODE_ENV: production
       PORT: "3000"
@@ -65,6 +101,7 @@ services:
       - caddy_config:/config
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN:-bidgari.com}
+      ACME_EMAIL: ${ACME_EMAIL:-admin@bidgari.com}
     networks: [app]
 
 networks:

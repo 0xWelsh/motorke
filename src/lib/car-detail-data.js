@@ -200,7 +200,7 @@ export function getCarReviews(carId) {
       return { reviews, avgRating, count: reviews.length };
     },
     ["car-reviews", carId],
-    { revalidate: 300, tags: [`car-reviews:${carId}`] }
+    { revalidate: 600, tags: [`car-reviews:${carId}`] }
   );
   return cached();
 }

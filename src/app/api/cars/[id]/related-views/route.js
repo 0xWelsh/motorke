@@ -58,7 +58,7 @@ const getRelatedViews = unstable_cache(
     return relatedCars;
   },
   ["related-views"],
-  { revalidate: 300, tags: ["cars"] }
+  { revalidate: 600, tags: ["cars"] }
 );
 
 export async function GET(req, { params }) {

@@ -41,7 +41,7 @@ const getSimilarPriceSample = unstable_cache(
     });
   },
   ["market-similar-sample-v1"],
-  { revalidate: 300, tags: ["market-analysis"] }
+  { revalidate: 600, tags: ["market-analysis"] }
 );
 
 const getBroaderPriceSample = unstable_cache(
@@ -53,7 +53,7 @@ const getBroaderPriceSample = unstable_cache(
     });
   },
   ["market-broader-sample-v1"],
-  { revalidate: 300, tags: ["market-analysis"] }
+  { revalidate: 600, tags: ["market-analysis"] }
 );
 
 /**

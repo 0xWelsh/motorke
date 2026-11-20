@@ -1,5 +1,8 @@
 // src/app/cars/[id]/page.js
-export const revalidate = 60;
+// Listings are invalidated explicitly by revalidateInventory() on every edit,
+// so a 1h timer is plenty. 60s meant each crawled listing re-rendered every
+// minute — the single biggest source of ISR writes.
+export const revalidate = 3600;
 import { db } from "@/lib/db";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
@@ -124,7 +127,7 @@ function getCarData(ref) {
     ["car-detail-v4", ref],
     // Only the per-listing tag: a generic "cars" tag would wipe every detail
     // page whenever any single listing is edited.
-    { revalidate: 120, tags: [`car-detail:${ref}`] }
+    { revalidate: 3600, tags: [`car-detail:${ref}`] }
   );
   return cached();
 }

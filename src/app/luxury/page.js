@@ -1,7 +1,7 @@
 // No searchParams on this route, so the rendered page can be served from the
 // Vercel edge instead of re-rendering on every request. This was the slowest
 // cache MISS measured from Kenya at ~0.49s.
-export const revalidate = 300;
+export const revalidate = 3600;
 
 import Link from "next/link";
 import Image from "next/image";
@@ -64,7 +64,7 @@ const getLuxuryCars = unstable_cache(
     });
   },
   ["luxury-landing-cars-v4"],
-  { revalidate: 120, tags: ["cars", "homepage"] },
+  { revalidate: 3600, tags: ["cars", "homepage"] },
 );
 
 async function getHeroCar() {

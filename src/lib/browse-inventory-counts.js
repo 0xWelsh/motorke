@@ -129,7 +129,7 @@ const getCachedBrowseInventoryCounts = unstable_cache(
     }
   },
   ["browse-inventory-counts-v1"],
-  { revalidate: 300, tags: ["homepage", "makes", "browse-counts"] }
+  { revalidate: 600, tags: ["homepage", "makes", "browse-counts"] }
 );
 
 export async function getBrowseInventoryCounts() {

@@ -16,7 +16,7 @@ async function fetchSalesmanNumbers() {
 const getCachedSalesmanNumbers = unstable_cache(
   fetchSalesmanNumbers,
   ["salesman-whatsapp-numbers"],
-  { revalidate: 300, tags: ["settings"] }
+  { revalidate: 3600, tags: ["settings"] }
 );
 
 export async function getSalesmanWhatsappNumbers() {

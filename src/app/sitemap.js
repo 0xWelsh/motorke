@@ -1,9 +1,8 @@
 // src/app/sitemap.js
 // Next.js generates /sitemap.xml automatically from this file.
 
-// Regenerate at most every 15 minutes instead of rebuilding from the DB on
-// every crawl hit.
-export const revalidate = 900;
+// Regenerate hourly instead of rebuilding from the DB on every crawl hit.
+export const revalidate = 3600;
 import { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
 import { absoluteUrl, getSiteOrigin } from "@/lib/site-url";

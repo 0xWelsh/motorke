@@ -19,7 +19,9 @@ import {
   buildFaqSchema,
 } from "@/lib/seo-schema";
 import { absoluteUrl } from "@/lib/site-url";
-export const dynamic = "force-dynamic";
+// Programmatic comparison pages are the highest-cardinality SEO surface.
+// Force-dynamic meant every crawler hit re-ran all DB queries. Cache for 1h.
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;

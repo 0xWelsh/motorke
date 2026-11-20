@@ -393,7 +393,7 @@ const getCachedData = unstable_cache(
     }
   },
   ["homepage-minimal-v6"],
-  { revalidate: 300, tags: ["homepage"] }
+  { revalidate: 600, tags: ["homepage"] }
 );
 
 const getCachedHomeEnriched = unstable_cache(
@@ -408,7 +408,7 @@ const getCachedHomeEnriched = unstable_cache(
     }
   },
   ["homepage-enriched-v8"],
-  { revalidate: 120, tags: ["homepage"] }
+  { revalidate: 600, tags: ["homepage"] }
 );
 
 export async function getHomepageData() {

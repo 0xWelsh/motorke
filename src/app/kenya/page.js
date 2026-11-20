@@ -41,7 +41,7 @@ const getKenyaCars = unstable_cache(
     });
   },
   ["kenya-landing-cars-v1"],
-  { revalidate: 120, tags: ["cars", "homepage"] },
+  { revalidate: 600, tags: ["cars", "homepage"] },
 );
 
 const STEPS = [
