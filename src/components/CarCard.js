@@ -34,7 +34,8 @@ import { useCarFlag } from "@/hooks/use-car-flag";
 // Every grid that renders this card is 2-up on mobile, so ~48vw is the true
 // slot width there. Declaring that honestly is what lets phones select the
 // 400w WebP (~25KB) instead of the 800w one (~100KB).
-const GRID_SIZES = "(max-width: 768px) 48vw, (max-width: 1024px) 24vw, 16vw";
+const GRID_SIZES =
+  "(max-width: 640px) 48vw, (max-width: 1024px) 31vw, (max-width: 1536px) 24vw, 19vw";
 
 const titleCase = (s) =>
   String(s || "").replace(/\S+/g, (word) =>
@@ -438,9 +439,9 @@ function PremiumGridCard({
         </div>
 
         <div className="min-w-0 px-0.5 pt-2.5">
-          <div className="flex items-baseline justify-between gap-3">
+          <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-3">
             <h3
-              className="min-w-0 truncate text-[14.5px] font-bold leading-snug tracking-tight text-slate-900"
+              className="line-clamp-2 min-w-0 text-[14.5px] font-bold leading-snug tracking-tight text-slate-900 sm:line-clamp-1 sm:truncate"
               title={`${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`}
             >
               {titleHtml || [car.year, make, model].filter(Boolean).join(" ")}

@@ -421,7 +421,7 @@ export default function CarsInfiniteGrid({
               ))}
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8">
+            <div className="grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-5">
               {cars.map((car, index) => (
                 <CarCard key={car.id} car={car} priority={index < 2} />
               ))}

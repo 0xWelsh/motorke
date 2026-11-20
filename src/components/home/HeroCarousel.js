@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import { carListingPath } from "@/lib/car-listing-url";
 import { getThumbnailUrl } from "@/lib/image-transform";
 import { trackUiEvent } from "@/lib/analytics";
+import { FUEL_LABELS } from "@/lib/constants";
 
 export default function HeroCarousel({ cars = [] }) {
   const [index, setIndex] = useState(0);
@@ -28,10 +29,10 @@ export default function HeroCarousel({ cars = [] }) {
   const thumbs = images.slice(1, 4);
 
   const details = [
-    featured.year ? String(featured.year) : null,
     featured.mileage ? `${Number(featured.mileage).toLocaleString("en-KE")} km` : null,
-    featured.transmission || null,
-    featured.fuelType || null,
+    featured.engineCC ? `${Number(featured.engineCC).toLocaleString("en-KE")} cc` : null,
+    featured.fuelType ? FUEL_LABELS[featured.fuelType] || String(featured.fuelType) : null,
+    featured.location || featured.dealer?.location || null,
   ].filter(Boolean);
 
   return (
