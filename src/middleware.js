@@ -25,11 +25,11 @@ const CSRF_SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 // fetch — i.e. on every client navigation.
 const CSP_PROD =
   "default-src 'self'; " +
-  "script-src 'self' 'unsafe-inline' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com cdn.jsdelivr.net; " +
+  "script-src 'self' 'unsafe-inline' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com *.cloudflareinsights.com cdn.jsdelivr.net; " +
   "style-src 'self' 'unsafe-inline' *.googleapis.com *.fontshare.com fonts.googleapis.com; " +
   "img-src 'self' data: blob: https: *.supabase.co *.r2.dev *.unsplash.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
   "font-src 'self' *.fontshare.com fonts.gstatic.com; " +
-  "connect-src 'self' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com *.supabase.co *.r2.dev *.safaricom.co.ke vercel.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
+  "connect-src 'self' *.google.com *.gstatic.com *.recaptcha.net *.cloudflare.com *.cloudflareinsights.com *.supabase.co *.r2.dev *.safaricom.co.ke vercel.com *.openstreetmap.org tile.openstreetmap.org a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org; " +
   "frame-src 'self' *.google.com *.recaptcha.net *.cloudflare.com; " +
   "object-src 'none'; " +
   "base-uri 'self'; " +
