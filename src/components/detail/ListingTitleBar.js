@@ -103,15 +103,6 @@ export default function ListingTitleBar({
           </span>
         ) : null}
       </div>
-
-      {dealer?.slug ? (
-        <p className="mt-2.5 text-[11px] text-slate-400">
-          Listed by{" "}
-          <Link href={`/dealers/${dealer.slug}`} className="font-bold text-slate-600 hover:underline">
-            {dealer.name}
-          </Link>
-        </p>
-      ) : null}
     </div>
   );
 }

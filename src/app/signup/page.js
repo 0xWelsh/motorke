@@ -13,7 +13,6 @@ export default async function SignupPage({ searchParams }) {
   }
 
   const error = sp.error;
-  const role = sp.role;
 
-  return <SignupForm error={error} initialRole={role} />;
+  return <SignupForm error={error} />;
 }

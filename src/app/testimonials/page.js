@@ -10,12 +10,12 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: buildPageTitle("Testimonials"),
   description:
-    "Read what BIDGARI buyers and dealers say — real reviews from verified customers on their car-buying experience in Kenya.",
+    "Read what BIDGARI customers say — real reviews from verified buyers on their car-buying experience in Kenya.",
   ...buildCanonicalMetadata("/testimonials"),
   openGraph: {
     title: "Testimonials | BIDGARI",
     description:
-      "Real reviews from verified BIDGARI customers and dealers across Kenya.",
+      "Real reviews from verified BIDGARI customers across Kenya.",
     type: "website",
   },
 };
@@ -56,36 +56,16 @@ function Avatar({ name }) {
 }
 
 export default async function TestimonialsPage() {
-  const [dealerReviews, carReviews] = await Promise.all([
-    db.dealerReview.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 200,
-      include: {
-        user: { select: { name: true } },
-        dealer: { select: { name: true, slug: true } },
-      },
-    }),
-    db.carReview.findMany({
+  const carReviews = await db.carReview.findMany({
       orderBy: { createdAt: "desc" },
       take: 200,
       include: {
         user: { select: { name: true } },
         car: { select: { make: true, model: true, year: true, publicSlug: true } },
       },
-    }),
-  ]);
+    });
 
   const all = [
-    ...dealerReviews.map((r) => ({
-      id: `d-${r.id}`,
-      rating: r.rating,
-      comment: r.comment,
-      createdAt: r.createdAt,
-      author: r.user?.name || "BIDGARI customer",
-      targetLabel: r.dealer ? `Dealer: ${r.dealer.name}` : "BIDGARI dealer",
-      href: r.dealer?.slug ? `/dealers/${r.dealer.slug}` : null,
-      type: "dealer",
-    })),
     ...carReviews.map((r) => ({
       id: `c-${r.id}`,
       rating: r.rating,
@@ -158,7 +138,7 @@ export default async function TestimonialsPage() {
             <span className="text-slate-500">Real experiences.</span>
           </h1>
           <p className="text-lg text-slate-500 font-medium max-w-2xl leading-relaxed">
-            Verified reviews from BIDGARI customers and dealers across Kenya — on the vehicles
+            Verified reviews from BIDGARI customers across Kenya — on the vehicles
             they bought and the teams that served them.
           </p>
         </div>
@@ -191,7 +171,7 @@ export default async function TestimonialsPage() {
               <Quote className="mx-auto h-8 w-8 text-slate-300" />
               <p className="mt-6 text-lg font-bold text-slate-900">No reviews yet</p>
               <p className="mt-2 text-sm text-slate-500">
-                Reviews from BIDGARI buyers and dealers will appear here as they come in.
+                Reviews from BIDGARI customers will appear here as they come in.
               </p>
             </div>
           ) : (
@@ -215,15 +195,9 @@ export default async function TestimonialsPage() {
                       <div className="flex items-center gap-1.5">
                         <ShoppingBag className="h-3 w-3 shrink-0 text-slate-300" />
                         <span className="truncate text-xs font-medium text-slate-500">
-                          {r.type === "dealer" ? (
-                            <Link href={r.href || "#"} className="text-[var(--accent)] hover:underline">
-                              {r.targetLabel}
-                            </Link>
-                          ) : (
-                            <Link href={r.href || "#"} className="text-[var(--accent)] hover:underline">
-                              {r.targetLabel}
-                            </Link>
-                          )}
+                          <Link href={r.href || "#"} className="text-[var(--accent)] hover:underline">
+                            {r.targetLabel}
+                          </Link>
                         </span>
                       </div>
                     </div>

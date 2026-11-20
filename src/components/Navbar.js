@@ -50,7 +50,6 @@ const ABOUT_LINKS = [
 
 const MEMBER_LINKS = [
   { label: "Sell With BIDGARI", href: "/sell" },
-  { label: "Dealer Portal", href: "/portal" },
   { label: "Create Account", href: "/signup" },
   { label: "Login", href: "/login" },
 ];

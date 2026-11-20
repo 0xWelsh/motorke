@@ -76,15 +76,15 @@ export function globalHubTitleAndDescription(resolved, total) {
   switch (resolved.kind) {
     case "global_body":
       return {
-        title: `${base} | Verified dealer stock | BIDGARI`,
-        description: `Browse ${n} verified ${BODY_TYPE_LABELS[resolved.bodyType]?.toLowerCase() || "vehicle"} listings from Kenyan dealers. Compare prices and contact sellers on BIDGARI.`,
+        title: `${base} | Verified stock | BIDGARI`,
+        description: `Browse ${n} verified ${BODY_TYPE_LABELS[resolved.bodyType]?.toLowerCase() || "vehicle"} listings, inspected and sold by BIDGARI. Compare prices and enquire in one tap.`,
       };
     case "global_body_price": {
       const bl = BODY_TYPE_LABELS[resolved.bodyType] || resolved.bodyType;
       const band = SEO_PRICE_BANDS.find((b) => b.slug === resolved.bandSlug);
       return {
         title: `${resolved.h1} | ${bl} listings Kenya | BIDGARI`,
-        description: `Shop ${n} ${String(bl).toLowerCase()} vehicles ${band?.label || "in this budget"} from verified dealers. Live stock updated on BIDGARI.`,
+        description: `Shop ${n} ${String(bl).toLowerCase()} vehicles ${band?.label || "in this budget"} — every one inspected, priced, and sold by BIDGARI. Live stock updated daily.`,
       };
     }
     case "global_price":
@@ -141,11 +141,11 @@ export function globalHubIntroCopy(resolved, total) {
   const n = total;
   switch (resolved.kind) {
     case "global_body_price":
-      return `${n} live listings match this budget and body style. BIDGARI aggregates verified dealer stock so you can compare ${resolved.h1.toLowerCase()} without scrolling generic classifieds.`;
+      return `${n} live listings match this budget and body style. BIDGARI sources, inspects, and sells this stock itself, so you can compare ${resolved.h1.toLowerCase()} without scrolling generic classifieds.`;
     case "global_price":
-      return `${n} vehicles are listed ${resolved.band.label}. Use this hub to shortlist by make, then open each listing for dealer contact and location.`;
+      return `${n} vehicles are listed ${resolved.band.label}. Use this hub to shortlist by make, then open each listing for full specs and one-tap enquiry to the BIDGARI team.`;
     case "global_body":
-      return `${n} ${resolved.h1.toLowerCase()} from Kenyan dealerships. Every listing links to a verified seller profile and direct WhatsApp or phone contact.`;
+      return `${n} ${resolved.h1.toLowerCase()} — every one inspected, priced, and sold directly by the BIDGARI team.`;
     default:
       return null;
   }

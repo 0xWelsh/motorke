@@ -1,10 +1,7 @@
 "use client";
 
 // src/components/detail/SellerCard.js
-import Image from "next/image";
-import Link from "next/link";
 import { BadgeCheck, Phone, MapPin } from "lucide-react";
-import { absoluteMediaUrl } from "@/lib/site-url";
 import { SaveButton } from "@/components/CarActions";
 import { useClientSession } from "@/hooks/use-client-session";
 import { recordLeadIntent } from "@/lib/record-lead";
@@ -28,8 +25,6 @@ export default function SellerCard({
   count,
 }) {
   const { user: clientUser } = useClientSession();
-  const avatarUrl = dealer?.users?.[0]?.avatarUrl || null;
-  const initial = (dealer?.name || "B").trim().charAt(0).toUpperCase();
 
   function onWhatsApp() {
     recordLeadIntent({
@@ -77,43 +72,23 @@ export default function SellerCard({
 
   return (
     <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-      {/* Seller header */}
+      {/* Seller header — one identity: BIDGARI. Dealerships are where the
+         stock is sourced; buyers only ever deal with our team. */}
       <div className="flex items-center gap-3 px-4 py-4">
         <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
-          {avatarUrl ? (
-            <Image
-              src={absoluteMediaUrl(avatarUrl)}
-              alt={dealer?.name || "Seller"}
-              fill
-              sizes="48px"
-              className="object-cover"
-            />
-          ) : (
-            <span className="flex h-full w-full items-center justify-center bg-[var(--sidebar-bar)] text-[18px] font-black text-white">
-              {initial}
-            </span>
-          )}
+          <span className="flex h-full w-full items-center justify-center bg-[var(--sidebar-bar)] text-[18px] font-black text-white">
+            B
+          </span>
         </div>
 
         <div className="min-w-0 flex-1">
-          {dealer?.slug ? (
-            <Link
-              href={`/dealers/${dealer.slug}`}
-              className="group inline-flex max-w-full items-center gap-1.5 hover:underline"
-            >
-              <span className="truncate text-[15px] font-bold text-slate-900">{dealer?.name}</span>
-              {dealer?.verificationStatus === "VERIFIED" && (
-                <BadgeCheck className="h-4 w-4 shrink-0 text-emerald-500" aria-label="Verified dealer" />
-              )}
-            </Link>
-          ) : (
-            <span className="flex items-center gap-1.5">
-              <span className="truncate text-[15px] font-bold text-slate-900">{dealer?.name}</span>
-              {dealer?.verificationStatus === "VERIFIED" && (
-                <BadgeCheck className="h-4 w-4 shrink-0 text-emerald-500" aria-label="Verified dealer" />
-              )}
-            </span>
-          )}
+          <span className="flex items-center gap-1.5">
+            <span className="truncate text-[15px] font-bold text-slate-900">BIDGARI</span>
+            <BadgeCheck className="h-4 w-4 shrink-0 text-emerald-500" aria-label="Verified seller" />
+          </span>
+          <p className="mt-0.5 text-[11px] leading-snug text-slate-500">
+            Every car inspected, priced, and sold directly by our team.
+          </p>
           {locationLabel && (
             <p className="mt-0.5 flex items-center gap-1 text-[11px] text-slate-500">
               <MapPin className="h-3 w-3 shrink-0" aria-hidden />
@@ -122,7 +97,7 @@ export default function SellerCard({
           )}
           {typeof count === "number" && count > 0 && (
             <p className="mt-0.5 text-[11px] text-slate-400">
-              {count} vehicle{count !== 1 ? "s" : ""} in stock
+              {count} vehicle{count !== 1 ? "s" : ""} available now
             </p>
           )}
         </div>

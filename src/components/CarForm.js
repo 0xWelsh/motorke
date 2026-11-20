@@ -985,7 +985,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
             ref={parseTextareaRef}
             defaultValue=""
             rows={3}
-            placeholder={"Paste the dealer's description here — e.g.\n2019 Toyota Axio NKT 1.5L, KES 2,800,000, 78,000 km, petrol, automatic, white, Nairobi"}
+            placeholder={"Paste the car's description here — e.g.\n2019 Toyota Axio NKT 1.5L, KES 2,800,000, 78,000 km, petrol, automatic, white, Nairobi"}
             className="w-full border border-white/[0.06] rounded-xl px-3 py-2.5 text-sm text-white bg-[#222222] outline-none focus:border-purple-500/50 transition-all resize-y min-h-[4rem] placeholder:text-zinc-600"
           />
           <div className="flex items-center gap-3">

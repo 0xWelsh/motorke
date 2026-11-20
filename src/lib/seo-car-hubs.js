@@ -172,41 +172,41 @@ export function hubTitleAndDescription(resolved, total) {
     case "county":
       return {
         title: `Cars for sale in ${resolved.county} | BIDGARI`,
-        description: `Browse ${n}+ verified vehicles from trusted dealers in ${resolved.county}, Kenya. Compare prices, specs, and contact sellers on BIDGARI.`,
+        description: `Browse ${n}+ verified vehicles in ${resolved.county}, Kenya — every one inspected, priced, and sold by the BIDGARI team. Compare and enquire in one tap.`,
       };
     case "make":
       return {
         title: `${resolved.make} cars for sale in Kenya | BIDGARI`,
-        description: `Shop ${n} verified ${resolved.make} listings across Kenya. Filter by year, price, fuel, and body type, dealer inventory on BIDGARI.`,
+        description: `Shop ${n} verified ${resolved.make} listings across Kenya. Filter by year, price, fuel, and body type — all stock sold directly by BIDGARI.`,
       };
     case "make_model":
       return {
         title: `${resolved.make} ${resolved.model} for sale in Kenya | BIDGARI`,
-        description: `Find ${resolved.make} ${resolved.model} cars for sale, ${n} live listings from verified Kenyan dealers on BIDGARI.`,
+        description: `Find ${resolved.make} ${resolved.model} cars for sale — ${n} live listings, inspected and sold directly by BIDGARI.`,
       };
     case "make_county":
       return {
         title: `${resolved.make} for sale in ${resolved.county} | BIDGARI`,
-        description: `Browse ${n} ${resolved.make} vehicles listed by dealers in ${resolved.county}. Transparent pricing and direct contact on BIDGARI.`,
+        description: `Browse ${n} ${resolved.make} vehicles available in ${resolved.county}. Transparent pricing, one trusted contact: BIDGARI.`,
       };
     case "make_fuel": {
       const fl = fuelFacetLabel(resolved.fuelType);
       return {
         title: `${resolved.make} ${fl} cars for sale in Kenya | BIDGARI`,
-        description: `${n} ${resolved.make} ${fl.toLowerCase()} listings from verified Kenyan dealers, compare prices and specs on BIDGARI.`,
+        description: `${n} ${resolved.make} ${fl.toLowerCase()} listings, verified and sold by BIDGARI — compare prices and specs in one place.`,
       };
     }
     case "make_body": {
       const bl = BODY_TYPE_LABELS[resolved.bodyType] || resolved.bodyType;
       return {
         title: `${resolved.make} ${bl} for sale in Kenya | BIDGARI`,
-        description: `Shop ${n} ${resolved.make} ${String(bl).toLowerCase()} vehicles from dealers across Kenya on BIDGARI.`,
+        description: `Shop ${n} ${resolved.make} ${String(bl).toLowerCase()} vehicles across Kenya — inspected, priced, and sold by BIDGARI.`,
       };
     }
     case "make_price_band":
       return {
         title: `${resolved.make} (${resolved.band.label}), cars for sale | BIDGARI`,
-        description: `Browse ${n} ${resolved.make} listings in this price range from verified Kenyan dealers on BIDGARI.`,
+        description: `Browse ${n} ${resolved.make} listings in this price range — verified stock, sold directly by BIDGARI.`,
       };
     case "global_body":
     case "global_body_price":

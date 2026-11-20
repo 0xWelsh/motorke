@@ -203,7 +203,7 @@ export default function NotificationsBell({ variant = "portal" }) {
                     </p>
                     <div className="flex items-center gap-2 mt-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                        <span>{formatRelativeTime(item.createdAt)}</span>
-                       {item.dealership && <span>• {item.dealership}</span>}
+                       
                     </div>
                   </>
                 );

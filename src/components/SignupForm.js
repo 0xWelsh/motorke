@@ -1,17 +1,10 @@
 "use client";
 import { useState } from "react";
 import { Loader2, ArrowRight, Eye, EyeOff } from "lucide-react";
-import { clsx } from "clsx";
 import Link from "next/link";
 import HumanCheck from "./HumanCheck";
 import GoogleAuthButton, { GoogleAuthDivider } from "./GoogleAuthButton";
 import AuthLayout from "./AuthLayout";
-import { PHONE_COUNTRY_CODE_HELPER, PHONE_PLACEHOLDER_INTERNATIONAL } from "@/lib/phone-hints";
-
-const COUNTIES = [
-  "Nairobi","Mombasa","Kisumu","Nakuru","Uasin Gishu","Kiambu","Machakos",
-  "Kajiado","Muranga","Nyeri","Meru","Embu","Kilifi","Kwale","Laikipia","Other"
-];
 
 function PasswordMeter({ password }) {
   let score = 0;
@@ -52,7 +45,7 @@ function PasswordMeter({ password }) {
   );
 }
 
-export default function SignupForm({ error: initialError, initialRole }) {
+export default function SignupForm({ error: initialError }) {
   const initialErrorMessage =
     initialError === "invalid"
       ? "Please fill all required fields correctly."
@@ -64,7 +57,6 @@ export default function SignupForm({ error: initialError, initialRole }) {
           ? "Please complete the security check and try again."
           : initialError || "";
 
-  const [role, setRole] = useState(initialRole === "DEALER" ? "DEALER" : "BUYER");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -119,35 +111,13 @@ export default function SignupForm({ error: initialError, initialRole }) {
     <AuthLayout>
       <div className="w-full">
         <h2 className="text-xl font-black text-slate-900 tracking-tight mb-4">
-          Join the network
+          Create your account
         </h2>
 
-        <div className="flex gap-1.5 mb-4 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
-          <button
-            type="button"
-            onClick={() => setRole("BUYER")}
-            className={clsx(
-              "flex-1 py-1.5 px-3 font-bold text-[11px] transition-all rounded-md",
-              role === "BUYER"
-                ? "bg-white text-slate-900 shadow-sm"
-                : "text-slate-500 hover:text-slate-500"
-            )}
-          >
-            Personal
-          </button>
-          <button
-            type="button"
-            onClick={() => setRole("DEALER")}
-            className={clsx(
-              "flex-1 py-1.5 px-3 font-bold text-[11px] transition-all rounded-md",
-              role === "DEALER"
-                ? "bg-[var(--accent)] text-white shadow-sm"
-                : "text-slate-500 hover:text-slate-500"
-            )}
-          >
-            Dealership
-          </button>
+        <div className="mb-3">
+          <GoogleAuthButton mode="signup" next="/" />
         </div>
+        <GoogleAuthDivider />
 
         {errorMsg && (
           <div className="mb-4 p-3 bg-rose-950/20 border-l-2 border-rose-500/60 rounded">
@@ -155,26 +125,12 @@ export default function SignupForm({ error: initialError, initialRole }) {
           </div>
         )}
 
-        {role === "BUYER" ? (
-          <>
-            <div className="mb-3">
-              <GoogleAuthButton mode="signup" next="/" />
-            </div>
-            <GoogleAuthDivider />
-          </>
-        ) : (
-          <p className="mb-3 text-[11px] font-medium text-slate-500 leading-relaxed">
-            Dealerships sign up with email so we can verify your business.
-            Switch to <button type="button" onClick={() => setRole("BUYER")} className="underline underline-offset-2 text-[var(--accent)] hover:no-underline">Personal</button> for Google one-tap.
-          </p>
-        )}
-
         <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
           <input type="hidden" name="captchaToken" value={captchaToken} readOnly />
           <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
-          <input type="hidden" name="role" value={role} />
+          <input type="hidden" name="role" value="BUYER" />
 
-          <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
+          <div className="md:col-span-2">
             <label htmlFor="signup-email" className="block text-xs font-semibold text-slate-500 mb-1">Email</label>
             <input
               id="signup-email"
@@ -188,7 +144,7 @@ export default function SignupForm({ error: initialError, initialRole }) {
             />
           </div>
 
-          <div className={role === "DEALER" ? "md:col-span-1" : "md:col-span-2"}>
+          <div className="md:col-span-2">
             <label htmlFor="name" className="block text-xs font-semibold text-slate-500 mb-1">Full Name</label>
             <input
               id="name"
@@ -235,57 +191,6 @@ export default function SignupForm({ error: initialError, initialRole }) {
               className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
           </div>
-
-          {role === "DEALER" && (
-            <>
-              <div className="md:col-span-2 pt-1">
-                <div className="h-px bg-slate-200 w-full mb-3" />
-                <h4 className="text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500 mb-3">Business</h4>
-              </div>
-
-              <div className="md:col-span-1">
-                <label htmlFor="dealerName" className="block text-xs font-semibold text-slate-500 mb-1">Dealership Title</label>
-                <input
-                  id="dealerName"
-                  name="dealerName"
-                  type="text"
-                  required
-                  placeholder="Japanese Car Exports"
-                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
-                />
-              </div>
-
-              <div className="md:col-span-1">
-                <label htmlFor="phone" className="block text-xs font-semibold text-slate-500 mb-1">Phone</label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  required
-                  placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
-                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
-                />
-                <p className="mt-1 text-[9px] font-medium text-slate-400">{PHONE_COUNTRY_CODE_HELPER}</p>
-              </div>
-
-              <div className="md:col-span-2">
-                <label htmlFor="county" className="block text-xs font-semibold text-slate-500 mb-1">Base County</label>
-                <select
-                  id="county"
-                  name="county"
-                  required
-                  className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all appearance-none cursor-pointer"
-                >
-                  <option value="" className="bg-slate-100 text-slate-500">Select a county</option>
-                  {COUNTIES.map((c) => (
-                    <option key={c} value={c} className="bg-slate-100 text-slate-900">{c}</option>
-                  ))}
-                </select>
-              </div>
-            </>
-          )}
 
           <div className="md:col-span-2 pt-1">
             <div className="mb-3">

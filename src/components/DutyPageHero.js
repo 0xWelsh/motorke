@@ -52,7 +52,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
               <span className="text-accent">duty calculator</span>
             </h1>
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed mb-4">
-              Instant KRA-style tax breakdown for popular imports, then browse matching verified dealer stock.
+              Instant KRA-style tax breakdown for popular imports, then browse matching stock we sell directly.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 mb-5 max-w-md">

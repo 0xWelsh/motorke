@@ -254,7 +254,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
         {/* ── ENQUIRIES ── */}
         {tab === "enquiries" && (
           enquiries.length === 0
-            ? <Empty icon={<MessageSquare size={32} className="text-[var(--accent)]" />} title="No Messages Yet" desc="Messages and inquiries you send to dealers will appear here." href="/cars" cta="Browse Cars" />
+            ? <Empty icon={<MessageSquare size={32} className="text-[var(--accent)]" />} title="No Messages Yet" desc="Messages and enquiries you send through BIDGARI will appear here." href="/cars" cta="Browse Cars" />
             : (
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {enquiries.map(e => (

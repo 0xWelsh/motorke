@@ -42,7 +42,7 @@ const CTAS = [
   },
   {
     title: "Looking for a deal?",
-    subtitle: "Best prices from verified dealers",
+    subtitle: "Inspected stock, honest prices, sold by BIDGARI",
     href: "/cars?sort=price_asc",
     icon: TrendingUp,
     iconBg: "bg-orange-100 text-orange-600",

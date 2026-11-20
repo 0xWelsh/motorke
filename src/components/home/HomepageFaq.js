@@ -4,20 +4,20 @@ import { ChevronDown } from "lucide-react";
 
 const FAQ_ITEMS = [
   {
-    q: "How does BIDGARI verify dealers?",
-    a: "Every dealership on BIDGARI goes through a verification process before they can list cars. We confirm business registration, physical showroom existence, and track record. Verified dealers carry a badge on their listings so you know who you're dealing with.",
+    q: "How does BIDGARI verify its cars?",
+    a: "Every car we list passes our own checks before it goes live: ownership documents, mileage and condition verification, import duty status, and a physical inspection. We source stock from trusted partner yards, but the verification, the price, and the sale are all ours — you deal with BIDGARI, one team, start to finish.",
   },
   {
-    q: "Is there a fee to list or buy a car?",
-    a: "Listing is free for dealers — no subscription, no commission, no hidden charges. Buyers also pay nothing to browse, compare, or contact sellers. BIDGARI earns from dealer subscription plans that unlock premium features like spotlight placement and boost.",
+    q: "Is there a fee to buy a car through BIDGARI?",
+    a: "No. Browsing, comparing, duty estimates, and buying cost nothing extra — the price you see is the price we agree. We earn when a car sells, which is why every listing is inspected and priced to move, not padded with hidden charges.",
   },
   {
     q: "How accurate is the duty calculator?",
     a: "Our duty calculator uses current KRA rates (import duty, excise, VAT, IDF, RDL) based on the car's engine size, age, and CIF value. It gives you a close estimate of what the car will cost once it lands in Kenya. For exact figures, consult a licensed clearing agent.",
   },
   {
-    q: "Can I compare cars before contacting a dealer?",
-    a: "Yes. Pick up to three cars and compare them side by side — specs, pricing, total cost of ownership, and road-readiness signals in one view. No need to hop between tabs or call multiple dealers to get basic info.",
+    q: "Can I compare cars before enquiring?",
+    a: "Yes. Pick up to three cars and compare them side by side — specs, pricing, total cost of ownership, and road-readiness signals in one view. No tab-hopping, no phone tag with five different sellers: one enquiry to BIDGARI covers it all.",
   },
 ];
 

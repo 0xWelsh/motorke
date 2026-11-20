@@ -184,9 +184,6 @@ export function getSpecGroups(getInsights) {
         { id: "imported", label: "Imported", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: yesNo(c?.imported), raw: c?.imported }) },
         { id: "importCountry", label: "Import country", tags: ["all", "city", "longtrip"], pick: (c) => ({ value: toDisplay(c?.importCountry), raw: c?.importCountry }) },
         { id: "registered", label: "Registered in Kenya", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: c?.registered == null ? "Not specified" : c.registered === false ? "No" : "Yes", raw: c?.registered }) },
-        { id: "dealer", label: "Dealer", tags: ["all", "city", "family", "performance", "longtrip"], pick: (c) => ({ value: toDisplay(c?.dealer?.name), raw: c?.dealer?.name }) },
-        { id: "dealerType", label: "Seller type", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: c?.dealer?.type === "DEALERSHIP" ? "Dealership" : "Broker", raw: c?.dealer?.type }), rank: "auto" },
-        { id: "dealerVerified", label: "Seller verified", tags: ["all", "city", "family", "longtrip"], pick: (c) => ({ value: c?.dealer?.verificationStatus === "VERIFIED" ? "Yes" : "No", raw: c?.dealer?.verificationStatus === "VERIFIED" }), rank: "booltrue" },
       ],
     },
     {

@@ -151,7 +151,6 @@ export default async function sitemap() {
     { url: `${BASE}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },
     { url: `${BASE}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },
     { url: `${BASE}/kenya`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    { url: `${BASE}/dealers`, lastModified: now, changeFrequency: "weekly", priority: 0.75 },
     { url: `${BASE}/testimonials`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${BASE}/how-to-buy`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/trust`, lastModified: now, changeFrequency: "monthly", priority: 0.65 },
@@ -256,16 +255,6 @@ export default async function sitemap() {
     priority: 0.75,
   }));
 
-  const dealerPages = await db.dealer.findMany({
-    where: dealerWhere,
-    select: { slug: true, updatedAt: true },
-  }).then((rows) => rows.map((d) => ({
-    url: `${BASE}/dealers/${d.slug}`,
-    lastModified: d.updatedAt || now,
-    changeFrequency: "weekly",
-    priority: 0.72,
-  })));
-
   return dedupeByUrl([
     ...staticPages,
     ...globalHubPages,
@@ -280,6 +269,5 @@ export default async function sitemap() {
     ...dutyPages,
     ...contentPages,
     ...showroomHubPages,
-    ...dealerPages,
   ]);
 }

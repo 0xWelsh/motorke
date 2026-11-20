@@ -376,7 +376,7 @@ export default function CarsInfiniteGrid({
           </h2>
           <p className="text-slate-500 font-medium mb-6">
             {noFiltersActive
-              ? "Dealers are uploading inventory now. Tell us the car you want and we'll source it."
+              ? "We are sourcing new stock now. Tell us the car you want and we'll find it for you."
               : "Try adjusting your filters or resetting your search."}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2">
@@ -384,9 +384,6 @@ export default function CarsInfiniteGrid({
               <>
                 <Link href="/request-car" className="btn btn-primary btn-sm">
                   Request a car
-                </Link>
-                <Link href="/dealers" className="btn btn-neutral btn-sm">
-                  Browse dealers
                 </Link>
               </>
             ) : (

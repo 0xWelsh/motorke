@@ -92,7 +92,7 @@ export default function DutySimilarStock({ make, model }) {
 
         {!make && (
           <p className="text-sm text-slate-500">
-            Run an estimate to see matching listings from verified dealers.
+            Run an estimate to see matching listings we sell directly.
           </p>
         )}
 

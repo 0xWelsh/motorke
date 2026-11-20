@@ -3,8 +3,8 @@ import { ShieldCheck, Scale, PhoneCall } from "lucide-react";
 const BADGES = [
   {
     icon: ShieldCheck,
-    title: "Verified dealer inventory",
-    desc: "Every dealership is verified before listing. You deal with real businesses, not anonymous sellers.",
+    title: "Every car verified by BIDGARI",
+    desc: "We inspect, verify, and price every car ourselves. You deal with one team — BIDGARI — never anonymous sellers.",
   },
   {
     icon: Scale,
@@ -13,7 +13,7 @@ const BADGES = [
   },
   {
     icon: PhoneCall,
-    title: "Direct dealer contact",
+    title: "One team, one contact",
     desc: "Call or WhatsApp the BIDGARI team from any listing. No forms, no commissions, no delays.",
   },
 ];
