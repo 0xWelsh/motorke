@@ -70,63 +70,38 @@ function normalizeQuery(query) {
 // Middleware to add to Prisma client for production monitoring
 export function withQueryMonitoring(prismaClient) {
   if (process.env.NODE_ENV !== "production") return prismaClient;
-  
+
   const monitor = createQueryMonitor();
-  
+
   // Extend client with $on for query events
   const originalQueryRaw = prismaClient.$queryRaw.bind(prismaClient);
   const originalQueryRawUnsafe = prismaClient.$queryRawUnsafe.bind(prismaClient);
   const originalExecuteRaw = prismaClient.$executeRaw.bind(prismaClient);
   const originalExecuteRawUnsafe = prismaClient.$executeRawUnsafe.bind(prismaClient);
-  
-  const wrappedClient = {
-    ...prismaClient,
-    $queryRaw: async (...args) => {
-      const start = Date.now();
-      try {
-        return await originalQueryRaw(...args);
-      } finally {
-        const duration = Date.now() - start;
-        if (duration > SLOW_QUERY_THRESHOLD_MS) {
-          console.warn(`[SLOW $queryRaw] ${duration}ms`);
-        }
+
+  // Object.create keeps the real client's prototype chain intact — a
+  // spread ({ ...prismaClient }) silently drops prototype methods like
+  // $transaction/$connect/$disconnect/$extends, which broke "Publish" in
+  // production with "db.$transaction is not a function".
+  const wrappedClient = Object.create(prismaClient);
+
+  const timed = (label, fn) => async (...args) => {
+    const start = Date.now();
+    try {
+      return await fn(...args);
+    } finally {
+      const duration = Date.now() - start;
+      if (duration > SLOW_QUERY_THRESHOLD_MS) {
+        console.warn(`[SLOW ${label}] ${duration}ms`);
       }
-    },
-    $queryRawUnsafe: async (...args) => {
-      const start = Date.now();
-      try {
-        return await originalQueryRawUnsafe(...args);
-      } finally {
-        const duration = Date.now() - start;
-        if (duration > SLOW_QUERY_THRESHOLD_MS) {
-          console.warn(`[SLOW $queryRawUnsafe] ${duration}ms`);
-        }
-      }
-    },
-    $executeRaw: async (...args) => {
-      const start = Date.now();
-      try {
-        return await originalExecuteRaw(...args);
-      } finally {
-        const duration = Date.now() - start;
-        if (duration > SLOW_QUERY_THRESHOLD_MS) {
-          console.warn(`[SLOW $executeRaw] ${duration}ms`);
-        }
-      }
-    },
-    $executeRawUnsafe: async (...args) => {
-      const start = Date.now();
-      try {
-        return await originalExecuteRawUnsafe(...args);
-      } finally {
-        const duration = Date.now() - start;
-        if (duration > SLOW_QUERY_THRESHOLD_MS) {
-          console.warn(`[SLOW $executeRawUnsafe] ${duration}ms`);
-        }
-      }
-    },
+    }
   };
-  
+
+  wrappedClient.$queryRaw = timed("$queryRaw", originalQueryRaw);
+  wrappedClient.$queryRawUnsafe = timed("$queryRawUnsafe", originalQueryRawUnsafe);
+  wrappedClient.$executeRaw = timed("$executeRaw", originalExecuteRaw);
+  wrappedClient.$executeRawUnsafe = timed("$executeRawUnsafe", originalExecuteRawUnsafe);
+
   return wrappedClient;
 }
 
