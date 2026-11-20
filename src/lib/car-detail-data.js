@@ -19,7 +19,7 @@ export const getSimilarCars = unstable_cache(
     const candidates = await db.$queryRaw`
       SELECT 
         c.id, c.make, c.model, c.variant, c.year, c.price, c.mileage,
-        c."bodyType" as body_type, c."fuelType" as fuel_type, c.transmission, c.color, c.location,
+        c."bodyType"::text as body_type, c."fuelType"::text as fuel_type, c.transmission, c.color, c.location,
         c.available, c."createdAt" as created_at, c.badges, c.description, c.featured,
         c."featuredWeight" as featured_weight, c."spotlightUntil" as spotlight_until, c."hotBadgeUntil" as hot_badge_until, c.views,
         c."dealerId" as dealer_id,
@@ -41,7 +41,7 @@ export const getSimilarCars = unstable_cache(
         ${dealerVerificationFilter.dealer ? Prisma.sql`AND d."verificationStatus" = 'VERIFIED'` : Prisma.empty}
       ORDER BY 
         (CASE WHEN c."dealerId" = ${dealerId} THEN 45 ELSE 0 END) +
-        (CASE WHEN c."bodyType" = ${bodyType} THEN 20 ELSE 0 END) +
+        (CASE WHEN c."bodyType"::text = ${bodyType} THEN 20 ELSE 0 END) +
         GREATEST(0, 15 - ABS(COALESCE(c.year, 0) - COALESCE(${year}, 0)) * 3) +
         GREATEST(0, 20 - (ABS(COALESCE(c.price, 0) - COALESCE(${price}, 0))::float / NULLIF(${price}, 0)) * 40) +
         (CASE WHEN d."verificationStatus" = 'VERIFIED' THEN 3 ELSE 0 END) DESC,
@@ -72,7 +72,7 @@ export const getPeopleAlsoSearch = unstable_cache(
       WITH candidates AS (
         SELECT 
           c.id, c.make, c.model, c.variant, c.year, c.price, c.mileage,
-          c."bodyType" as body_type, c."fuelType" as fuel_type, c.transmission, c.color, c.location,
+          c."bodyType"::text as body_type, c."fuelType"::text as fuel_type, c.transmission, c.color, c.location,
           c.available, c."createdAt" as created_at,
           c."dealerId" as dealer_id,
           d.name as dealer_name, d.location as dealer_location,
@@ -92,10 +92,10 @@ export const getPeopleAlsoSearch = unstable_cache(
           AND c.id != ${carId}
           ${dealerVerificationFilter.dealer ? Prisma.sql`AND d."verificationStatus" = 'VERIFIED'` : Prisma.empty}
           AND (
-            ${bodyType ? Prisma.sql`c."bodyType" = ${bodyType}` : Prisma.sql`1=0`}
+            ${bodyType ? Prisma.sql`c."bodyType"::text = ${bodyType}` : Prisma.sql`1=0`}
             OR LOWER(c.make) = LOWER(${make})
             OR LOWER(c.model) = LOWER(${model})
-            ${fuelType ? Prisma.sql`OR c."fuelType" = ${fuelType}` : Prisma.sql``}
+            ${fuelType ? Prisma.sql`OR c."fuelType"::text = ${fuelType}` : Prisma.sql``}
             ${anchorPrice ? Prisma.sql`OR (c.price BETWEEN ${floor} AND ${ceiling})` : Prisma.sql``}
           )
         LIMIT 30

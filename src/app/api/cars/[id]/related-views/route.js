@@ -37,7 +37,7 @@ const getRelatedViews = unstable_cache(
         LIMIT 8
       )
       SELECT c.id, c.make, c.model, c.variant, c.year, c.price, c.mileage,
-             c."bodyType" as body_type, c."fuelType" as fuel_type, c.transmission, c.color, c.location,
+             c."bodyType"::text as body_type, c."fuelType"::text as fuel_type, c.transmission, c.color, c.location,
              c.available, c."createdAt" as created_at,
              c."dealerId" as dealer_id,
              d.name as dealer_name, d.location as dealer_location,
