@@ -7,7 +7,7 @@
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#ffffff",
-  "theme_color": "#ffffff",
+  "theme_color": "#00C010",
   "icons": [
     {
       "src": "/favicon.png",
@@ -28,13 +28,16 @@
       "purpose": "any"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/icon-512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
   ],
-  "categories": ["shopping", "automotive"],
+  "categories": [
+    "shopping",
+    "automotive"
+  ],
   "screenshots": [
     {
       "src": "/images/mercedes.jpg",

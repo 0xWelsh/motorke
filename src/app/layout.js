@@ -105,13 +105,13 @@ export const metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico?v=3", sizes: "48x48" },
-      { url: "/favicon.png?v=3", type: "image/png", sizes: "96x96" },
-      { url: "/icon-192.png?v=3", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512.png?v=3", sizes: "512x512", type: "image/png" },
+      { url: "/favicon.ico?v=4", sizes: "48x48" },
+      { url: "/favicon.png?v=4", type: "image/png", sizes: "96x96" },
+      { url: "/icon-192.png?v=4", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png?v=4", sizes: "512x512", type: "image/png" },
     ],
-    shortcut: [{ url: "/favicon.ico?v=3" }],
-    apple: [{ url: "/icon-192.png?v=3", sizes: "180x180", type: "image/png" }],
+    shortcut: [{ url: "/favicon.ico?v=4" }],
+    apple: [{ url: "/icon-192.png?v=4", sizes: "180x180", type: "image/png" }],
   },
 };
 

@@ -5,9 +5,9 @@
   Strategy: Cache-first for static assets, network-first for API calls
 */
 
-const CACHE_NAME = "welsh-motorhub-v7";
-const RUNTIME_CACHE = "welsh-motorhub-runtime-v7";
-const R2_IMAGE_CACHE = "welsh-motorhub-r2images-v7";
+const CACHE_NAME = "welsh-motorhub-v8";
+const RUNTIME_CACHE = "welsh-motorhub-runtime-v8";
+const R2_IMAGE_CACHE = "welsh-motorhub-r2images-v8";
 const MAX_R2_CACHE = 100;
 const OFFLINE_FALLBACK = new Response("Offline", {
   status: 503,
