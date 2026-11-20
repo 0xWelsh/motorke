@@ -272,13 +272,20 @@ function PriceBandRow({ priceBands }) {
       <div className="grid grid-cols-3 gap-2">
         {bands.map((band) => {
           const count = priceBands[band.slug];
+          // Compact display label — the full SEO label ("under KES 1M")
+          // truncated to "Under KES…" in a 3-col grid on a 390px phone.
+          const short = band.label
+            .replace(/^under\s+/i, "Under ")
+            .replace(/^over\s+/i, "Over ")
+            .replace(/kes\s+/i, "")
+            .replace(/\s*–\s*/g, "–");
           return (
             <Link
               key={band.slug}
               href={`/cars/${band.slug}`}
               className="flex min-w-0 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 py-2.5 text-center text-[12px] font-semibold leading-tight text-slate-700 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
             >
-              <span className="min-w-0 truncate capitalize">{band.label}</span>
+              <span className="min-w-0 truncate">{short}</span>
               <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-500">
                 {count}
               </span>
