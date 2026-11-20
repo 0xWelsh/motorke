@@ -7,7 +7,7 @@ import { BRANDS } from "@/lib/browse-catalog";
 import { trackUiEvent } from "@/lib/analytics";
 
 const selectCls =
-  "w-full border border-slate-200 bg-white px-3 py-2.5 text-[12px] font-semibold text-slate-900 outline-none focus:border-[var(--accent)] rounded-lg";
+  "w-full appearance-none border border-slate-200 bg-white px-3 py-2.5 pr-8 text-[12px] font-semibold text-slate-900 outline-none focus:border-[var(--accent)] rounded-lg bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2394a3b8%22 stroke-width=%223%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E')] bg-no-repeat bg-[right_0.6rem_center]";
 
 const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-slate-400";
 
@@ -61,9 +61,7 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
     router.push(q ? `/cars?${q}` : "/cars");
   }
 
-  const fieldGrid = embedded
-    ? "grid grid-cols-1 sm:grid-cols-2 gap-2.5"
-    : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3";
+  const fieldGrid = "grid grid-cols-2 gap-2";
 
   return (
     <div
@@ -82,14 +80,14 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
         Find your car
       </p>
       <h2
-        className={`font-bold text-slate-900 mb-3 sm:mb-4 ${
-          embedded ? "text-base text-left" : "text-lg sm:text-xl text-center mb-4 sm:mb-5"
+        className={`font-bold text-slate-900 mb-2 sm:mb-3 ${
+          embedded ? "text-base text-left" : "text-lg sm:text-xl text-center"
         }`}
       >
         What are you looking for?
       </h2>
 
-      <form onSubmit={handleSearch} className="space-y-3">
+      <form onSubmit={handleSearch} className="space-y-2">
         <div className={fieldGrid}>
           <div className="space-y-1">
             <label htmlFor="hero-make" className={labelCls}>
@@ -135,7 +133,7 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
             </select>
           </div>
 
-          <div className="space-y-1">
+          <div className="col-span-2 space-y-1">
             <label htmlFor="hero-budget" className={labelCls}>
               Max budget (KES)
             </label>
@@ -147,19 +145,18 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
               style={{ borderRadius: "var(--radius)" }}
             >
               <option value="">No limit</option>
-              <option value="1300000">Up to 1.3M</option>
-              <option value="2600000">Up to 2.6M</option>
-              <option value="3900000">Up to 3.9M</option>
-              <option value="6500000">Up to 6.5M</option>
-              <option value="9750000">Up to 9.8M</option>
-              <option value="13000000">Up to 13M</option>
+              <option value="1000000">Under 1M</option>
+              <option value="2000000">Under 2M</option>
+              <option value="3000000">Under 3M</option>
+              <option value="5000000">Under 5M</option>
+              <option value="10000000">Under 10M</option>
             </select>
           </div>
         </div>
 
         <button
           type="submit"
-          className="btn btn-primary btn-lg w-full"
+          className="btn btn-primary btn-lg w-full !py-2.5 sm:!py-3"
         >
           <Search className="h-4 w-4" aria-hidden />
           Search listings

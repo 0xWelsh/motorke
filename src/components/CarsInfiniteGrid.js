@@ -394,6 +394,9 @@ export default function CarsInfiniteGrid({
                 <Link href="/cars" className="btn btn-primary btn-sm">
                   Browse all cars
                 </Link>
+                <Link href="/newad" className="btn btn-neutral btn-sm">
+                  List your car instead
+                </Link>
                 {!noFiltersActive && (
                   <Link href="/cars" className="btn btn-neutral btn-sm">
                     Clear filters

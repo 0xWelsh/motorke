@@ -1,4 +1,7 @@
-export const revalidate = 300;
+// Programmatic make/model/price hubs are high-cardinality and heavily crawled.
+// Stock changes bust them via revalidateHubPathsForCar(); the timer is a
+// backstop, so 1h instead of 5 min keeps ISR writes down.
+export const revalidate = 3600;
 
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
@@ -276,10 +279,50 @@ export default async function CarHubPage({ params, searchParams }) {
 
   const where = await hubWhereClause(resolved);
 
+  // Quick-filter chips (price / fuel / gearbox) refine the hub server-side.
+  // Wrapped in AND so hub-derived clauses (e.g. price-band hubs) are never
+  // silently overwritten.
+  const minPrice = parseInt(sp.minPrice || "", 10) || 0;
+  const maxPrice = parseInt(sp.maxPrice || "", 10) || 0;
+  const quick = {
+    ...(minPrice || maxPrice
+      ? { price: { ...(minPrice && { gte: minPrice }), ...(maxPrice && { lte: maxPrice }) } }
+      : {}),
+    ...(sp.fuelType ? { fuelType: { in: String(sp.fuelType).split(",").filter(Boolean) } } : {}),
+    ...(sp.transmission ? { transmission: String(sp.transmission).split(",")[0] } : {}),
+  };
+  const filteredWhere = Object.keys(quick).length ? { AND: [where, quick] } : where;
+
+  function hubHref(nextSp) {
+    const q = new URLSearchParams();
+    for (const [k, v] of Object.entries(nextSp)) {
+      if (k !== "page" && v) q.set(k, String(v));
+    }
+    const s = q.toString();
+    return s ? `${resolved.path}?${s}` : resolved.path;
+  }
+  function toggleHref(key, value) {
+    const next = { ...sp };
+    if (key === "price") {
+      const active = (next.minPrice || "") === String(minPrice || "") && (next.maxPrice || "") === String(maxPrice || "");
+      delete next.minPrice;
+      delete next.maxPrice;
+      if (!active) {
+        if (value.min) next.minPrice = value.min;
+        if (value.max) next.maxPrice = value.max;
+      }
+    } else {
+      next[key] = next[key] === value ? "" : value;
+    }
+    return hubHref(next);
+  }
+  const isPriceActive = (v) =>
+    (parseInt(v.min || "0", 10) || 0) === minPrice && (parseInt(v.max || "0", 10) || 0) === maxPrice;
+
   const [total, cars, siblingMakes, countyLinks, popularMakes] = await Promise.all([
-    withDbRetry(() => db.car.count({ where })),
+    withDbRetry(() => db.car.count({ where: filteredWhere })),
     withDbRetry(() => db.car.findMany({
-      where,
+      where: filteredWhere,
       select: hubCarSelect,
       orderBy: [
         { featuredWeight: "desc" },
@@ -508,6 +551,50 @@ export default async function CarHubPage({ params, searchParams }) {
           </p>
         </header>
 
+        {/* Quick filters — refine this hub in place (server-side, no JS). */}
+        <div className="mb-6 flex flex-wrap items-center gap-1.5">
+          <span className="mr-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">Refine:</span>
+          {[
+            { label: "Under 1M", min: "", max: "1000000" },
+            { label: "1M – 3M", min: "1000000", max: "3000000" },
+            { label: "3M – 5M", min: "3000000", max: "5000000" },
+            { label: "Over 5M", min: "5000000", max: "" },
+          ].map((v) => {
+            const active = isPriceActive(v);
+            return (
+              <Link key={v.label} href={toggleHref("price", v)}
+                className={`rounded-full border px-3 py-1 text-[11px] font-semibold transition-colors ${active ? "border-[var(--accent)] bg-[var(--accent)] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"}`}>
+                {v.label}
+              </Link>
+            );
+          })}
+          <span className="mx-1 text-slate-200" aria-hidden>|</span>
+          {["PETROL", "DIESEL", "HYBRID", "ELECTRIC"].map((f) => {
+            const active = sp.fuelType === f;
+            return (
+              <Link key={f} href={toggleHref("fuelType", f)}
+                className={`rounded-full border px-3 py-1 text-[11px] font-semibold capitalize transition-colors ${active ? "border-[var(--accent)] bg-[var(--accent)] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"}`}>
+                {f.toLowerCase()}
+              </Link>
+            );
+          })}
+          <span className="mx-1 text-slate-200" aria-hidden>|</span>
+          {["AUTOMATIC", "MANUAL"].map((t) => {
+            const active = sp.transmission === t;
+            return (
+              <Link key={t} href={toggleHref("transmission", t)}
+                className={`rounded-full border px-3 py-1 text-[11px] font-semibold capitalize transition-colors ${active ? "border-[var(--accent)] bg-[var(--accent)] text-white" : "border-slate-200 bg-white text-slate-600 hover:border-slate-400"}`}>
+                {t.toLowerCase()}
+              </Link>
+            );
+          })}
+          {(minPrice || maxPrice || sp.fuelType || sp.transmission) ? (
+            <Link href={hubHref({})} className="ml-1 text-[11px] font-bold text-[var(--accent)] underline-offset-4 hover:underline">
+              Clear
+            </Link>
+          ) : null}
+        </div>
+
         {modelAggs ? (
           <div className="mb-8 rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-5 sm:px-6">
             <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
@@ -599,6 +686,13 @@ export default async function CarHubPage({ params, searchParams }) {
             >
               Browse all cars
             </Link>
+            <Link
+              href="/newad"
+              className="ml-3 inline-flex border border-slate-300 px-8 py-3 text-xs font-bold uppercase tracking-widest text-slate-700 hover:border-slate-500"
+              style={{ borderRadius: "var(--radius)" }}
+            >
+              List your car
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-3">
@@ -612,7 +706,7 @@ export default async function CarHubPage({ params, searchParams }) {
           <div className="mt-10 flex justify-center gap-2 flex-wrap">
             {page > 1 ? (
               <Link
-                href={`${path}?page=${page - 1}`}
+                href={`${path}?${new URLSearchParams({ ...sp, page: String(page - 1) }).toString()}`}
                 className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold"
               >
                 Previous
@@ -623,7 +717,7 @@ export default async function CarHubPage({ params, searchParams }) {
             </span>
             {page < totalPages ? (
               <Link
-                href={`${path}?page=${page + 1}`}
+                href={`${path}?${new URLSearchParams({ ...sp, page: String(page + 1) }).toString()}`}
                 className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold"
               >
                 Next

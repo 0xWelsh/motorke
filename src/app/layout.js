@@ -9,6 +9,7 @@ import { PWARegister } from "@/components/PWARegister";
 import AnalyticsBootstrap from "@/components/AnalyticsBootstrap";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import CookieConsent from "@/components/CookieConsent";
+import MobileTabBar from "@/components/MobileTabBar";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
 import PageTransition from "@/components/PageTransition";
 import PendingSwap from "@/components/PendingSwap";
@@ -248,6 +249,7 @@ export default async function RootLayout({ children }) {
           </SaveDataProvider>
           <ScrollToTop />
           <CookieConsent />
+          <MobileTabBar />
         </ThemeProvider>
         <Analytics />
       </body>

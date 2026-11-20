@@ -34,33 +34,23 @@ export default function CookieConsent() {
   };
 
   return (
-    <div 
-      className="fixed bottom-4 left-4 right-4 sm:right-auto sm:max-w-md w-auto sm:w-[400px] z-[9999] bg-white border border-slate-200 p-5 font-sans animate-in slide-in-from-bottom" 
-      style={{ borderRadius: 0, boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)' }}
-    >
-       <div className="flex justify-between items-start mb-4">
-         <h3 className="font-black text-slate-900 uppercase tracking-widest text-[11px]">Privacy & Cookies</h3>
-         <button onClick={decline} className="text-slate-400 hover:text-slate-600 transition-colors">
-           <X size={16} />
-         </button>
-       </div>
-       <p className="text-[13px] text-slate-600 font-medium leading-relaxed tracking-tight mb-5">
-          We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. By clicking &quot;Accept&quot;, you consent to our use of cookies.
-       </p>
-       <div className="flex items-center gap-3">
-         <button 
-           onClick={accept} 
-           className="flex-1 btn btn-primary"
-         >
-           Accept All
-         </button>
-         <button 
-           onClick={decline} 
-            className="flex-1 btn btn-neutral"
-         >
-           Decline
-         </button>
-       </div>
+    <div className="fixed bottom-[calc(env(safe-area-inset-bottom)+3.5rem)] left-0 right-0 z-[9999] md:bottom-0 bg-white/95 backdrop-blur border-t border-slate-200 shadow-[0_-8px_30px_-12px_rgba(0,0,0,0.15)] font-sans">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-col sm:flex-row sm:items-center gap-3">
+        <p className="text-[13px] text-slate-600 font-medium leading-snug flex-1">
+          We use cookies to enhance your browsing, serve personalized content, and analyze traffic.
+        </p>
+        <div className="flex items-center gap-2 shrink-0">
+          <button onClick={accept} className="btn btn-primary !px-5 !py-2 text-[13px]">
+            Accept All
+          </button>
+          <button onClick={decline} className="btn btn-neutral !px-5 !py-2 text-[13px]">
+            Decline
+          </button>
+          <button onClick={decline} aria-label="Dismiss" className="text-slate-400 hover:text-slate-600 transition-colors p-1">
+            <X size={16} />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

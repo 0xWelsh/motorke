@@ -36,7 +36,7 @@ export default function DutyPageClient({
   return (
     <>
       {showHero && (
-        <div className="pt-16 md:pt-20 duty-print-hide">
+        <div className="pt-4 md:pt-6 duty-print-hide">
           <DutyPageHero />
         </div>
       )}
@@ -46,7 +46,7 @@ export default function DutyPageClient({
           <div className="lg:grid lg:grid-cols-12 lg:gap-10 xl:gap-12 items-start">
             <div
               id="duty-calculator"
-              className={`lg:col-span-8 min-w-0 scroll-mt-24 ${showHero ? "-mt-6 sm:-mt-8 relative z-10" : ""}`}
+              className="lg:col-span-8 min-w-0 scroll-mt-24"
             >
               <div
                 className="rounded-[var(--radius)] border border-slate-200 bg-white shadow-lg p-4 sm:p-5"

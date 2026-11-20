@@ -55,15 +55,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
               Instant KRA-style tax breakdown for popular imports, then browse matching verified dealer stock.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 mb-5 max-w-xl">
-              <TrackedLink
-                href="/"
-                eventName="duty_hero_home_click"
-                className="btn btn-neutral"
-                style={{ borderRadius: "var(--radius)" }}
-              >
-                Home
-              </TrackedLink>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 mb-5 max-w-md">
               <TrackedLink
                 href="/cars"
                 eventName="duty_hero_inventory_click"

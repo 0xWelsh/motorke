@@ -1,5 +1,8 @@
 // src/app/page.js
-export const revalidate = 60;
+// 10 min, not 60s: renders are invalidated on publish/hide/delete via
+// revalidateTag("homepage"), so the timer only needs to catch drift. At 60s
+// nearly every crawler hit regenerated the page (ISR write + full CPU render).
+export const revalidate = 600;
 import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -275,7 +278,7 @@ function PriceBandRow({ priceBands }) {
               href={`/cars/${band.slug}`}
               className="flex min-w-0 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 py-2.5 text-center text-[12px] font-semibold leading-tight text-slate-700 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
             >
-              <span className="min-w-0 truncate">{band.label}</span>
+              <span className="min-w-0 truncate capitalize">{band.label}</span>
               <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-500">
                 {count}
               </span>

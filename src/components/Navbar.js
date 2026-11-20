@@ -15,14 +15,14 @@ import NotificationsBell from "@/components/NotificationsBell";
 import { trackUiEvent } from "@/lib/analytics";
 import { BRAND_HEADER_LOGO } from "@/lib/site-url";
 import { BODY_TYPE_LABELS } from "@/lib/constants";
-import { PUBLIC_SUPPORT_EMAIL, PUBLIC_SUPPORT_PHONE } from "@/lib/site-contact";
-import { telHrefFromMsisdn } from "@/lib/phone-hints";
 import { loadRecentSearches, saveRecentSearch, toRecentSuggestionItems } from "@/lib/recent-searches";
 
 const NAV_TABS = [
-  { key: "search", label: "Search Cars", href: "/cars" },
+  { key: "search", label: "Buy Cars", href: "/cars" },
+  { key: "duty", label: "Duty Calculator", href: "/duty" },
+  { key: null, label: "Compare", href: "/compare", plain: true },
+  { key: "member", label: "Sell Your Car", href: "/sell" },
   { key: "about", label: "About Us", href: "/mission" },
-  { key: "member", label: "New Member", href: "/login" },
   { key: null, label: "Testimonials", href: "/testimonials", plain: true },
 ];
 
@@ -49,10 +49,10 @@ const ABOUT_LINKS = [
 ];
 
 const MEMBER_LINKS = [
+  { label: "Sell With BIDGARI", href: "/sell" },
+  { label: "Dealer Portal", href: "/portal" },
   { label: "Create Account", href: "/signup" },
   { label: "Login", href: "/login" },
-  { label: "Forgot Password", href: "/forgot-password" },
-  { label: "Sell With BIDGARI", href: "/sell" },
 ];
 
 export default function Navbar({ user, navCounts }) {
@@ -270,26 +270,6 @@ export default function Navbar({ user, navCounts }) {
             </div>
 
             <div className="flex shrink-0 items-center gap-3 lg:gap-4">
-              <span className="hidden xl:flex items-center gap-3">
-                {PUBLIC_SUPPORT_EMAIL && (
-                  <a
-                    href={`mailto:${PUBLIC_SUPPORT_EMAIL}`}
-                    className="inline-flex max-w-[170px] items-center gap-1.5 text-[12px] font-semibold text-slate-500 transition-colors hover:text-[var(--accent)]"
-                  >
-                    <Mail className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
-                    <span className="truncate">{PUBLIC_SUPPORT_EMAIL}</span>
-                  </a>
-                )}
-                {PUBLIC_SUPPORT_PHONE && (
-                  <a
-                    href={telHrefFromMsisdn(PUBLIC_SUPPORT_PHONE) || "#"}
-                    className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-slate-500 transition-colors hover:text-[var(--accent)]"
-                  >
-                    <Phone className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
-                    <span>{PUBLIC_SUPPORT_PHONE}</span>
-                  </a>
-                )}
-              </span>
               <Link
                 href="/contact"
                 onClick={(e) => navigateTo("/contact", e)}
@@ -297,7 +277,6 @@ export default function Navbar({ user, navCounts }) {
               >
                 Contact
               </Link>
-              <KenyaTime />
               {user ? (
                 <div className="flex items-center gap-3">
                   <NotificationsBell variant="navbar" />
@@ -341,13 +320,6 @@ export default function Navbar({ user, navCounts }) {
                 </div>
               ) : (
                 <div className="flex items-center gap-2.5">
-                  <Link
-                    href="/forgot-password"
-                    onClick={(e) => navigateTo("/forgot-password", e)}
-                    className="hidden lg:inline text-[11px] font-semibold text-slate-400 transition-colors hover:text-[var(--accent)]"
-                  >
-                    Forgot?
-                  </Link>
                   <Link
                     href="/login"
                     onClick={(e) => navigateTo("/login", e)}
@@ -759,35 +731,6 @@ function DesktopTab({ label, href, triangle, active, onHover, onLeave, onClick, 
   );
 }
 
-/* ─── Live Kenya time ─── */
-function KenyaTime() {
-  const [time, setTime] = useState("");
-
-  useEffect(() => {
-    const update = () => {
-      try {
-        setTime(new Intl.DateTimeFormat("en-KE", {
-          timeZone: "Africa/Nairobi",
-          hour: "numeric",
-          minute: "2-digit",
-          hour12: true,
-        }).format(new Date()));
-      } catch {
-        setTime("");
-      }
-    };
-    update();
-    const id = setInterval(update, 30_000);
-    return () => clearInterval(id);
-  }, []);
-
-  if (!time) return null;
-  return (
-    <span className="hidden lg:inline-flex items-center gap-1.5 text-[12px] font-semibold text-slate-500">
-      Kenya Time: <span className="font-bold text-slate-800 tabular-nums">{time}</span>
-    </span>
-  );
-}
 
 /* ─── Search Cars mega menu ─── */
 function SearchMegaMenu({ counts }) {

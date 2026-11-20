@@ -5,7 +5,6 @@ import { MapPin, ImageOff, X } from "lucide-react";
 import PictureImage from "@/components/PictureImage";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { FUEL_LABELS } from "@/lib/constants";
-import { formatListedAge } from "@/lib/format-age";
 import { useSaveData } from "@/components/SaveDataProvider";
 import { trackUiEvent } from "@/lib/analytics";
 import { carListingPath } from "@/lib/car-listing-url";
@@ -241,18 +240,24 @@ export default function CarCard({
               </p>
             );
           })()}
-          {car.createdAt && (
-            <p className="text-[11px] leading-snug text-slate-400">
-              Listed {formatListedAge(car.createdAt)}
-            </p>
-          )}
-          {(car.location || distanceLabel) && (
-            <p className={clsx("flex min-w-0 items-center gap-1 text-[12px] leading-snug text-slate-500", !isList && "hidden sm:flex")}>
+          {(() => {
+            // Freshness only when genuinely fresh — "Listed 3 months ago"
+            // advertised stale stock. Older listings show no age line.
+            const days = car.createdAt
+              ? (Date.now() - new Date(car.createdAt).getTime()) / 86_400_000
+              : null;
+            if (days == null || days > 7) return null;
+            return (
+              <p className="text-[11px] font-bold uppercase tracking-wide text-emerald-600">
+                {days < 1 ? "Listed today" : `Listed this week`}
+              </p>
+            );
+          })()}
+          {(car.location || distanceLabel || car.dealer?.name) && (
+            <p className="flex min-w-0 items-center gap-1 text-[12px] leading-snug text-slate-500">
               <MapPin className="h-3 w-3 shrink-0 text-slate-400" aria-hidden />
               <span className="min-w-0 truncate">
-                {car.location}
-                {car.location && distanceLabel ? " · " : ""}
-                {distanceLabel}
+                {[car.location, car.dealer?.name, distanceLabel].filter(Boolean).join(" · ")}
               </span>
             </p>
           )}

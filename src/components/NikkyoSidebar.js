@@ -1,8 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Bookmark, Clock, Search, ChevronRight, ImageOff } from "lucide-react";
+import { Bookmark, Clock, ChevronRight, ImageOff } from "lucide-react";
 import { BRANDS, BODY_TYPES } from "@/lib/browse-catalog";
 import { readRecentCarsFromStorage } from "@/lib/personalization";
 import { stockCode } from "@/lib/stock-code";
@@ -45,11 +44,11 @@ const LOGO_BY_MAKE = new Map([
 
 function SidebarSection({ title, children }) {
   return (
-    <div className="border-b border-slate-200 last:border-b-0">
-      <h3 className="bg-[var(--sidebar-bar)] px-3 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white">
+    <div className="border-b border-slate-100 last:border-b-0">
+      <h3 className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
         {title}
       </h3>
-      <div className="px-3 py-2.5">{children}</div>
+      <div className="px-3 pb-3">{children}</div>
     </div>
   );
 }
@@ -97,8 +96,6 @@ function RecentViewRow({ car }) {
 }
 
 export default function NikkyoSidebar({ inventoryCounts = {} }) {
-  const router = useRouter();
-  const [keyword, setKeyword] = useState("");
   const [recent, setRecent] = useState([]);
 
   const { brands = {}, bodyTypes = {}, makes = {} } = inventoryCounts;
@@ -136,34 +133,17 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
     };
   }, []);
 
-  function submitKeyword(e) {
-    e.preventDefault();
-    const term = keyword.trim();
-    if (term) router.push(`/cars?search=${encodeURIComponent(term)}`);
-    else router.push("/cars");
-  }
-
   return (
     <aside className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-      <form onSubmit={submitKeyword} className="relative border-b border-slate-200">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-        <input
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="Keyword search..."
-          className="w-full bg-slate-50 py-3 pl-10 pr-3 text-[13px] font-semibold text-slate-900 outline-none placeholder:text-slate-400 transition-colors focus:bg-white"
-        />
-      </form>
-
-      <SidebarSection title="Inventory Type">
+      <SidebarSection title="All inventory">
         <div className="space-y-0.5">
           <SideLink href="/cars">
-            BIDGARI Stocks{totalInventory ? ` (${totalInventory})` : ""}
+            All cars{totalInventory ? ` (${totalInventory})` : ""}
           </SideLink>
         </div>
       </SidebarSection>
 
-      <SidebarSection title="Favorites">
+      <SidebarSection title="Saved & recent">
         <div className="space-y-0.5">
           <SideLink href="/account?tab=saved">
             <span className="flex items-center gap-1.5">
@@ -188,7 +168,7 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
         )}
       </SidebarSection>
 
-      <SidebarSection title="Search By Price">
+      <SidebarSection title="Browse by price">
         <div className="space-y-0.5">
           {PRICE_PRESETS.map((p) => (
             <SideLink key={p.label} href={withQuery({ minPrice: p.min, maxPrice: p.max })}>
@@ -198,7 +178,7 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
         </div>
       </SidebarSection>
 
-      <SidebarSection title="Search By Make">
+      <SidebarSection title="Browse by make">
         {makeList.length ? (
           <div className="space-y-0.5">
             {makeList.map((m) => (
@@ -232,7 +212,7 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
         )}
       </SidebarSection>
 
-      <SidebarSection title="Search By Shape">
+      <SidebarSection title="Browse by body type">
         {bodyList.length ? (
           <div className="grid grid-cols-2 gap-1">
             {bodyList.map((bt) => (
@@ -253,7 +233,7 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
         )}
       </SidebarSection>
 
-      <SidebarSection title="Search By Year">
+      <SidebarSection title="Browse by year">
         <div className="space-y-0.5">
           {YEAR_PRESETS.map((y) => (
             <SideLink key={y.label} href={withQuery({ minYOM: y.min, maxYOM: y.max })}>
