@@ -37,6 +37,9 @@ import { useCarFlag } from "@/hooks/use-car-flag";
 const GRID_SIZES =
   "(max-width: 640px) 48vw, (max-width: 1024px) 31vw, (max-width: 1536px) 24vw, 19vw";
 
+// Homepage one-column feed: full column width on phones, ~720px on desktop.
+const FEED_SIZES = "(max-width: 1024px) 100vw, 720px";
+
 const titleCase = (s) =>
   String(s || "").replace(/\S+/g, (word) =>
     word
@@ -71,6 +74,7 @@ export default function CarCard({
 }) {
   const spotlightActive = showSpotlight || isActiveSpotlight(car) || spotlightProminent;
   const isList = layout === "list";
+  const isFeed = layout === "feed";
   const saveData = useSaveData();
   const router = useRouter();
   // Instant admin overrides (mark sold / hide) applied before the server refresh
@@ -284,7 +288,8 @@ export default function CarCard({
       distanceLabel={distanceLabel}
       onRemove={onRemove}
       priority={priority}
-      sizes={sizes}
+      sizes={sizes || (isFeed ? FEED_SIZES : undefined)}
+      feed={isFeed}
       titleHtml={titleHtml}
       onCarClick={onCarClick}
       eventPayload={eventPayload}
@@ -305,6 +310,7 @@ function PremiumGridCard({
   onRemove,
   priority,
   sizes,
+  feed = false,
   titleHtml,
   onCarClick,
   eventPayload,
@@ -417,7 +423,8 @@ function PremiumGridCard({
       >
         <div
           className={clsx(
-            "relative aspect-[4/3] w-full overflow-hidden bg-slate-100 rounded-xl",
+            "relative w-full overflow-hidden bg-slate-100 rounded-xl",
+            feed ? "aspect-[16/9]" : "aspect-[4/3]",
             boost.spotlight ? "ring-1 ring-slate-900/15" : "border border-slate-200",
             sold && "grayscale",
           )}
@@ -454,7 +461,7 @@ function PremiumGridCard({
               <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/15">
                 <Tag className="h-3 w-3" aria-hidden />
               </span>
-              <span className="truncate text-[13px] font-bold tabular-nums tracking-tight">
+              <span className={clsx("truncate font-bold tabular-nums tracking-tight", feed ? "text-[15px]" : "text-[13px]")}>
                 {formatCarPrice(car)}
               </span>
             </span>
@@ -497,20 +504,23 @@ function PremiumGridCard({
           className="min-w-0 flex-1"
         >
           <h3
-            className="line-clamp-2 text-[15px] font-bold leading-snug tracking-tight text-slate-900"
+            className={clsx(
+              "line-clamp-2 font-bold leading-snug tracking-tight text-slate-900",
+              feed ? "text-[18px]" : "text-[15px]",
+            )}
             title={`${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`}
           >
             {titleHtml || [car.year, make, model].filter(Boolean).join(" ")}
           </h3>
 
           {specSentence && (
-            <p className="mt-1 line-clamp-2 text-[13px] font-medium leading-relaxed text-slate-500">
+            <p className={clsx("mt-1 line-clamp-2 font-medium leading-relaxed text-slate-500", feed ? "text-[14px]" : "text-[13px]")}>
               {specSentence}
             </p>
           )}
 
           {locationLabel && (
-            <p className="mt-1.5 text-[12.5px] font-semibold text-slate-400">{locationLabel}</p>
+            <p className={clsx("mt-1.5 font-semibold text-slate-400", feed ? "text-[13.5px]" : "text-[12.5px]")}>{locationLabel}</p>
           )}
         </Link>
 

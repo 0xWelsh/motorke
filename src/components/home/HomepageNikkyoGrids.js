@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import HomeListCard from "@/components/home/HomeListCard";
+import CarCard from "@/components/CarCard";
 
 function GridSection({ heading, href, cars, eagerCount = 0 }) {
   if (!cars?.length) return null;
@@ -23,7 +23,7 @@ function GridSection({ heading, href, cars, eagerCount = 0 }) {
       </div>
       <div className="flex flex-col gap-6 sm:gap-7">
         {cars.slice(0, 16).map((car, i) => (
-          <HomeListCard key={car.id} car={car} priority={i < eagerCount} />
+          <CarCard key={car.id} car={car} layout="feed" priority={i < eagerCount} />
         ))}
       </div>
     </section>
@@ -31,7 +31,8 @@ function GridSection({ heading, href, cars, eagerCount = 0 }) {
 }
 
 /**
- * Cars & Bids-style single-column listing stack for the homepage.
+ * One-column listing feed for the homepage, same card anatomy as browse
+ * (price strip on image, FEATURED pill, spec sentence, location line).
  */
 export default function HomepageNikkyoGrids({ recommended = [], newArrivals = [], deals = [], luxury = [] }) {
   if (!recommended.length && !newArrivals.length && !deals.length && !luxury.length) return null;
