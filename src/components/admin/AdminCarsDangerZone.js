@@ -16,11 +16,11 @@ export default function AdminCarsDangerZone() {
         aria-expanded={open}
       >
         <span className="flex items-center gap-2.5 min-w-0">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-rose-950 text-rose-400">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-rose-950 text-rose-600">
             <AlertTriangle size={14} />
           </span>
           <span>
-            <span className="block text-[10px] font-bold uppercase tracking-wider text-rose-400">
+            <span className="block text-[10px] font-bold uppercase tracking-wider text-rose-600">
               Danger zone
             </span>
             <span className="block text-[11px] text-rose-300/70">
@@ -30,7 +30,7 @@ export default function AdminCarsDangerZone() {
         </span>
         <ChevronDown
           size={14}
-          className={`shrink-0 text-rose-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`shrink-0 text-rose-600 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
       {open ? (

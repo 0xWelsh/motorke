@@ -10,18 +10,18 @@ export default function AdminOverviewPieChart({ data, title = "Marketplace mix",
 
   if (!slices.length) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-6 border-zinc-800 bg-zinc-950">
-        <h3 className="text-lg font-bold text-slate-900 text-white">{title}</h3>
+      <div className="rounded-xl border border-slate-200 bg-white p-6 border-slate-200 bg-[var(--bg)]">
+        <h3 className="text-lg font-bold text-slate-900 text-slate-900">{title}</h3>
         <p className="mt-8 text-center text-sm text-slate-500">No data to chart yet.</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm border-zinc-800 bg-zinc-950 sm:p-6">
+    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm border-slate-200 bg-[var(--bg)] sm:p-6">
       <div className="mb-4">
-        <h3 className="text-lg font-bold tracking-tight text-slate-900 text-white">{title}</h3>
-        {subtitle ? <p className="mt-1 text-sm text-slate-500 text-zinc-400">{subtitle}</p> : null}
+        <h3 className="text-lg font-bold tracking-tight text-slate-900 text-slate-900">{title}</h3>
+        {subtitle ? <p className="mt-1 text-sm text-slate-500 text-slate-500">{subtitle}</p> : null}
       </div>
 
       <div className="h-[260px] w-full">
@@ -62,8 +62,8 @@ export default function AdminOverviewPieChart({ data, title = "Marketplace mix",
         </ResponsiveContainer>
       </div>
 
-      <p className="mt-2 text-center text-xs font-medium text-slate-500 text-zinc-500">
-        Total: <span className="font-bold text-slate-900 text-white">{total.toLocaleString("en-KE")}</span>
+      <p className="mt-2 text-center text-xs font-medium text-slate-500 text-slate-400">
+        Total: <span className="font-bold text-slate-900 text-slate-900">{total.toLocaleString("en-KE")}</span>
       </p>
     </div>
   );

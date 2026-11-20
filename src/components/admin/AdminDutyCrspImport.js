@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Upload, Download, FileSpreadsheet } from "lucide-react";
+import { humanizeError, humanizeApiError } from "@/lib/humanize-error";
 
 export default function AdminDutyCrspImport({ initialCount = 0 }) {
   const [file, setFile] = useState(null);
@@ -26,10 +27,10 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
         body: formData,
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Import failed");
+      if (!res.ok) throw new Error(humanizeApiError(data, "Import failed"));
       setResult(data);
     } catch (e) {
-      setError(e.message || "Import failed");
+      setError(humanizeError(e, "Import failed"));
     } finally {
       setLoading(false);
     }
@@ -38,17 +39,17 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-5">
-        <p className="text-sm font-semibold text-white">Catalog size</p>
+        <p className="text-sm font-semibold text-slate-900">Catalog size</p>
         <p className="text-2xl font-bold tabular-nums text-[var(--accent)] mt-1">
           {result?.activeCatalogCount ?? initialCount}
         </p>
-        <p className="text-xs text-zinc-400 mt-1">Active duty vehicles in database</p>
+        <p className="text-xs text-slate-500 mt-1">Active duty vehicles in database</p>
       </div>
 
       <div className="flex flex-wrap gap-3">
         <a
           href="/api/admin/duty-vehicles/template"
-          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#1c1c1c] px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/[0.03]"
+          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#1c1c1c] px-4 py-2.5 text-sm font-semibold text-slate-900 hover:bg-white/[0.03]"
         >
           <Download className="w-4 h-4" aria-hidden />
           Download CSV template
@@ -57,7 +58,7 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
           href="/duty"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#1c1c1c] px-4 py-2.5 text-sm font-semibold text-zinc-300 hover:bg-white/[0.03]"
+          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#1c1c1c] px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-white/[0.03]"
         >
           Open duty calculator
         </a>
@@ -67,8 +68,8 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
         <div className="flex items-start gap-3 mb-5">
           <FileSpreadsheet className="w-5 h-5 text-[var(--accent)] shrink-0 mt-0.5" aria-hidden />
           <div>
-            <h2 className="text-sm font-bold text-white">Upload CRSP catalog CSV</h2>
-            <p className="text-xs text-zinc-400 mt-1 leading-relaxed max-w-xl">
+            <h2 className="text-sm font-bold text-slate-900">Upload CRSP catalog CSV</h2>
+            <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-xl">
               No KRA Excel required. Edit{" "}
               <code className="text-[11px] bg-white/[0.03] px-1 rounded">
                 data/duty-crsp/starter-catalog.csv
@@ -79,7 +80,7 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
         </div>
 
         <label className="flex flex-col gap-2">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">CSV file</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">CSV file</span>
           <input
             type="file"
             accept=".csv,text/csv"
@@ -88,11 +89,11 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
               setResult(null);
               setError("");
             }}
-            className="text-sm text-zinc-300 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--accent)] file:px-3 file:py-2 file:text-xs file:font-bold file:uppercase file:tracking-wider file:text-white"
+            className="text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--accent)] file:px-3 file:py-2 file:text-xs file:font-bold file:uppercase file:tracking-wider file:text-slate-900"
           />
         </label>
 
-        <label className="mt-4 flex items-center gap-2 text-sm text-zinc-400">
+        <label className="mt-4 flex items-center gap-2 text-sm text-slate-500">
           <input
             type="checkbox"
             checked={dryRun}
@@ -106,14 +107,14 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
           type="button"
           onClick={runImport}
           disabled={loading || !file}
-          className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-white hover:bg-[var(--accent)]/80 disabled:opacity-50"
+          className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-slate-900 hover:bg-[var(--accent)]/80 disabled:opacity-50"
         >
           <Upload className="w-4 h-4" aria-hidden />
           {loading ? "Importing…" : dryRun ? "Validate CSV" : "Import to database"}
         </button>
 
         {error && (
-          <p className="mt-4 text-sm text-red-400" role="alert">
+          <p className="mt-4 text-sm text-red-600" role="alert">
             {error}
           </p>
         )}
@@ -123,7 +124,7 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
             <p className="font-bold text-emerald-200">
               {result.dryRun ? "Validation complete" : "Import complete"}
             </p>
-            <ul className="mt-2 space-y-1 text-emerald-300 text-xs">
+            <ul className="mt-2 space-y-1 text-emerald-700 text-xs">
               <li>Parsed: {result.parsed} rows</li>
               <li>
                 {result.dryRun ? "Would upsert" : "Upserted"}: {result.upserted}

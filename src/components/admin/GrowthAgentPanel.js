@@ -12,16 +12,17 @@ import {
   RefreshCw,
   UserPlus,
 } from "lucide-react";
+import { humanizeError, humanizeApiError } from "@/lib/humanize-error";
 
 const STATUS_STYLES = {
-  DISCOVERED: "bg-slate-100 text-slate-700 bg-zinc-800 text-zinc-300",
+  DISCOVERED: "bg-slate-100 text-slate-700 bg-slate-100 text-slate-700",
   CONTACT_COLLECTED: "bg-sky-100 text-sky-800 bg-sky-950 text-sky-300",
   OUTREACH_PLANNED: "bg-violet-100 text-violet-800 bg-violet-950 text-violet-300",
   CONTACTED: "bg-amber-100 text-amber-800 bg-amber-950 text-amber-300",
-  INTERESTED: "bg-emerald-100 text-emerald-800 bg-emerald-950 text-emerald-300",
+  INTERESTED: "bg-emerald-100 text-emerald-800 bg-emerald-950 text-emerald-700",
   ONBOARDED: "bg-emerald-200 text-emerald-900 bg-emerald-900 text-emerald-100",
   DECLINED: "bg-rose-100 text-rose-800 bg-rose-950 text-rose-300",
-  DORMANT: "bg-zinc-100 text-zinc-600 bg-zinc-900 text-zinc-400",
+  DORMANT: "bg-slate-100 text-slate-500",
 };
 
 function statusClass(status) {
@@ -46,7 +47,7 @@ async function apiJson(path, options = {}) {
     },
   });
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || "Request failed");
+  if (!res.ok) throw new Error(humanizeApiError(data, "Request failed"));
   return data;
 }
 
@@ -81,7 +82,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
       setMessage(typeof result === "string" ? result : "Done.");
       router.refresh();
     } catch (e) {
-      setError(e?.message || "Something went wrong");
+      setError(humanizeError(e, "Something went wrong"));
     } finally {
       setBusy(null);
     }
@@ -130,14 +131,14 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
               return `Checked ${data.checked || 0} prospects, ${data.changed || 0} inventory changes.`;
             })
           }
-          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-800 hover:bg-slate-50 disabled:opacity-60 border-zinc-700 bg-zinc-900 text-white"
+          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-800 hover:bg-slate-50 disabled:opacity-60 border-slate-200 bg-white text-slate-900"
         >
           {busy === "monitor" ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
           Monitor stock
         </button>
         <a
           href="/api/admin/growth-agent/export/prospects.csv"
-          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-800 hover:bg-slate-50 border-zinc-700 bg-zinc-900 text-white"
+          className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-xs font-bold uppercase tracking-widest text-slate-800 hover:bg-slate-50 border-slate-200 bg-white text-slate-900"
         >
           <Download className="h-4 w-4" />
           Export CSV
@@ -165,7 +166,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
 
       {addOpen ? (
         <form
-          className="rounded-2xl border border-slate-200 bg-white p-5 border-zinc-800 bg-zinc-950 space-y-3"
+          className="rounded-2xl border border-slate-200 bg-white p-5 border-slate-200 bg-[var(--bg)] space-y-3"
           onSubmit={(e) => {
             e.preventDefault();
             runAction("add", async () => {
@@ -194,37 +195,37 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
               placeholder="Dealership name"
               value={newProspect.name}
               onChange={(e) => setNewProspect((p) => ({ ...p, name: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-slate-200 bg-white"
             />
             <input
               placeholder="County"
               value={newProspect.county}
               onChange={(e) => setNewProspect((p) => ({ ...p, county: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-slate-200 bg-white"
             />
             <input
               placeholder="Phone (254…)"
               value={newProspect.phone}
               onChange={(e) => setNewProspect((p) => ({ ...p, phone: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-slate-200 bg-white"
             />
             <input
               placeholder="WhatsApp"
               value={newProspect.whatsapp}
               onChange={(e) => setNewProspect((p) => ({ ...p, whatsapp: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-slate-200 bg-white"
             />
             <input
               placeholder="Email"
               value={newProspect.email}
               onChange={(e) => setNewProspect((p) => ({ ...p, email: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-slate-200 bg-white"
             />
             <input
               placeholder="Source (google_maps, referral…)"
               value={newProspect.source}
               onChange={(e) => setNewProspect((p) => ({ ...p, source: e.target.value }))}
-              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
+              className="rounded-lg border border-slate-200 px-3 py-2 text-sm border-slate-200 bg-white"
             />
           </div>
           <textarea
@@ -232,7 +233,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
             rows={2}
             value={newProspect.notes}
             onChange={(e) => setNewProspect((p) => ({ ...p, notes: e.target.value }))}
-            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm border-zinc-700 bg-zinc-900"
+            className="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm border-slate-200 bg-white"
           />
           <button
             type="submit"
@@ -244,10 +245,10 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
         </form>
       ) : null}
 
-      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white border-zinc-800 bg-zinc-950">
+      <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white border-slate-200 bg-[var(--bg)]">
         <table className="w-full text-left text-sm min-w-[960px]">
           <thead>
-            <tr className="border-b border-slate-200 border-zinc-800 text-[10px] font-black uppercase tracking-widest text-slate-500">
+            <tr className="border-b border-slate-200 border-slate-200 text-[10px] font-black uppercase tracking-widest text-slate-500">
               <th className="py-3 px-4">Dealership</th>
               <th className="py-3 px-4">County</th>
               <th className="py-3 px-4">Contact</th>
@@ -273,9 +274,9 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
                     ? row.inventoryCount - row.inventoryCountPrev
                     : null;
                 return (
-                  <tr key={row.id} className="border-b border-slate-100 border-zinc-900 align-top">
+                  <tr key={row.id} className="border-b border-slate-100 border-slate-200 align-top">
                     <td className="py-3 px-4 min-w-[160px]">
-                      <p className="font-semibold text-slate-900 text-white">{row.name}</p>
+                      <p className="font-semibold text-slate-900 text-slate-900">{row.name}</p>
                       <p className="text-[10px] text-slate-400 mt-0.5">{row.source}</p>
                       {row.matchedDealer ? (
                         <Link
@@ -338,7 +339,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
                       ) : null}
                     </td>
                     <td className="py-3 px-4 text-xs text-slate-500">
-                      <p className="font-semibold text-slate-700 text-zinc-300">{row.outreachCount} touches</p>
+                      <p className="font-semibold text-slate-700 text-slate-700">{row.outreachCount} touches</p>
                       {row.lastOutreachAt ? (
                         <p>{new Date(row.lastOutreachAt).toLocaleDateString("en-KE")}</p>
                       ) : (
@@ -351,7 +352,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
                           <select
                             value={outreachChannel}
                             onChange={(e) => setOutreachChannel(e.target.value)}
-                            className="w-full rounded border border-slate-200 text-xs px-2 py-1 border-zinc-700 bg-zinc-900"
+                            className="w-full rounded border border-slate-200 text-xs px-2 py-1 border-slate-200 bg-white"
                           >
                             <option value="WHATSAPP">WhatsApp</option>
                             <option value="CALL">Call</option>
@@ -362,7 +363,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
                             value={outreachNote}
                             onChange={(e) => setOutreachNote(e.target.value)}
                             placeholder="Note"
-                            className="w-full rounded border border-slate-200 text-xs px-2 py-1 border-zinc-700 bg-zinc-900"
+                            className="w-full rounded border border-slate-200 text-xs px-2 py-1 border-slate-200 bg-white"
                           />
                           <div className="flex gap-2">
                             <button
@@ -403,7 +404,7 @@ export default function GrowthAgentPanel({ configured, prospects: initialProspec
                             setOutreachId(row.id);
                             setOutreachNote("");
                           }}
-                          className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-emerald-600 text-zinc-400"
+                          className="text-[10px] font-black uppercase tracking-widest text-slate-600 hover:text-emerald-600 text-slate-500"
                         >
                           Log outreach
                         </button>

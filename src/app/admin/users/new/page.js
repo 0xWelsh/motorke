@@ -22,17 +22,17 @@ export default async function AdminNewUserPage(props) {
   const dealers = await db.dealer.findMany({ orderBy: { name: "asc" } });
   const error   = searchParams?.error;
 
-  const inputCls  = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-white placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
-  const selectCls = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-white outline-none focus:border-slate-800 transition-all font-bold appearance-none";
+  const inputCls  = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
+  const selectCls = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-slate-900 outline-none focus:border-slate-800 transition-all font-bold appearance-none";
   const labelCls  = "block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 mb-2";
 
   return (
     <div className="max-w-4xl mx-auto animate-in fade-in duration-500">
       <div className="mb-10">
-        <Link href="/admin/users" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] text-slate-400 hover:text-slate-900 text-white transition-colors mb-6">
+        <Link href="/admin/users" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] text-slate-400 hover:text-slate-900 text-slate-900 transition-colors mb-6">
           <ChevronLeft size={14} /> Back to Directory
         </Link>
-        <h1 className="text-3xl font-black text-slate-900 text-white tracking-tight">Provision Identity</h1>
+        <h1 className="text-3xl font-black text-slate-900 text-slate-900 tracking-tight">Provision Identity</h1>
         <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest mt-2 max-w-xl">
           Create a secure login for a new dealership partner or another system administrator.
         </p>
@@ -46,7 +46,7 @@ export default async function AdminNewUserPage(props) {
                   <UserPlus size={18} />
                </div>
                <div>
-                  <h2 className="text-lg font-black text-slate-900 text-white">Identity Details</h2>
+                  <h2 className="text-lg font-black text-slate-900 text-slate-900">Identity Details</h2>
                   <p className="text-xs font-medium text-slate-500">Set up credentials and roles</p>
                </div>
             </div>
@@ -138,14 +138,14 @@ export default async function AdminNewUserPage(props) {
                     <Lightbulb size={18} />
                  </div>
                  <div>
-                    <h2 className="text-lg font-black text-slate-900 text-white">Partner Setup</h2>
+                    <h2 className="text-lg font-black text-slate-900 text-slate-900">Partner Setup</h2>
                  </div>
               </div>
               
               <ol className="text-xs font-medium text-slate-600 space-y-4 mb-2 leading-relaxed">
                  <li className="flex gap-3 relative">
                     <span className="w-5 h-5 shrink-0 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-[11px]">1</span>
-                    <span>Ensure the <Link href="/admin/dealers/new" className="text-slate-900 text-white font-black underline">dealership profile</Link> is created first.</span>
+                    <span>Ensure the <Link href="/admin/dealers/new" className="text-slate-900 text-slate-900 font-black underline">dealership profile</Link> is created first.</span>
                  </li>
                  <li className="flex gap-3 relative">
                     <span className="w-5 h-5 shrink-0 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-[11px]">2</span>
@@ -157,7 +157,7 @@ export default async function AdminNewUserPage(props) {
                  </li>
                  <li className="flex gap-3 relative">
                     <span className="w-5 h-5 shrink-0 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-[11px]">4</span>
-                     <span>The partner will log in to the <code className="font-bold text-slate-900 text-white">admin panel</code> and start uploading cars.</span>
+                     <span>The partner will log in to the <code className="font-bold text-slate-900 text-slate-900">admin panel</code> and start uploading cars.</span>
                  </li>
               </ol>
            </div>

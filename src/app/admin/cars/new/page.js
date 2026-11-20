@@ -15,11 +15,11 @@ export default async function AdminNewCarPage() {
       <div className="mb-4">
         <Link
           href="/admin/cars"
-          className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-emerald-400 transition-colors"
+          className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors"
         >
           ← All cars
         </Link>
-        <h1 className="mt-1.5 text-lg font-bold text-white tracking-tight">
+        <h1 className="mt-1.5 text-lg font-bold text-slate-900 tracking-tight">
           Add new car
         </h1>
       </div>

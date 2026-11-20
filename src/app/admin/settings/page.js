@@ -23,10 +23,10 @@ export default async function AdminSettingsPage({ searchParams }) {
       <div className="flex flex-col md:flex-row justify-between mb-12 gap-8">
         <div>
            <div className="flex items-center gap-2 mb-2">
-             <div className="w-2 h-2 rounded-xl bg-zinc-400" />
-             <span className="text-xs font-semibold uppercase tracking-wider text-zinc-400">System</span>
+             <div className="w-2 h-2 rounded-xl bg-slate-400" />
+             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500">System</span>
           </div>
-          <h1 className="text-4xl font-black text-white tracking-tight">Global Configurations</h1>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Global Configurations</h1>
         </div>
       </div>
 
@@ -45,36 +45,36 @@ export default async function AdminSettingsPage({ searchParams }) {
       <form action="/api/admin/settings" method="POST" className="bg-[#1c1c1c] rounded-xl p-8 border border-white/[0.08]">
          <div className="space-y-6 mb-8">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Platform Fee (Monthly)</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Platform Fee (Monthly)</label>
               <input 
                 name="platform_fee" 
                 defaultValue={settings.platform_fee || "45000"} 
                 className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-5 py-4 focus:ring-2 focus:ring-white/[0.2] font-medium" 
                 placeholder="Ex. 45000"
               />
-              <p className="text-xs text-zinc-400 mt-2">Reserved reference amount for future paid tiers (billing is off while access is free).</p>
+              <p className="text-xs text-slate-500 mt-2">Reserved reference amount for future paid tiers (billing is off while access is free).</p>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Global Support Email</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Global Support Email</label>
               <input 
                 name="support_email" 
                 defaultValue={settings.support_email || getSupportEmail()}
                 className="w-full bg-white/[0.03] border border-white/[0.08] rounded-xl px-5 py-4 focus:ring-2 focus:ring-white/[0.2] font-medium" 
                 placeholder="support@domain.com"
               />
-              <p className="text-xs text-zinc-400 mt-2">Where default notifications and automated customer inquiries are CC'ed.</p>
+              <p className="text-xs text-slate-500 mt-2">Where default notifications and automated customer inquiries are CC'ed.</p>
             </div>
          </div>
 
          <details className="group mt-8">
-           <summary className="cursor-pointer text-xs font-bold uppercase tracking-widest text-zinc-400 hover:text-zinc-300 transition-colors select-none">
+           <summary className="cursor-pointer text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-700 transition-colors select-none">
              WhatsApp Lead Routing
            </summary>
             <div className="mt-4 space-y-4 border-t border-white/[0.06] pt-4">
-              <p className="text-xs text-zinc-400">Phone numbers for the 3 salesmen. The WhatsApp button on car listings routes customers round-robin to these numbers. Include country code (e.g. 2547XXXXXXXX).</p>
+              <p className="text-xs text-slate-500">Phone numbers for the 3 salesmen. The WhatsApp button on car listings routes customers round-robin to these numbers. Include country code (e.g. 2547XXXXXXXX).</p>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Salesman 1</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Salesman 1</label>
                 <input
                   name="salesman_whatsapp_1"
                   defaultValue={settings.salesman_whatsapp_1 || ""}
@@ -83,7 +83,7 @@ export default async function AdminSettingsPage({ searchParams }) {
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Salesman 2</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Salesman 2</label>
                 <input
                   name="salesman_whatsapp_2"
                   defaultValue={settings.salesman_whatsapp_2 || ""}
@@ -92,7 +92,7 @@ export default async function AdminSettingsPage({ searchParams }) {
                 />
               </div>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-zinc-400 mb-2">Salesman 3</label>
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Salesman 3</label>
                 <input
                   name="salesman_whatsapp_3"
                   defaultValue={settings.salesman_whatsapp_3 || ""}
@@ -103,7 +103,7 @@ export default async function AdminSettingsPage({ searchParams }) {
             </div>
           </details>
 
-          <button type="submit" className="w-full bg-white/[0.1] hover:bg-white/[0.15] text-white rounded-xl px-6 py-4 font-bold transition-colors flex items-center justify-center gap-2 mt-8">
+          <button type="submit" className="w-full bg-white/[0.1] hover:bg-white/[0.15] text-slate-900 rounded-xl px-6 py-4 font-bold transition-colors flex items-center justify-center gap-2 mt-8">
              <Settings size={18} /> Update Configurations
           </button>
        </form>

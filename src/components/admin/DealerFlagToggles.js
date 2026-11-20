@@ -8,6 +8,7 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ShieldCheck, Star, Loader2 } from "lucide-react";
+import { humanizeError, humanizeApiError } from "@/lib/humanize-error";
 
 export default function DealerFlagToggles({ dealerId, verified, featured }) {
   const router = useRouter();
@@ -31,7 +32,7 @@ export default function DealerFlagToggles({ dealerId, verified, featured }) {
         setLocal(currentValue);
         const detail = await res.json().catch(() => ({}));
         console.error("Toggle failed:", detail);
-        alert(detail?.error || "Could not update dealer.");
+        alert(humanizeApiError(detail, "Could not update dealer."));
       } else {
         startTransition(() => router.refresh());
       }
@@ -54,7 +55,7 @@ export default function DealerFlagToggles({ dealerId, verified, featured }) {
         title={verifiedState ? "Click to remove verified status" : "Click to mark as verified"}
         className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-bold border transition disabled:opacity-50 ${
           verifiedState
-            ? "border-emerald-900/60 bg-emerald-950/50 text-emerald-300 hover:border-emerald-400"
+            ? "border-emerald-900/60 bg-emerald-950/50 text-emerald-700 hover:border-emerald-400"
             : "border-sky-900/50 bg-sky-950/40 text-sky-200 hover:border-sky-400"
         }`}
       >
@@ -74,8 +75,8 @@ export default function DealerFlagToggles({ dealerId, verified, featured }) {
         title={featuredState ? "Click to remove from homepage" : "Click to feature on homepage"}
         className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-wider border transition disabled:opacity-50 ${
           featuredState
-            ? "border-emerald-800/50 bg-emerald-950/35 text-emerald-300 hover:border-emerald-400"
-            : "border-white/[0.06] bg-[#1c1c1c] text-zinc-400 hover:border-zinc-500 hover:text-zinc-200"
+            ? "border-emerald-800/50 bg-emerald-950/35 text-emerald-700 hover:border-emerald-400"
+            : "border-white/[0.06] bg-[#1c1c1c] text-slate-500 hover:border-slate-300 hover:text-slate-800"
         }`}
       >
         {busyFlag === "featured" ? (

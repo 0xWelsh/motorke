@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { humanizeError, humanizeApiError } from "@/lib/humanize-error";
 
 export default function RunWatchAlertsButton() {
   const [state, setState] = useState("idle");
@@ -13,14 +14,14 @@ export default function RunWatchAlertsButton() {
       const res = await fetch("/api/cron/watch-alerts", { method: "POST" });
       const data = await res.json();
       if (!res.ok || !data?.success) {
-        throw new Error(data?.error || "Run failed");
+        throw new Error(humanizeApiError(data, "Run failed"));
       }
       setState("done");
       setSummary(`Processed ${data.processed} watches, sent ${data.alertsSent} alerts.`);
       setTimeout(() => setState("idle"), 2200);
     } catch (error) {
       setState("error");
-      setSummary(error.message || "Failed to run watch alerts.");
+      setSummary(humanizeError(error, "Failed to run watch alerts."));
       setTimeout(() => setState("idle"), 3000);
     }
   }
@@ -36,7 +37,7 @@ export default function RunWatchAlertsButton() {
       });
       const data = await res.json();
       if (!res.ok || !data?.success) {
-        throw new Error(data?.error || "Test send failed");
+        throw new Error(humanizeApiError(data, "Test send failed"));
       }
       setState("done");
       if (data.mocked) {
@@ -47,7 +48,7 @@ export default function RunWatchAlertsButton() {
       setTimeout(() => setState("idle"), 5000);
     } catch (error) {
       setState("error");
-      setSummary(error.message || "Failed to send test email.");
+      setSummary(humanizeError(error, "Failed to send test email."));
       setTimeout(() => setState("idle"), 5000);
     }
   }
@@ -59,7 +60,7 @@ export default function RunWatchAlertsButton() {
           type="button"
           onClick={runNow}
           disabled={state === "running"}
-          className="px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest bg-[#2F855A] text-white hover:bg-[#38A169] disabled:opacity-60 transition-colors"
+          className="px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest bg-[#2F855A] text-slate-900 hover:bg-[#38A169] disabled:opacity-60 transition-colors"
         >
           {state === "running" ? "Running..." : "Run Watch Alerts"}
         </button>
@@ -67,7 +68,7 @@ export default function RunWatchAlertsButton() {
           type="button"
           onClick={sendTestEmail}
           disabled={state === "running"}
-          className="px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest border border-[#2F855A] text-[#2F855A] hover:bg-[#2F855A]/10 border-emerald-400/80 text-emerald-300 hover:bg-emerald-950/50 disabled:opacity-60 transition-colors"
+          className="px-4 py-2 text-[10px] sm:text-[11px] font-black uppercase tracking-widest border border-[#2F855A] text-[#2F855A] hover:bg-[#2F855A]/10 border-emerald-400/80 text-emerald-700 hover:bg-emerald-950/50 disabled:opacity-60 transition-colors"
         >
           Send Test Alert Email
         </button>

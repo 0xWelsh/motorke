@@ -43,14 +43,14 @@ export default async function AdminEditUserPage(props) {
   const saved = searchParams?.saved;
   const error = searchParams?.error;
 
-  const inputCls  = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-white placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
-  const selectCls = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-white outline-none focus:border-slate-800 transition-all font-bold appearance-none";
+  const inputCls  = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
+  const selectCls = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-slate-900 outline-none focus:border-slate-800 transition-all font-bold appearance-none";
   const labelCls  = "block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 mb-2";
 
   return (
     <div className="max-w-4xl mx-auto animate-in fade-in duration-500">
       <div className="mb-10">
-        <Link href="/admin/users" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] text-slate-400 hover:text-slate-900 text-white transition-colors mb-8">
+        <Link href="/admin/users" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] text-slate-400 hover:text-slate-900 text-slate-900 transition-colors mb-8">
           <ChevronLeft size={14} /> Back to Directory
         </Link>
         
@@ -59,13 +59,13 @@ export default async function AdminEditUserPage(props) {
              <AdminAvatarUpload currentUrl={user.avatarUrl} targetId={user.id} targetType="user" name={user.name} size="lg" />
           </div>
           <div>
-            <h1 className="text-3xl font-black text-slate-900 text-white tracking-tight">{user.name}</h1>
+            <h1 className="text-3xl font-black text-slate-900 text-slate-900 tracking-tight">{user.name}</h1>
             <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest mt-1 mb-3">{user.email}</p>
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex px-3 py-1 rounded-2xl bg-slate-100 text-slate-600 text-[11px] font-black uppercase tracking-widest">
                 ID: {user.id.slice(-8)}
               </span>
-              <span className={`inline-flex px-3 py-1 rounded-2xl text-[11px] font-black uppercase tracking-widest ${user.active ? 'bg-emerald-50 text-emerald-800 bg-emerald-950/40 text-emerald-300' : 'bg-red-50 text-red-600'}`}>
+              <span className={`inline-flex px-3 py-1 rounded-2xl text-[11px] font-black uppercase tracking-widest ${user.active ? 'bg-emerald-50 text-emerald-800 bg-emerald-950/40 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
                 {user.active ? 'Active' : 'Locked'}
               </span>
               <span className="inline-flex px-3 py-1 rounded-2xl bg-slate-100 text-slate-700 text-[11px] font-black uppercase tracking-widest">
@@ -85,13 +85,13 @@ export default async function AdminEditUserPage(props) {
                   <User size={18} />
                </div>
                <div>
-                  <h2 className="text-lg font-black text-slate-900 text-white">Profile Information</h2>
+                  <h2 className="text-lg font-black text-slate-900 text-slate-900">Profile Information</h2>
                   <p className="text-xs font-medium text-slate-500">Update general account details</p>
                </div>
             </div>
 
             {saved === "profile" && (
-              <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 bg-emerald-950/35 border-emerald-800/50 text-emerald-300 text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+              <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 bg-emerald-950/35 border-emerald-800/50 text-emerald-700 text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
                 ✓ Profile saved successfully
               </div>
             )}
@@ -154,7 +154,7 @@ export default async function AdminEditUserPage(props) {
                 </div>
               </div>
               <div className="pt-4 border-t border-slate-100 flex justify-end">
-                <button type="submit" className="bg-[#2F855A] border border-[#2F855A] text-white px-8 h-12 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#38A169] hover:border-[#38A169] transition-all shadow-none">
+                <button type="submit" className="bg-[#2F855A] border border-[#2F855A] text-slate-900 px-8 h-12 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#38A169] hover:border-[#38A169] transition-all shadow-none">
                   Save Details
                 </button>
               </div>
@@ -168,13 +168,13 @@ export default async function AdminEditUserPage(props) {
                   <Lock size={18} />
                </div>
                <div>
-                  <h2 className="text-lg font-black text-slate-900 text-white">Force Password Reset</h2>
+                  <h2 className="text-lg font-black text-slate-900 text-slate-900">Force Password Reset</h2>
                   <p className="text-xs font-medium text-slate-500">Generate a new temporary password</p>
                </div>
             </div>
 
             {saved === "password" && (
-              <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 bg-emerald-950/35 border-emerald-800/50 text-emerald-300 text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
+              <div className="bg-emerald-50 border border-emerald-200/80 text-emerald-800 bg-emerald-950/35 border-emerald-800/50 text-emerald-700 text-sm font-bold rounded-2xl px-4 py-3 mb-8 flex items-center gap-2 animate-in fade-in">
                 ✓ New password successfully set
               </div>
             )}

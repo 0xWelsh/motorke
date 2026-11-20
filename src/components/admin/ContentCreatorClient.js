@@ -301,7 +301,7 @@ export default function ContentCreatorClient({ cars = [] }) {
             type="button"
             onClick={handleDownload}
             disabled={!selectedCar || generating}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--accent)] text-white text-sm font-bold disabled:opacity-40 hover:brightness-110 transition-all"
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--accent)] text-slate-900 text-sm font-bold disabled:opacity-40 hover:brightness-110 transition-all"
           >
             {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
             {generating ? "Generating..." : "Download Video"}

@@ -270,7 +270,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
             ? "z-50 border-emerald-500 shadow-2xl ring-2 ring-emerald-500/40"
             : !included
               ? "border-slate-400 ring-2 ring-slate-400/40 opacity-90"
-              : "max-md:border-0 max-md:ring-1 max-md:ring-slate-200/80 md:border-slate-200 max-md:ring-zinc-700 md:border-slate-800 active:scale-[0.99]"
+              : "max-md:border-0 max-md:ring-1 max-md:ring-slate-200/80 md:border-slate-200 max-md:ring-slate-300 md:border-slate-800 active:scale-[0.99]"
         }`}
         style={{ cursor: isLifted ? "grabbing" : "grab" }}
       >
@@ -278,7 +278,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
 
         {!included && (
           <div className="absolute inset-0 z-10 bg-slate-950/40 pointer-events-none flex items-center justify-center p-2">
-            <span className="text-[9px] font-black uppercase tracking-widest text-white drop-shadow-md text-center leading-tight">
+            <span className="text-[9px] font-black uppercase tracking-widest text-slate-900 drop-shadow-md text-center leading-tight">
               Skipped — tick to upload
             </span>
           </div>
@@ -303,13 +303,13 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
         </label>
 
         {file.isPrimary && (
-          <div className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 bg-[#2F855A] text-white rounded-lg shadow-lg border border-white/20 pointer-events-none">
+          <div className="absolute top-2 left-2 inline-flex items-center gap-1.5 px-2 py-1 bg-[#2F855A] text-slate-900 rounded-lg shadow-lg border border-white/20 pointer-events-none">
             <Crown size={12} />
             <span className="text-[8px] font-black uppercase tracking-widest">Cover</span>
           </div>
         )}
 
-        <div className="absolute bottom-2 right-2 text-[8px] font-black text-white/90 uppercase tracking-widest drop-shadow-md pointer-events-none">
+        <div className="absolute bottom-2 right-2 text-[8px] font-black text-slate-900/90 uppercase tracking-widest drop-shadow-md pointer-events-none">
           #{files.indexOf(file) + 1}
         </div>
       </motion.div>
@@ -319,10 +319,10 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
   return (
     <div className="w-full space-y-4">
       <div
-        className={`relative flex h-36 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl p-3 transition-all duration-500 group max-md:border max-md:border-dashed max-md:border-slate-200 max-md:bg-slate-50 sm:h-48 sm:rounded-2xl sm:border-2 max-md:border-zinc-700 max-md:bg-zinc-900/40 ${
+        className={`relative flex h-36 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl p-3 transition-all duration-500 group max-md:border max-md:border-dashed max-md:border-slate-200 max-md:bg-slate-50 sm:h-48 sm:rounded-2xl sm:border-2 max-md:border-slate-200 max-md:bg-white/40 ${
           dragActive
             ? "border-[#2F855A] bg-[#2F855A]/5 scale-[1.01]"
-            : "max-md:border-slate-200 md:border-slate-200 md:border-dashed md:bg-[#fbfcfe] max-md:border-zinc-700 md:border-slate-800 md:bg-[#222222] md:hover:border-slate-300 md:hover:border-slate-700"
+            : "max-md:border-slate-200 md:border-slate-200 md:border-dashed md:bg-[#fbfcfe] max-md:border-slate-200 md:border-slate-800 md:bg-[#222222] md:hover:border-slate-300 md:hover:border-slate-700"
         }`}
         onDragEnter={handleDrag}
         onDragLeave={handleDrag}
@@ -340,7 +340,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
           <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#2F855A] shadow-lg transition-transform duration-500 group-hover:scale-110 max-md:border-0 bg-[#1e1e1e] md:border md:border-slate-100 md:border-slate-800">
             <UploadCloud size={24} />
           </div>
-          <p className="text-base font-black text-slate-900 text-white tracking-tight">Drop listing photos</p>
+          <p className="text-base font-black text-slate-900 text-slate-900 tracking-tight">Drop listing photos</p>
           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.16em] mt-2 block">Tap or drag to add</p>
           <p className="text-[9px] text-slate-400 mt-1">Max 3MB per file</p>
         </div>
@@ -361,7 +361,7 @@ export default function MediaUploader({ initialImages = [], onFilesSelected, max
           <div className="flex items-center justify-between mb-4 gap-2">
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-2 h-2 rounded-full bg-[#2F855A] shrink-0" />
-              <h3 className="text-[11px] font-black text-slate-900 text-white uppercase tracking-[0.2em] truncate">Photos</h3>
+              <h3 className="text-[11px] font-black text-slate-900 text-slate-900 uppercase tracking-[0.2em] truncate">Photos</h3>
             </div>
             <div className="flex flex-wrap items-center justify-end gap-2 shrink-0">
               <div className="px-4 py-1.5 bg-slate-100 bg-[#1e1e1e] rounded-full">

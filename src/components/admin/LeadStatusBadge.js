@@ -2,12 +2,12 @@
 import { useState } from "react";
 
 const STATUS_STYLES = {
-  NEW: { badge: "border-emerald-500/25 bg-emerald-500/10 text-emerald-300", dot: "bg-emerald-400" },
+  NEW: { badge: "border-emerald-500/25 bg-emerald-50 text-emerald-700", dot: "bg-emerald-400" },
   CONTACTED: { badge: "border-blue-500/25 bg-blue-500/10 text-blue-300", dot: "bg-blue-400" },
   INTERESTED: { badge: "border-violet-500/25 bg-violet-500/10 text-violet-300", dot: "bg-violet-400" },
-  NEGOTIATING: { badge: "border-amber-500/25 bg-amber-500/10 text-amber-300", dot: "bg-amber-400" },
+  NEGOTIATING: { badge: "border-amber-500/25 bg-amber-50 text-amber-300", dot: "bg-amber-400" },
   SOLD: { badge: "border-green-500/25 bg-green-500/10 text-green-300", dot: "bg-green-400" },
-  DEAD: { badge: "border-zinc-700 bg-zinc-800/60 text-zinc-400", dot: "bg-zinc-500" },
+  DEAD: { badge: "border-slate-200 bg-slate-100/60 text-slate-500", dot: "bg-slate-400" },
 };
 
 const STATUS_OPTIONS = ["NEW", "CONTACTED", "INTERESTED", "NEGOTIATING", "SOLD", "DEAD"];

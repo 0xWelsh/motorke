@@ -30,8 +30,8 @@ export default async function AdminSeoIndexingPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-lg font-bold text-white tracking-tight">SEO · Indexing</h1>
-          <p className="mt-1 text-[12px] text-zinc-500">
+          <h1 className="text-lg font-bold text-slate-900 tracking-tight">SEO · Indexing</h1>
+          <p className="mt-1 text-[12px] text-slate-400">
             {urls.length} URLs on the sitemap. Monthly ritual: open new pages in Google Search Console → Request indexing, and keep Bing&rsquo;s sitemap submitted.
           </p>
         </div>
@@ -48,25 +48,25 @@ export default async function AdminSeoIndexingPage() {
             href="https://search.google.com/search-console"
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3.5 py-2 text-[11px] font-bold text-zinc-300 hover:text-white transition-colors"
+            className="rounded-lg border border-slate-200 bg-white/60 px-3.5 py-2 text-[11px] font-bold text-slate-700 hover:text-slate-900 transition-colors"
           >
             Google Search Console
           </a>
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-zinc-800">
+      <div className="overflow-x-auto rounded-xl border border-slate-200">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead>
-            <tr className="border-b border-zinc-800 bg-zinc-900/40">
-              <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500">URL</th>
-              <th className="px-4 py-3 text-right text-[10px] font-bold uppercase tracking-wider text-zinc-500">Actions</th>
+            <tr className="border-b border-slate-200 bg-white/40">
+              <th className="px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">URL</th>
+              <th className="px-4 py-3 text-right text-[10px] font-bold uppercase tracking-wider text-slate-400">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-800/60">
+          <tbody className="divide-y divide-slate-200/60">
             {urls.slice(0, 200).map((url) => (
-              <tr key={url} className="hover:bg-zinc-800/30">
-                <td className="max-w-[400px] truncate px-4 py-2.5 text-[12px] text-zinc-300">{url}</td>
+              <tr key={url} className="hover:bg-slate-100/30">
+                <td className="max-w-[400px] truncate px-4 py-2.5 text-[12px] text-slate-700">{url}</td>
                 <td className="px-4 py-2.5 text-right">
                   <div className="flex items-center justify-end gap-2">
                     <CopyUrlButton url={url} />
@@ -74,7 +74,7 @@ export default async function AdminSeoIndexingPage() {
                       href={gscInspect(url)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="rounded-md border border-emerald-800/50 bg-emerald-950/30 px-2.5 py-1 text-[11px] font-bold text-emerald-400 hover:bg-emerald-800 hover:text-white transition-colors"
+                      className="rounded-md border border-emerald-800/50 bg-emerald-950/30 px-2.5 py-1 text-[11px] font-bold text-emerald-600 hover:bg-emerald-800 hover:text-white transition-colors"
                     >
                       GSC inspect
                     </a>
@@ -85,7 +85,7 @@ export default async function AdminSeoIndexingPage() {
           </tbody>
         </table>
         {urls.length === 0 && (
-          <p className="p-6 text-center text-sm text-zinc-500">Sitemap not reachable — check bidgari.com/sitemap.xml.</p>
+          <p className="p-6 text-center text-sm text-slate-400">Sitemap not reachable — check bidgari.com/sitemap.xml.</p>
         )}
       </div>
     </div>

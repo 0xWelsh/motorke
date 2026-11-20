@@ -8,7 +8,7 @@ export default function AdminPageHeader({
 }) {
   return (
     <section
-      className={`relative mb-6 overflow-hidden rounded-2xl border border-zinc-800 bg-gradient-to-br from-zinc-950 via-zinc-950 to-zinc-900 px-5 py-6 sm:mb-8 sm:px-6 sm:py-7 lg:px-8 ${className}`}
+      className={`relative mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 via-white to-white px-5 py-6 sm:mb-8 sm:px-6 sm:py-7 lg:px-8 ${className}`}
     >
       <div
         className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full bg-emerald-500/5 blur-3xl"
@@ -22,16 +22,16 @@ export default function AdminPageHeader({
                 className="inline-flex h-2 w-2 rounded-full bg-emerald-600 shadow-[0_0_12px_rgba(47,133,90,0.65)]"
                 aria-hidden
               />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-zinc-400">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
                 {eyebrow}
               </span>
             </div>
           ) : null}
-          <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
             {title}
           </h1>
           {description ? (
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-zinc-400">
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate-500">
               {description}
             </p>
           ) : null}
@@ -44,12 +44,12 @@ export default function AdminPageHeader({
                 {stats.map((s) => (
                   <div
                     key={s.label}
-                    className="min-w-[100px] rounded-xl border border-zinc-800 bg-zinc-900/60 px-3 py-2 text-center shadow-sm backdrop-blur sm:min-w-0"
+                    className="min-w-[100px] rounded-xl border border-slate-200 bg-white/60 px-3 py-2 text-center shadow-sm backdrop-blur sm:min-w-0"
                   >
-                    <p className={`text-lg font-bold tabular-nums sm:text-xl ${s.tone || "text-white"}`}>
+                    <p className={`text-lg font-bold tabular-nums sm:text-xl ${s.tone || "text-slate-900"}`}>
                       {s.value}
                     </p>
-                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-slate-400">
                       {s.label}
                     </p>
                   </div>

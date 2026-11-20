@@ -44,10 +44,10 @@ export default async function AdminApprovalsPage() {
         <div>
           <div className="flex items-center gap-3 mb-3">
              <div className="w-2 h-2 rounded-xl bg-[var(--accent)] shadow-[0_0_8px_rgba(47,133,90,0.45)] animate-pulse" />
-             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-zinc-300">Dealer Approval</span>
+             <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-700">Dealer Approval</span>
           </div>
-          <h1 className="text-4xl font-black text-white tracking-tight">
-            Pending Approvals <span className="text-zinc-400 font-medium ml-3">/ {dealers.length} Dealers</span>
+          <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+            Pending Approvals <span className="text-slate-500 font-medium ml-3">/ {dealers.length} Dealers</span>
           </h1>
         </div>
       </div>
@@ -59,7 +59,7 @@ export default async function AdminApprovalsPage() {
             <thead>
               <tr className="border-b border-white/[0.06] bg-white/[0.03]">
                 {["Dealer", "Details", "Status", ""].map((h) => (
-                  <th key={h} className="px-10 py-6 text-[11px] font-black uppercase tracking-[0.25em] text-zinc-300">{h}</th>
+                  <th key={h} className="px-10 py-6 text-[11px] font-black uppercase tracking-[0.25em] text-slate-700">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -74,9 +74,9 @@ export default async function AdminApprovalsPage() {
                         {dealer.name[0]?.toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-lg font-black text-white tracking-tight leading-none mb-1.5 uppercase group-hover:text-[var(--accent)] transition-colors">{dealer.name}</p>
+                        <p className="text-lg font-black text-slate-900 tracking-tight leading-none mb-1.5 uppercase group-hover:text-[var(--accent)] transition-colors">{dealer.name}</p>
                         <div className="flex items-center gap-3">
-                           <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">{dealer.phone}</span>
+                           <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{dealer.phone}</span>
                            <div className="w-1 h-1 rounded-xl bg-white/[0.06]" />
                            <span className="text-[11px] font-bold text-[var(--accent)] uppercase tracking-widest">Entry: {new Date(dealer.createdAt).toLocaleDateString()}</span>
                         </div>
@@ -84,11 +84,11 @@ export default async function AdminApprovalsPage() {
                     </div>
                   </td>
                   <td className="px-10 py-7">
-                     <div className="flex items-center gap-2.5 text-zinc-300 mb-1">
+                     <div className="flex items-center gap-2.5 text-slate-700 mb-1">
                         <MapPin size={14} className="text-[var(--accent)]" />
                         <p className="text-xs font-bold uppercase tracking-widest">{dealer.county || "Unknown Territory"}</p>
                      </div>
-                     <p className="text-[11px] font-medium text-zinc-400 uppercase tracking-tighter">{dealer.location}</p>
+                     <p className="text-[11px] font-medium text-slate-500 uppercase tracking-tighter">{dealer.location}</p>
                   </td>
                   <td className="px-10 py-7">
                      <div className="flex items-center gap-2 px-4 py-2 bg-[var(--accent)]/10 border border-[var(--accent)]/20 rounded-xl w-fit shadow-none">
@@ -100,13 +100,13 @@ export default async function AdminApprovalsPage() {
                   </td>
                   <td className="px-10 py-7 text-right">
                     <div className="flex items-center justify-end gap-3 sm:opacity-0 lg:group-hover:opacity-100 transition-all duration-300">
-                      <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-[#1c1c1c] border border-white/[0.08] text-zinc-300 hover:text-white hover:border-white/[0.15] font-bold text-[11px] uppercase tracking-widest rounded-xl transition-all flex items-center gap-2 shadow-none" title="Audit Profile">
+                      <Link href={`/admin/dealers/${dealer.id}/edit`} className="h-11 px-6 bg-[#1c1c1c] border border-white/[0.08] text-slate-700 hover:text-slate-900 hover:border-white/[0.15] font-bold text-[11px] uppercase tracking-widest rounded-xl transition-all flex items-center gap-2 shadow-none" title="Audit Profile">
                         <Edit3 size={14} /> Inspect
                       </Link>
                       
                       <form action={`/api/admin/dealers/${dealer.id}/toggle-verified`} method="POST">
                         <button type="submit" 
-                          className="h-11 px-6 bg-[var(--accent)] hover:bg-[var(--accent)] text-white font-bold text-[11px] uppercase tracking-widest border border-transparent rounded-xl transition-all flex items-center gap-2"
+                          className="h-11 px-6 bg-[var(--accent)] hover:bg-[var(--accent)] text-slate-900 font-bold text-[11px] uppercase tracking-widest border border-transparent rounded-xl transition-all flex items-center gap-2"
                         >
                           <CheckCircle2 size={14} /> Authorize
                         </button>
@@ -125,10 +125,10 @@ export default async function AdminApprovalsPage() {
         {dealers.length === 0 && (
           <div className="py-32 text-center">
             <div className="w-20 h-20 bg-white/[0.03] rounded-xl border border-white/[0.06] flex items-center justify-center mx-auto mb-8">
-               <ShieldCheck size={32} className="text-zinc-400" />
+               <ShieldCheck size={32} className="text-slate-500" />
             </div>
-            <p className="text-xl font-black text-white uppercase tracking-tighter">Queue Purged</p>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mt-2 tracking-wide">All partner nodes have been successfully validated.</p>
+            <p className="text-xl font-black text-slate-900 uppercase tracking-tighter">Queue Purged</p>
+            <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 mt-2 tracking-wide">All partner nodes have been successfully validated.</p>
           </div>
         )}
       </div>

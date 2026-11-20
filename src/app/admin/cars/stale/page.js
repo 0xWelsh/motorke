@@ -82,32 +82,32 @@ export default async function AdminStalePage() {
 
   const renderList = (cars) =>
     cars.length === 0 ? (
-      <p className="py-6 text-center text-sm text-zinc-500">Nothing here — clean.</p>
+      <p className="py-6 text-center text-sm text-slate-400">Nothing here — clean.</p>
     ) : (
       <DataTableShell>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[560px] text-left">
             <thead>
-              <tr className="border-b border-zinc-800 bg-zinc-900/40">
+              <tr className="border-b border-slate-200 bg-white/40">
                 {["Listing", "Price", "Listed", ""].map((h) => (
-                  <th key={h} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-zinc-500">{h}</th>
+                  <th key={h} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60">
+            <tbody className="divide-y divide-slate-200/60">
               {cars.map((c) => (
-                <tr key={c.id} className="hover:bg-zinc-800/30">
+                <tr key={c.id} className="hover:bg-slate-100/30">
                   <td className="px-4 py-3">
-                    <Link href={`/admin/cars/${c.id}/edit`} className="text-sm font-bold text-white hover:text-amber-400 transition-colors">
+                    <Link href={`/admin/cars/${c.id}/edit`} className="text-sm font-bold text-slate-900 hover:text-amber-600 transition-colors">
                       {c.year} {c.make} {c.model}
                       {c.variant ? ` ${c.variant}` : ""}
                     </Link>
                   </td>
-                  <td className="whitespace-nowrap px-4 py-3 text-sm font-bold text-white tabular-nums">{fmtPrice(c.price)}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-[11px] text-zinc-500">{formatListedAge(c.createdAt)}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-sm font-bold text-slate-900 tabular-nums">{fmtPrice(c.price)}</td>
+                  <td className="whitespace-nowrap px-4 py-3 text-[11px] text-slate-400">{formatListedAge(c.createdAt)}</td>
                   <td className="px-4 py-3 text-right">
                     {c.publicSlug ? (
-                      <Link href={`/cars/${c.publicSlug || c.id}`} target="_blank" className="text-[11px] font-bold text-zinc-400 hover:text-white">
+                      <Link href={`/cars/${c.publicSlug || c.id}`} target="_blank" className="text-[11px] font-bold text-slate-500 hover:text-slate-900">
                         View
                       </Link>
                     ) : null}
@@ -123,54 +123,54 @@ export default async function AdminStalePage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-lg font-bold text-white tracking-tight">Stale listings review</h1>
-        <p className="mt-1 text-[12px] text-zinc-500">
+        <h1 className="text-lg font-bold text-slate-900 tracking-tight">Stale listings review</h1>
+        <p className="mt-1 text-[12px] text-slate-400">
           Live &gt;90 days with 0 leads → your call. Live &gt;180 days with no real views in 90 days → auto-hide candidates. Nothing is auto-deleted.
         </p>
       </div>
 
-      <section className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4">
-        <h2 className="text-sm font-bold text-amber-400">Local auto-expiry countdown</h2>
+      <section className="rounded-xl border border-slate-200 bg-white/60 p-4">
+        <h2 className="text-sm font-bold text-amber-600">Local auto-expiry countdown</h2>
         <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Active locals</p>
-            <p className="text-xl font-bold text-white">{localRows.length}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Active locals</p>
+            <p className="text-xl font-bold text-slate-900">{localRows.length}</p>
           </div>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Expire in 30 days</p>
-            <p className="text-xl font-bold text-white">{due30}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Expire in 30 days</p>
+            <p className="text-xl font-bold text-slate-900">{due30}</p>
           </div>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Expire in 7 days</p>
-            <p className={`text-xl font-bold ${due7 > 0 ? "text-red-400" : "text-white"}`}>{due7}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Expire in 7 days</p>
+            <p className={`text-xl font-bold ${due7 > 0 ? "text-red-600" : "text-slate-900"}`}>{due7}</p>
           </div>
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-zinc-500">Next expiry</p>
-            <p className="text-xl font-bold text-white">{nextExpiryLabel}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Next expiry</p>
+            <p className="text-xl font-bold text-slate-900">{nextExpiryLabel}</p>
           </div>
         </div>
-        <p className="mt-2 text-[11px] text-zinc-500">
+        <p className="mt-2 text-[11px] text-slate-400">
           Locals auto-remove 30 days after listing (existing stock re-anchored 24 Sep). Cars with leads are always kept.
         </p>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-bold text-amber-400">
+        <h2 className="text-sm font-bold text-amber-600">
           Needs review · live &gt;90 days, no leads ({warnStale.length})
         </h2>
         {renderList(warnStale)}
         <div className="flex justify-end">
-          <Link href="/admin/cars?order=oldest" className="rounded-md border border-zinc-800 px-3.5 py-2 text-[11px] font-bold text-zinc-300 hover:text-white transition-colors">
+          <Link href="/admin/cars?order=oldest" className="rounded-md border border-slate-200 px-3.5 py-2 text-[11px] font-bold text-slate-700 hover:text-slate-900 transition-colors">
             Open oldest-first in Inventory
           </Link>
         </div>
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-bold text-emerald-400">
+        <h2 className="text-sm font-bold text-emerald-600">
           Auto-hide candidates · live &gt;180 days, 0 views in 90 days
         </h2>
-        <p className="text-[12px] text-zinc-500">
+        <p className="text-[12px] text-slate-400">
           Dry-run only — nothing is hidden until you press it below. Re-shown anytime from Inventory (Status: Hidden).
         </p>
         {renderList(hideCandidates)}

@@ -33,8 +33,8 @@ export default function ExportButton({
       onClick={exportToCSV}
       title={empty ? "No rows to export" : `Download ${filename}`}
       className={clsx(
-        "inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-zinc-700 bg-zinc-900 px-4 py-3 text-[11px] font-black uppercase tracking-[0.08em] text-white shadow-sm transition hover:bg-zinc-800 hover:border-zinc-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F855A]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1e1e1e]",
-        empty && "cursor-not-allowed opacity-45 hover:bg-zinc-900 hover:border-zinc-700",
+        "inline-flex shrink-0 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-3 text-[11px] font-black uppercase tracking-[0.08em] text-slate-900 shadow-sm transition hover:bg-slate-100 hover:border-slate-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2F855A]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1e1e1e]",
+        empty && "cursor-not-allowed opacity-45 hover:bg-slate-50 hover:border-slate-300",
         className,
       )}
     >

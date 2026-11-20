@@ -13,7 +13,7 @@ function StarDisplay({ rating }) {
         <Star
           key={i}
           size={13}
-          className={i <= rating ? "fill-[var(--accent)] text-[var(--accent)]" : "text-zinc-600"}
+          className={i <= rating ? "fill-[var(--accent)] text-[var(--accent)]" : "text-slate-500"}
         />
       ))}
     </div>
@@ -49,12 +49,12 @@ export default async function AdminReviewsPage() {
       <div className="mb-12">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-2 h-2 rounded-full bg-[var(--accent)] shadow-[0_0_8px_rgba(47,133,90,0.45)]" />
-          <span className="text-xs font-black uppercase tracking-[0.3em] text-zinc-400">Moderation</span>
+          <span className="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Moderation</span>
         </div>
-        <h1 className="text-4xl font-black text-white tracking-tight">
+        <h1 className="text-4xl font-black text-slate-900 tracking-tight">
           Review Moderation
         </h1>
-        <p className="text-sm text-zinc-400 mt-2 font-medium">
+        <p className="text-sm text-slate-500 mt-2 font-medium">
           {dealerReviews.length + carReviews.length} total reviews &mdash; remove any that violate community guidelines.
         </p>
       </div>
@@ -63,14 +63,14 @@ export default async function AdminReviewsPage() {
       <section className="mb-16">
         <div className="flex items-center gap-3 mb-6">
           <Building2 size={16} className="text-[var(--accent)]" />
-          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-300">
-            Dealer Reviews <span className="text-zinc-400 font-semibold">({dealerReviews.length})</span>
+          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700">
+            Dealer Reviews <span className="text-slate-500 font-semibold">({dealerReviews.length})</span>
           </h2>
         </div>
 
         {dealerReviews.length === 0 ? (
           <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl p-8 text-center">
-            <p className="text-sm text-zinc-400 font-semibold">No dealer reviews yet.</p>
+            <p className="text-sm text-slate-500 font-semibold">No dealer reviews yet.</p>
           </div>
         ) : (
           <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl overflow-hidden">
@@ -79,7 +79,7 @@ export default async function AdminReviewsPage() {
                 <thead>
                   <tr className="border-b border-white/[0.06] bg-white/[0.03]">
                     {["Reviewer", "Dealer", "Rating", "Comment", "Date", ""].map((h) => (
-                      <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">{h}</th>
+                      <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -87,20 +87,20 @@ export default async function AdminReviewsPage() {
                   {dealerReviews.map((r) => (
                     <tr key={r.id} className="group hover:bg-white/[0.03] transition-colors">
                       <td className="px-6 py-4">
-                        <p className="text-sm font-bold text-white">{r.user.name}</p>
-                        <p className="text-[11px] text-zinc-400">{r.user.email}</p>
+                        <p className="text-sm font-bold text-slate-900">{r.user.name}</p>
+                        <p className="text-[11px] text-slate-500">{r.user.email}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm font-semibold text-zinc-300 capitalize">{r.dealer.name}</p>
+                        <p className="text-sm font-semibold text-slate-700 capitalize">{r.dealer.name}</p>
                       </td>
                       <td className="px-6 py-4">
                         <StarDisplay rating={r.rating} />
-                        <p className="text-[10px] font-bold text-zinc-400 mt-0.5">{r.rating}/5</p>
+                        <p className="text-[10px] font-bold text-slate-500 mt-0.5">{r.rating}/5</p>
                       </td>
                       <td className="px-6 py-4 max-w-[280px]">
-                        <p className="text-sm text-zinc-400 line-clamp-2">{r.comment || <span className="text-zinc-300">No comment</span>}</p>
+                        <p className="text-sm text-slate-500 line-clamp-2">{r.comment || <span className="text-slate-700">No comment</span>}</p>
                       </td>
-                      <td className="px-6 py-4 text-[11px] text-zinc-400 font-semibold whitespace-nowrap">
+                      <td className="px-6 py-4 text-[11px] text-slate-500 font-semibold whitespace-nowrap">
                         {formatDate(r.createdAt)}
                       </td>
                       <td className="px-6 py-4">
@@ -123,14 +123,14 @@ export default async function AdminReviewsPage() {
       <section>
         <div className="flex items-center gap-3 mb-6">
           <Car size={16} className="text-[var(--accent)]" />
-          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-300">
-            Car Reviews <span className="text-zinc-400 font-semibold">({carReviews.length})</span>
+          <h2 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-700">
+            Car Reviews <span className="text-slate-500 font-semibold">({carReviews.length})</span>
           </h2>
         </div>
 
         {carReviews.length === 0 ? (
           <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl p-8 text-center">
-            <p className="text-sm text-zinc-400 font-semibold">No car reviews yet.</p>
+            <p className="text-sm text-slate-500 font-semibold">No car reviews yet.</p>
           </div>
         ) : (
           <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl overflow-hidden">
@@ -139,7 +139,7 @@ export default async function AdminReviewsPage() {
                 <thead>
                   <tr className="border-b border-white/[0.06] bg-white/[0.03]">
                     {["Reviewer", "Vehicle", "Rating", "Comment", "Date", ""].map((h) => (
-                      <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">{h}</th>
+                      <th key={h} className="px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -147,20 +147,20 @@ export default async function AdminReviewsPage() {
                   {carReviews.map((r) => (
                     <tr key={r.id} className="group hover:bg-white/[0.03] transition-colors">
                       <td className="px-6 py-4">
-                        <p className="text-sm font-bold text-white">{r.user.name}</p>
-                        <p className="text-[11px] text-zinc-400">{r.user.email}</p>
+                        <p className="text-sm font-bold text-slate-900">{r.user.name}</p>
+                        <p className="text-[11px] text-slate-500">{r.user.email}</p>
                       </td>
                       <td className="px-6 py-4">
-                        <p className="text-sm font-semibold font-sans text-zinc-300">{r.car.year} {r.car.make} {r.car.model}</p>
+                        <p className="text-sm font-semibold font-sans text-slate-700">{r.car.year} {r.car.make} {r.car.model}</p>
                       </td>
                       <td className="px-6 py-4">
                         <StarDisplay rating={r.rating} />
-                        <p className="text-[10px] font-bold text-zinc-400 mt-0.5">{r.rating}/5</p>
+                        <p className="text-[10px] font-bold text-slate-500 mt-0.5">{r.rating}/5</p>
                       </td>
                       <td className="px-6 py-4 max-w-[280px]">
-                        <p className="text-sm text-zinc-400 line-clamp-2">{r.comment || <span className="text-zinc-300">No comment</span>}</p>
+                        <p className="text-sm text-slate-500 line-clamp-2">{r.comment || <span className="text-slate-700">No comment</span>}</p>
                       </td>
-                      <td className="px-6 py-4 text-[11px] text-zinc-400 font-semibold whitespace-nowrap">
+                      <td className="px-6 py-4 text-[11px] text-slate-500 font-semibold whitespace-nowrap">
                         {formatDate(r.createdAt)}
                       </td>
                       <td className="px-6 py-4">

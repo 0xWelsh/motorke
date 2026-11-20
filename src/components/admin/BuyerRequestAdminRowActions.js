@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Trash2, Loader2 } from "lucide-react";
+import { humanizeError, humanizeApiError } from "@/lib/humanize-error";
 
 export default function BuyerRequestAdminRowActions({ requestId, publicCode, status }) {
   const router = useRouter();
@@ -10,7 +11,7 @@ export default function BuyerRequestAdminRowActions({ requestId, publicCode, sta
   const [error, setError] = useState("");
 
   if (status === "CLOSED") {
-    return <span className="text-[10px] font-bold uppercase text-zinc-600">Removed</span>;
+    return <span className="text-[10px] font-bold uppercase text-slate-500">Removed</span>;
   }
 
   async function removeRequest() {
@@ -27,7 +28,7 @@ export default function BuyerRequestAdminRowActions({ requestId, publicCode, sta
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        setError(data?.error || "Could not remove request.");
+        setError(humanizeApiError(data, "Could not remove request."));
         return;
       }
       router.refresh();

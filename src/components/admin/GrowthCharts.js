@@ -33,8 +33,8 @@ export default function GrowthCharts({ weeklyChart, userChart, statusPipeline, c
     <div className="space-y-4">
 
       {/* Main chart: Listings + Leads + Views */}
-      <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-3">
-        <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-2">Listings, Leads & Views — Weekly</h3>
+      <div className="rounded-lg border border-slate-200 bg-white/60 p-3">
+        <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Listings, Leads & Views — Weekly</h3>
         <div className="h-[220px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={weeklyChart} margin={{ top: 8, right: 4, left: -20, bottom: 0 }}>
@@ -88,8 +88,8 @@ export default function GrowthCharts({ weeklyChart, userChart, statusPipeline, c
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
         {/* Lead pipeline */}
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-3">
-          <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-2">Lead Pipeline</h3>
+        <div className="rounded-lg border border-slate-200 bg-white/60 p-3">
+          <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Lead Pipeline</h3>
           <div className="h-[180px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={statusPipeline} layout="vertical" margin={{ left: -12, right: 4, top: 4, bottom: 0 }}>
@@ -109,8 +109,8 @@ export default function GrowthCharts({ weeklyChart, userChart, statusPipeline, c
         </div>
 
         {/* User signups */}
-        <div className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-3">
-          <h3 className="text-[11px] font-bold uppercase tracking-wider text-zinc-500 mb-2">User Signups & Saves — Weekly</h3>
+        <div className="rounded-lg border border-slate-200 bg-white/60 p-3">
+          <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">User Signups & Saves — Weekly</h3>
           <div className="h-[180px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={userChart} margin={{ top: 8, right: 4, left: -20, bottom: 0 }}>

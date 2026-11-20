@@ -31,11 +31,11 @@ export default async function AdminEditCarPage({ params }) {
         <div>
           <Link
             href="/admin/cars"
-            className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-zinc-400 hover:text-emerald-400 transition-colors"
+            className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-emerald-600 transition-colors"
           >
             ← All cars
           </Link>
-          <h1 className="mt-1.5 text-lg font-bold text-white tracking-tight">
+          <h1 className="mt-1.5 text-lg font-bold text-slate-900 tracking-tight">
             Edit — {car.year} {car.make} {car.model}
           </h1>
         </div>
@@ -51,8 +51,8 @@ export default async function AdminEditCarPage({ params }) {
 
       {/* Danger zone */}
       <div className="rounded-lg border border-rose-800/40 bg-rose-950/15 p-4">
-        <h3 className="text-sm font-bold text-rose-400 mb-1">Danger zone</h3>
-        <p className="text-xs text-zinc-500 mb-3">
+        <h3 className="text-sm font-bold text-rose-600 mb-1">Danger zone</h3>
+        <p className="text-xs text-slate-400 mb-3">
           Permanently deletes this listing, all its photos, and all buyer enquiries. Cannot be undone.
         </p>
         <DeleteButton

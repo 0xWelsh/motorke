@@ -12,6 +12,7 @@ import {
   VEHICLE_TYPE_LABELS,
 } from "@/lib/utils";
 import { CAR_STATUS_LABELS } from "@/lib/constants";
+import { humanizeError, humanizeApiError } from "@/lib/humanize-error";
 
 const MAKES = [
   "Abarth",
@@ -798,7 +799,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
           const text = await res.text();
           throw new Error(text.slice(0, 120) || `Upload failed (HTTP ${res.status})`);
         }
-        if (!res.ok) throw new Error(data.error || `Failed: ${file.name}`);
+        if (!res.ok) throw new Error(humanizeApiError(data, `Upload failed for ${file.name} — try re-selecting it.`));
         uploadedLocalMapRef.current.set(file.id, data.url);
         setUploadProgress((prev) => ({ ...prev, done: prev.done + 1 }));
         return data.url;
@@ -902,7 +903,7 @@ export default function CarForm({ dealers = [], car = null, action, method = "PO
       });
 
       const result = await res.json();
-      if (!res.ok) throw new Error(result.error || "Failed to save");
+      if (!res.ok) throw new Error(humanizeApiError(result, "Couldn't save the listing. Check required fields and try again."));
 
       localStorage.setItem(
         defaultsKey,

@@ -87,12 +87,12 @@ export default async function AdminCarsPage({ searchParams }) {
     <div className="space-y-4">
 
       {successMsg === "wa-posted" && (
-        <div className="rounded-lg border border-emerald-800/50 bg-emerald-950/30 px-4 py-3 text-sm text-emerald-400">
+        <div className="rounded-lg border border-emerald-800/50 bg-emerald-950/30 px-4 py-3 text-sm text-emerald-600">
           Posted to WhatsApp Channel successfully
         </div>
       )}
       {errorMsg === "wa-post-failed" && (
-        <div className="rounded-lg border border-red-800/50 bg-red-950/30 px-4 py-3 text-sm text-red-400">
+        <div className="rounded-lg border border-red-800/50 bg-red-950/30 px-4 py-3 text-sm text-red-600">
           Failed to post to WhatsApp Channel
         </div>
       )}
@@ -100,8 +100,8 @@ export default async function AdminCarsPage({ searchParams }) {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h1 className="text-lg font-bold text-white tracking-tight">Inventory</h1>
-          <div className="mt-1 flex items-center gap-3 text-[11px] text-zinc-500">
+          <h1 className="text-lg font-bold text-slate-900 tracking-tight">Inventory</h1>
+          <div className="mt-1 flex items-center gap-3 text-[11px] text-slate-400">
             <span>{total} total</span>
             <span className="text-emerald-500">{totalLive} live</span>
             <span>{totalHidden} hidden</span>
@@ -110,7 +110,7 @@ export default async function AdminCarsPage({ searchParams }) {
         <div className="flex flex-wrap items-center gap-2 shrink-0">
           <Link
             href="/admin/cars/stale"
-            className="inline-flex items-center gap-1.5 rounded-lg border border-amber-800/40 bg-amber-950/20 px-3.5 py-2 text-[11px] font-bold text-amber-400 hover:bg-amber-900/30 transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-amber-800/40 bg-amber-950/20 px-3.5 py-2 text-[11px] font-bold text-amber-600 hover:bg-amber-900/30 transition-colors"
           >
             Stale review
           </Link>
@@ -124,7 +124,7 @@ export default async function AdminCarsPage({ searchParams }) {
             label="Export"
             filename="welsh-motorhub-inventory.csv"
             data={exportRows}
-            className="rounded-lg border border-zinc-800 bg-zinc-900/60 px-3.5 py-2 text-[11px] font-bold text-zinc-300 hover:text-white transition-colors"
+            className="rounded-lg border border-slate-200 bg-white/60 px-3.5 py-2 text-[11px] font-bold text-slate-700 hover:text-slate-900 transition-colors"
           />
         </div>
       </div>
@@ -133,23 +133,23 @@ export default async function AdminCarsPage({ searchParams }) {
       <form
         action="/admin/cars"
         method="GET"
-        className="rounded-lg border border-zinc-800 bg-zinc-900/60 p-2"
+        className="rounded-lg border border-slate-200 bg-white/60 p-2"
       >
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative w-full min-w-0">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-zinc-500" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
             <input
               name="search"
               defaultValue={search}
               placeholder="Make, model, variant, or description…"
               autoComplete="off"
-              className="w-full min-w-0 rounded-md border border-zinc-800 bg-zinc-950/60 py-2 pl-9 pr-3 text-sm text-white placeholder:text-zinc-600 outline-none transition focus:border-emerald-500/50 focus:bg-zinc-950"
+              className="w-full min-w-0 rounded-md border border-slate-200 bg-[var(--bg)]/60 py-2 pl-9 pr-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-emerald-500/50 focus:bg-[var(--bg)]"
             />
           </div>
           <select
             name="status"
             defaultValue={statusFilter}
-            className="rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-xs font-medium text-zinc-300 outline-none cursor-pointer focus:border-emerald-500/50"
+            className="rounded-md border border-slate-200 bg-[var(--bg)]/60 px-3 py-2 text-xs font-medium text-slate-700 outline-none cursor-pointer focus:border-emerald-500/50"
           >
             {STATUS_OPTS.map((o) => (
               <option key={o.v} value={o.v}>{o.l}</option>
@@ -158,7 +158,7 @@ export default async function AdminCarsPage({ searchParams }) {
           <select
             name="order"
             defaultValue={order}
-            className="rounded-md border border-zinc-800 bg-zinc-950/60 px-3 py-2 text-xs font-medium text-zinc-300 outline-none cursor-pointer focus:border-emerald-500/50"
+            className="rounded-md border border-slate-200 bg-[var(--bg)]/60 px-3 py-2 text-xs font-medium text-slate-700 outline-none cursor-pointer focus:border-emerald-500/50"
           >
             <option value="newest">Newest first</option>
             <option value="oldest">Oldest first</option>
@@ -172,7 +172,7 @@ export default async function AdminCarsPage({ searchParams }) {
           {(search || statusFilter) && (
             <Link
               href="/admin/cars"
-              className="rounded-md border border-zinc-800 px-3 py-2 text-xs font-bold text-zinc-400 hover:text-white transition-colors"
+              className="rounded-md border border-slate-200 px-3 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors"
             >
               Clear
             </Link>
@@ -201,7 +201,7 @@ export default async function AdminCarsPage({ searchParams }) {
             href={page > 1 ? carsHref({ page: page - 1, search, status: statusFilter }) : null}
             label="Prev"
           />
-          <span className="text-xs text-zinc-500 tabular-nums">{page} / {pages}</span>
+          <span className="text-xs text-slate-400 tabular-nums">{page} / {pages}</span>
           <PageLink
             href={page < pages ? carsHref({ page: page + 1, search, status: statusFilter }) : null}
             label="Next"
@@ -219,7 +219,7 @@ export default async function AdminCarsPage({ searchParams }) {
               className={`flex h-8 min-w-[2rem] items-center justify-center rounded-md text-xs font-bold transition-colors ${
                 p === page
                   ? "bg-emerald-600 text-white"
-                  : "border border-zinc-800 bg-zinc-900/60 text-zinc-400 hover:text-white hover:border-zinc-700"
+                  : "border border-slate-200 bg-white/60 text-slate-500 hover:text-slate-900 hover:border-slate-300"
               }`}
             >
               {p}
@@ -233,12 +233,12 @@ export default async function AdminCarsPage({ searchParams }) {
 
 function PageLink({ href, label }) {
   if (!href) {
-    return <span className="rounded-md px-3 py-1.5 text-xs font-bold text-zinc-600 opacity-40">{label}</span>;
+    return <span className="rounded-md px-3 py-1.5 text-xs font-bold text-slate-500 opacity-40">{label}</span>;
   }
   return (
     <Link
       href={href}
-      className="rounded-md border border-zinc-800 bg-zinc-900/60 px-3 py-1.5 text-xs font-bold text-zinc-400 hover:text-white hover:border-zinc-700 transition-colors"
+      className="rounded-md border border-slate-200 bg-white/60 px-3 py-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-colors"
     >
       {label}
     </Link>
