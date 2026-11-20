@@ -71,6 +71,10 @@ const getCarPage = unstable_cache(
           description: true,
           available: true,
           soldAt: true,
+          location: true,
+          dutyPaid: true,
+          negotiable: true,
+          condition: true,
           images: { take: 1, orderBy: { isPrimary: "desc" } },
           dealer: {
             select: {

@@ -52,6 +52,9 @@ const hubCarSelect = {
   description: true,
   available: true,
   soldAt: true,
+  location: true,
+  dutyPaid: true,
+  negotiable: true,
   publicSlug: true,
   images: { where: { isPrimary: true }, take: 1 },
   dealer: {

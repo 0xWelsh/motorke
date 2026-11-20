@@ -33,7 +33,7 @@ export default async function AccountPage({ searchParams }) {
         car: {
           include: {
             images: { where: { isPrimary: true }, take: 1 },
-            dealer: { select: { name: true, location: true, slug: true } },
+            dealer: { select: { name: true, location: true, slug: true, verified: true, verificationStatus: true } },
           },
         },
       },

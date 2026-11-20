@@ -95,7 +95,7 @@ async function loadHomepageBase() {
         where: { available: true, createdAt: { gte: week } },
         include: {
           images: { where: { isPrimary: true }, take: 1 },
-          dealer: { select: { id: true, name: true, location: true, slug: true } },
+          dealer: { select: { id: true, name: true, location: true, slug: true, verified: true, verificationStatus: true } },
         },
         take: 16,
         orderBy: { createdAt: "desc" },

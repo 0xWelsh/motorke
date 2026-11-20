@@ -11,6 +11,7 @@ import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 import CookieConsent from "@/components/CookieConsent";
 import MobileTabBar from "@/components/MobileTabBar";
 import { SaveDataProvider } from "@/components/SaveDataProvider";
+import { SavedCarsProvider } from "@/components/SavedCarsProvider";
 import PageTransition from "@/components/PageTransition";
 import PendingSwap from "@/components/PendingSwap";
 import CarDetailSkeleton from "@/components/CarDetailSkeleton";
@@ -230,6 +231,7 @@ export default async function RootLayout({ children }) {
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
           <SaveDataProvider>
+          <SavedCarsProvider>
             {/* useSearchParams inside a statically-prerendered page needs a
                 Suspense boundary, else the whole page bails to CSR at build. */}
             <Suspense fallback={null}>
@@ -246,6 +248,7 @@ export default async function RootLayout({ children }) {
                 </SiteChrome>
               </CarNavPendingProvider>
             </CompareProvider>
+          </SavedCarsProvider>
           </SaveDataProvider>
           <ScrollToTop />
           <CookieConsent />
