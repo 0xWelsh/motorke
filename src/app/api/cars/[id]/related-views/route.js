@@ -20,37 +20,37 @@ const getRelatedViews = unstable_cache(
     
     const relatedCars = await db.$queryRaw`
       WITH viewers AS (
-        SELECT DISTINCT user_id, session_key
+        SELECT DISTINCT "userId", "sessionKey"
         FROM car_views
-        WHERE car_id = ${id}
-          AND viewed_at >= ${since}
+        WHERE "carId" = ${id}
+          AND "viewedAt" >= ${since}
       ),
       co_views AS (
-        SELECT cv.car_id, COUNT(DISTINCT cv.user_id || ':' || cv.session_key) as co_view_count
+        SELECT cv."carId" as car_id, COUNT(DISTINCT COALESCE(cv."userId", '') || ':' || COALESCE(cv."sessionKey", '')) as co_view_count
         FROM car_views cv
-        JOIN viewers v ON (cv.user_id = v.user_id OR cv.session_key = v.session_key)
-        WHERE cv.car_id != ${id}
-          AND cv.viewed_at >= ${since}
-          AND cv.car_id IS NOT NULL
-        GROUP BY cv.car_id
+        JOIN viewers v ON (cv."userId" = v."userId" OR cv."sessionKey" = v."sessionKey")
+        WHERE cv."carId" != ${id}
+          AND cv."viewedAt" >= ${since}
+          AND cv."carId" IS NOT NULL
+        GROUP BY cv."carId"
         ORDER BY co_view_count DESC
         LIMIT 8
       )
       SELECT c.id, c.make, c.model, c.variant, c.year, c.price, c.mileage,
-             c.body_type, c.fuel_type, c.transmission, c.color, c.location,
-             c.available, c.created_at,
-             c.dealer_id,
+             c."bodyType" as body_type, c."fuelType" as fuel_type, c.transmission, c.color, c.location,
+             c.available, c."createdAt" as created_at,
+             c."dealerId" as dealer_id,
              d.name as dealer_name, d.location as dealer_location,
-             d.type as dealer_type, d.verification_status as dealer_verification_status,
-             (SELECT json_agg(json_build_object('url', ci.url, 'alt', ci.alt, 'is_primary', ci.is_primary, 'order', ci."order"))
+             d.type as dealer_type, d."verificationStatus" as dealer_verification_status,
+             (SELECT json_agg(json_build_object('url', ci.url, 'alt', ci.alt, 'is_primary', ci."isPrimary", 'order', ci."order"))
               FROM car_images ci
-              WHERE ci.car_id = c.id
-              ORDER BY ci.is_primary DESC, ci."order"
+              WHERE ci."carId" = c.id
+              ORDER BY ci."isPrimary" DESC, ci."order"
               LIMIT 1) as images,
              cv.co_view_count
       FROM co_views cv
       JOIN cars c ON c.id = cv.car_id
-      JOIN dealers d ON d.id = c.dealer_id
+      JOIN dealers d ON d.id = c."dealerId"
       WHERE c.available = true
       ORDER BY cv.co_view_count DESC;
     `;

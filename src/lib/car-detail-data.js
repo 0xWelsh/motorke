@@ -19,30 +19,30 @@ export const getSimilarCars = unstable_cache(
     const candidates = await db.$queryRaw`
       SELECT 
         c.id, c.make, c.model, c.variant, c.year, c.price, c.mileage,
-        c.body_type, c.fuel_type, c.transmission, c.color, c.location,
-        c.available, c.created_at, c.badges, c.description, c.featured,
-        c.featured_weight, c.spotlight_until, c.hot_badge_until, c.views,
-        c.dealer_id,
+        c."bodyType" as body_type, c."fuelType" as fuel_type, c.transmission, c.color, c.location,
+        c.available, c."createdAt" as created_at, c.badges, c.description, c.featured,
+        c."featuredWeight" as featured_weight, c."spotlightUntil" as spotlight_until, c."hotBadgeUntil" as hot_badge_until, c.views,
+        c."dealerId" as dealer_id,
         d.name as dealer_name, d.location as dealer_location,
-        d.type as dealer_type, d.verification_status as dealer_verification_status,
-        (SELECT json_agg(json_build_object('url', ci.url, 'alt', ci.alt, 'is_primary', ci.is_primary, 'order', ci."order"))
+        d.type as dealer_type, d."verificationStatus" as dealer_verification_status,
+        (SELECT json_agg(json_build_object('url', ci.url, 'alt', ci.alt, 'is_primary', ci."isPrimary", 'order', ci."order"))
          FROM car_images ci
-         WHERE ci.car_id = c.id
-         ORDER BY ci.is_primary DESC, ci."order"
+         WHERE ci."carId" = c.id
+         ORDER BY ci."isPrimary" DESC, ci."order"
          LIMIT 3) as images
       FROM cars c
-      JOIN dealers d ON d.id = c.dealer_id
+      JOIN dealers d ON d.id = c."dealerId"
       WHERE c.available = true
         AND c.id != ${carId}
         AND c.make = ${make}
-        ${dealerVerificationFilter.dealer ? Prisma.sql`AND d.verification_status = 'VERIFIED'` : Prisma.empty}
+        ${dealerVerificationFilter.dealer ? Prisma.sql`AND d."verificationStatus" = 'VERIFIED'` : Prisma.empty}
       ORDER BY 
-        (CASE WHEN c.dealer_id = ${dealerId} THEN 45 ELSE 0 END) +
-        (CASE WHEN c.body_type = ${bodyType} THEN 20 ELSE 0 END) +
+        (CASE WHEN c."dealerId" = ${dealerId} THEN 45 ELSE 0 END) +
+        (CASE WHEN c."bodyType" = ${bodyType} THEN 20 ELSE 0 END) +
         GREATEST(0, 15 - ABS(COALESCE(c.year, 0) - COALESCE(${year}, 0)) * 3) +
         GREATEST(0, 20 - (ABS(COALESCE(c.price, 0) - COALESCE(${price}, 0))::float / NULLIF(${price}, 0)) * 40) +
-        (CASE WHEN d.verification_status = 'VERIFIED' THEN 3 ELSE 0 END) DESC,
-        c.created_at DESC
+        (CASE WHEN d."verificationStatus" = 'VERIFIED' THEN 3 ELSE 0 END) DESC,
+        c."createdAt" DESC
       LIMIT 8;
     `;
 
@@ -69,26 +69,27 @@ export const getPeopleAlsoSearch = unstable_cache(
       WITH candidates AS (
         SELECT 
           c.id, c.make, c.model, c.variant, c.year, c.price, c.mileage,
-          c.body_type, c.fuel_type, c.transmission, c.color, c.location,
-          c.available, c.created_at,
-          c.dealer_id,
+          c."bodyType" as body_type, c."fuelType" as fuel_type, c.transmission, c.color, c.location,
+          c.available, c."createdAt" as created_at,
+          c."dealerId" as dealer_id,
           d.name as dealer_name, d.location as dealer_location,
-          d.verification_status as dealer_verification_status,
-          (SELECT json_agg(json_build_object('url', ci.url, 'alt', ci.alt, 'is_primary', ci.is_primary, 'order', ci."order"))
+          d.type as dealer_type,
+          d."verificationStatus" as dealer_verification_status,
+          (SELECT json_agg(json_build_object('url', ci.url, 'alt', ci.alt, 'is_primary', ci."isPrimary", 'order', ci."order"))
            FROM car_images ci
-           WHERE ci.car_id = c.id
+           WHERE ci."carId" = c.id
            ORDER BY ci."order"
            LIMIT 1) as images
         FROM cars c
-        JOIN dealers d ON d.id = c.dealer_id
+        JOIN dealers d ON d.id = c."dealerId"
         WHERE c.available = true
           AND c.id != ${carId}
-          ${dealerVerificationFilter.dealer ? Prisma.sql`AND d.verification_status = 'VERIFIED'` : Prisma.empty}
+          ${dealerVerificationFilter.dealer ? Prisma.sql`AND d."verificationStatus" = 'VERIFIED'` : Prisma.empty}
           AND (
-            ${bodyType ? Prisma.sql`c.body_type = ${bodyType}` : Prisma.sql`1=0`}
+            ${bodyType ? Prisma.sql`c."bodyType" = ${bodyType}` : Prisma.sql`1=0`}
             OR LOWER(c.make) = LOWER(${make})
             OR LOWER(c.model) = LOWER(${model})
-            ${fuelType ? Prisma.sql`OR c.fuel_type = ${fuelType}` : Prisma.sql``}
+            ${fuelType ? Prisma.sql`OR c."fuelType" = ${fuelType}` : Prisma.sql``}
             ${anchorPrice ? Prisma.sql`OR (c.price BETWEEN ${floor} AND ${ceiling})` : Prisma.sql``}
           )
         LIMIT 30
@@ -106,7 +107,7 @@ export const getPeopleAlsoSearch = unstable_cache(
             ELSE 0 
           END) as score_price,
           GREATEST(0, 12 - ABS(COALESCE(c.year, 0) - COALESCE(${year}, 0)) * 4) as score_year,
-          (CASE WHEN d.verification_status = 'VERIFIED' THEN 2 ELSE 0 END) as score_verified,
+          (CASE WHEN d."verificationStatus" = 'VERIFIED' THEN 2 ELSE 0 END) as score_verified,
           ABS(c.price - ${anchorPrice})::float / NULLIF(${anchorPrice}, 0) as price_gap
         FROM candidates c
         JOIN dealers d ON d.id = c.dealer_id
