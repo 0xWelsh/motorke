@@ -61,6 +61,20 @@ const nextConfig = {
       },
     ];
     return [
+      // HTML pages: Next's ISR default is `s-maxage=<revalidate>,
+      // stale-while-revalidate=31535400` — a YEAR of allowed staleness. Chrome
+      // honours SWR for the service worker's own network fetches too, so users
+      // keep getting the previous build's HTML (e.g. stale light theme) long
+      // after a deploy. Force revalidation on every load; the 304s are cheap.
+      {
+        source: "/((?!api|_next/static|_next/image|images/|logos/|fonts/|watermark/|uploads/).*)",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=0, s-maxage=60, stale-while-revalidate=300",
+          },
+        ],
+      },
       { source: "/images/:path*", headers: staticAssetCache },
       { source: "/logos/:path*", headers: staticAssetCache },
       { source: "/fonts/:path*", headers: staticAssetCache },
