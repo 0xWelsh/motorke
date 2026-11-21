@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MapPin, ImageOff, X, Heart, Share2, Tag } from "lucide-react";
+import { MapPin, ImageOff, X, Heart, Share2, Clock } from "lucide-react";
 import PictureImage from "@/components/PictureImage";
 import CardGallery from "@/components/card/CardGallery";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
@@ -136,7 +136,7 @@ export default function CarCard({
   if (layout === "compact") {
     return (
       <article
-        className="group flex items-stretch bg-white border overflow-hidden transition-colors duration-300"
+        className="group flex items-stretch bg-surface border overflow-hidden transition-colors duration-300"
         style={{ borderColor, touchAction: "manipulation" }}
       >
         <Link
@@ -144,7 +144,7 @@ export default function CarCard({
           onClick={() => onCarClick("card_compact")}
           className="flex w-full items-center gap-2.5 p-2"
         >
-          <div className={`relative h-[52px] w-[84px] sm:h-16 sm:w-28 shrink-0 overflow-hidden rounded-md bg-slate-100${sold ? " grayscale" : ""}`}>
+          <div className={`relative h-[52px] w-[84px] sm:h-16 sm:w-28 shrink-0 overflow-hidden rounded-md bg-surface-overlay${sold ? " grayscale" : ""}`}>
             {primaryImg ? (
               <PictureImage
                 src={primaryImg}
@@ -153,13 +153,13 @@ export default function CarCard({
                 className="absolute inset-0 h-full w-full object-cover"
                 sizes="120px"
                 fallback={
-                  <div className="flex h-full w-full items-center justify-center text-slate-300">
+                  <div className="flex h-full w-full items-center justify-center text-ghost">
                     <ImageOff className="h-5 w-5" aria-hidden />
                   </div>
                 }
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-slate-300">
+              <div className="flex h-full w-full items-center justify-center text-ghost">
                 <ImageOff className="h-5 w-5" />
               </div>
             )}
@@ -171,7 +171,7 @@ export default function CarCard({
             <p className="mt-0.5 whitespace-nowrap text-[15px] font-bold leading-snug text-[var(--accent)]">
               {formatCarPrice(car)}
             </p>
-            <p className="truncate text-[11px] leading-snug text-slate-500">
+            <p className="truncate text-[11px] leading-snug text-muted">
               {[...specBits, car.location ? car.location : null, distanceLabel ? distanceLabel : null]
                 .filter(Boolean)
                 .join(" · ")}
@@ -187,7 +187,7 @@ export default function CarCard({
   if (isList) {
     return (
       <article
-        className="group flex flex-col bg-white border overflow-hidden transition-colors duration-300"
+        className="group flex flex-col bg-surface border overflow-hidden transition-colors duration-300"
         style={{ borderColor, touchAction: "manipulation" }}
         {...(boost.active
           ? {
@@ -201,7 +201,7 @@ export default function CarCard({
           className="flex"
         >
           <div
-            className={`relative w-[42%] shrink-0 sm:w-64 aspect-[4/3] overflow-hidden bg-slate-100${sold ? " grayscale" : ""}`}
+            className={`relative w-[42%] shrink-0 sm:w-64 aspect-[4/3] overflow-hidden bg-surface-overlay${sold ? " grayscale" : ""}`}
           >
             {primaryImg ? (
               <PictureImage
@@ -211,13 +211,13 @@ export default function CarCard({
                 className="absolute inset-0 h-full w-full object-cover transition-[filter] duration-300 ease-out group-hover:brightness-110"
                 sizes={sizes || "(max-width: 768px) 42vw, 16vw"}
                 fallback={
-                  <div className="flex h-full w-full items-center justify-center text-slate-300">
+                  <div className="flex h-full w-full items-center justify-center text-ghost">
                     <ImageOff className="h-7 w-7" aria-hidden />
                   </div>
                 }
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-slate-300">
+              <div className="flex h-full w-full items-center justify-center text-ghost">
                 <ImageOff className="h-7 w-7" />
               </div>
             )}
@@ -229,7 +229,7 @@ export default function CarCard({
                   event.stopPropagation();
                   onRemove(car.id);
                 }}
-                className="absolute right-1.5 top-1.5 inline-flex h-9 w-9 items-center justify-center rounded bg-white/90 text-slate-600 transition-colors hover:bg-white hover:text-red-600 sm:h-7 sm:w-7"
+                className="absolute right-1.5 top-1.5 inline-flex h-9 w-9 items-center justify-center rounded bg-glass/90 text-muted transition-colors hover:bg-surface hover:text-red-600 sm:h-7 sm:w-7"
                 aria-label="Remove from watchlist"
               >
                 <X className="h-3.5 w-3.5" />
@@ -239,7 +239,7 @@ export default function CarCard({
           </div>
           <div className="flex flex-1 flex-col gap-y-1 min-w-0 p-2.5 md:p-3">
             <h3
-              className="line-clamp-1 text-[15px] font-extrabold leading-tight tracking-tight text-slate-900"
+              className="line-clamp-1 text-[15px] font-extrabold leading-tight tracking-tight text-text"
               title={`${car.make} ${car.model}${car.variant ? ` (${car.variant})` : ""}`}
             >
               {[car.year, make, model].filter(Boolean).join(" ")}
@@ -247,14 +247,14 @@ export default function CarCard({
             <p className="mt-1 text-[16px] font-black leading-snug tracking-tight text-[var(--accent)]">
               {formatCarPrice(car)}
             </p>
-            <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-slate-900">
+            <p className="line-clamp-2 text-[13px] font-semibold leading-snug text-text">
               {[car.mileage != null ? formatMileage(car.mileage) : null, transLabel || null, fuelLabel || null]
                 .filter(Boolean)
                 .join(", ")}
             </p>
             {(car.location || distanceLabel) && (
-              <p className="flex min-w-0 items-center gap-1 text-[12px] leading-snug text-slate-500">
-                <MapPin className="h-3 w-3 shrink-0 text-slate-400" aria-hidden />
+              <p className="flex min-w-0 items-center gap-1 text-[12px] leading-snug text-muted">
+                <MapPin className="h-3 w-3 shrink-0 text-dim" aria-hidden />
                 <span className="min-w-0 truncate">
                   {[car.location, distanceLabel].filter(Boolean).join(" · ")}
                 </span>
@@ -349,21 +349,29 @@ function PremiumGridCard({
   const listedDays = car.createdAt
     ? (Date.now() - new Date(car.createdAt).getTime()) / 86_400_000
     : null;
+  // "2 Days" pill on the image, like C&B's countdown chip — ours reads as
+  // time on market (0 days shows "Today").
+  const daysOnMarket =
+    listedDays == null
+      ? null
+      : listedDays < 1
+        ? "Today"
+        : `${Math.floor(listedDays)} Day${Math.floor(listedDays) > 1 ? "s" : ""}`;
 
   // Top-right pills, C&B order of loudness. Max 2 — the strip owns the
   // bottom of the image, so the corner stays calm.
   const badges = [];
   if (boost.spotlight)
-    badges.push({ key: "feat", label: "Featured", cls: "bg-white/90 text-slate-900 tracking-[0.14em]" });
+    badges.push({ key: "feat", label: "Featured", cls: "bg-glass/90 text-text tracking-[0.14em]" });
   else if (boost.hot) badges.push({ key: "hot", label: "Hot", cls: "bg-red-600/95 text-white" });
   if (listedDays != null && listedDays <= 7)
     badges.push({ key: "new", label: "New", cls: "bg-emerald-600/95 text-white" });
   if (car.condition === "NEW")
-    badges.push({ key: "brand", label: "Brand new", cls: "bg-white/85 text-slate-900" });
+    badges.push({ key: "brand", label: "Brand new", cls: "bg-glass/85 text-text" });
   if (car.dutyPaid === true)
-    badges.push({ key: "duty", label: "Duty paid", cls: "bg-white/85 text-emerald-700" });
+    badges.push({ key: "duty", label: "Duty paid", cls: "bg-glass/85 text-emerald-600 dark:text-emerald-400" });
   else if (car.dutyPaid === false)
-    badges.push({ key: "duty", label: "Duty payable", cls: "bg-white/85 text-amber-700" });
+    badges.push({ key: "duty", label: "Duty payable", cls: "bg-glass/85 text-amber-600 dark:text-amber-400" });
   const shownBadges = badges.slice(0, 2);
 
   // One comma-separated spec sentence, like C&B's option list.
@@ -415,7 +423,7 @@ function PremiumGridCard({
   const listingHref = carListingPath(car);
 
   return (
-    <article className="group relative flex flex-col">
+    <article className="group relative flex flex-col rounded-2xl border border-border bg-surface p-2.5 transition-shadow duration-300 hover:shadow-glow">
       <Link
         href={listingHref}
         onClick={() => onCarClick("card")}
@@ -423,9 +431,9 @@ function PremiumGridCard({
       >
         <div
           className={clsx(
-            "relative w-full overflow-hidden bg-slate-100 rounded-xl",
-            feed ? "aspect-[16/9]" : "aspect-[4/3]",
-            boost.spotlight ? "ring-1 ring-slate-900/15" : "border border-slate-200",
+            "relative w-full overflow-hidden bg-surface-overlay rounded-xl",
+            feed ? "aspect-[16/9]" : "aspect-[16/10]",
+            boost.spotlight ? "ring-1 ring-slate-900/15" : "",
             sold && "grayscale",
           )}
         >
@@ -444,36 +452,38 @@ function PremiumGridCard({
               className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
               sizes={cardSizes}
               fallback={
-                <div className="flex h-full w-full items-center justify-center text-slate-300">
+                <div className="flex h-full w-full items-center justify-center text-ghost">
                   <ImageOff className="h-7 w-7" aria-hidden />
                 </div>
               }
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-slate-300">
+            <div className="flex h-full w-full items-center justify-center text-ghost">
               <ImageOff className="h-7 w-7" />
             </div>
           )}
 
-          {/* Price strip — the image owns the price, like C&B's bid bar. */}
-          <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 bg-gradient-to-t from-black/80 via-black/45 to-transparent px-2.5 pb-2 pt-7">
-            <span className="inline-flex min-w-0 items-center gap-1.5 text-white">
-              <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/15">
-                <Tag className="h-3 w-3" aria-hidden />
+          {/* Days pill + price, on the image's bottom-left over a scrim —
+              C&B's bid-bar layout without the bid. */}
+          <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/75 via-black/35 to-transparent px-2.5 pb-2 pt-8">
+            {daysOnMarket && (
+              <span className="inline-flex shrink-0 items-center gap-1 rounded-md bg-black/55 px-1.5 py-0.5 text-[11px] font-bold text-white backdrop-blur-sm">
+                <Clock className="h-3 w-3" aria-hidden />
+                {daysOnMarket}
               </span>
-              <span className={clsx("truncate font-bold tabular-nums tracking-tight", feed ? "text-[15px]" : "text-[13px]")}>
-                {formatCarPrice(car)}
-              </span>
+            )}
+            <span className={clsx("min-w-0 truncate font-bold tabular-nums tracking-tight text-white", feed ? "text-[15px]" : "text-[13.5px]")}>
+              {formatCarPrice(car)}
             </span>
             {car.negotiable === true && (
-              <span className="shrink-0 text-[9.5px] font-bold uppercase tracking-[0.12em] text-white/75">
+              <span className="ml-auto shrink-0 text-[9.5px] font-bold uppercase tracking-[0.12em] text-white/75">
                 Negotiable
               </span>
             )}
           </div>
 
           {shownBadges.length > 0 && (
-            <div className="pointer-events-none absolute right-2 top-2 z-10 flex flex-col items-end gap-1">
+            <div className="pointer-events-none absolute left-2 top-2 z-10 flex flex-col items-start gap-1">
               {shownBadges.map((b) => (
                 <span
                   key={b.key}
@@ -497,7 +507,7 @@ function PremiumGridCard({
         </div>
       </Link>
 
-      <div className="flex items-start justify-between gap-1.5 px-0.5 pt-2.5">
+      <div className="flex items-start justify-between gap-1.5 px-1 pt-2.5 pb-0.5">
         <Link
           href={listingHref}
           onClick={() => onCarClick("card_text")}
@@ -505,7 +515,7 @@ function PremiumGridCard({
         >
           <h3
             className={clsx(
-              "line-clamp-2 font-bold leading-snug tracking-tight text-slate-900",
+              "line-clamp-2 font-bold leading-snug tracking-tight text-text",
               feed ? "text-[18px]" : "text-[15px]",
             )}
             title={`${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`}
@@ -514,13 +524,13 @@ function PremiumGridCard({
           </h3>
 
           {specSentence && (
-            <p className={clsx("mt-1 line-clamp-2 font-medium leading-relaxed text-slate-500", feed ? "text-[14px]" : "text-[13px]")}>
+            <p className={clsx("mt-1 line-clamp-2 font-medium leading-relaxed text-muted", feed ? "text-[14px]" : "text-[13px]")}>
               {specSentence}
             </p>
           )}
 
           {locationLabel && (
-            <p className={clsx("mt-1.5 font-semibold text-slate-400", feed ? "text-[13.5px]" : "text-[12.5px]")}>{locationLabel}</p>
+            <p className={clsx("mt-1.5 font-medium text-muted", feed ? "text-[13.5px]" : "text-[12.5px]")}>{locationLabel}</p>
           )}
         </Link>
 
@@ -535,7 +545,7 @@ function PremiumGridCard({
                 onRemove(car.id);
               }}
               aria-label="Remove from watchlist"
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-red-600"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full text-dim transition-colors hover:text-red-600"
             >
               <X className="h-[18px] w-[18px]" />
             </button>
@@ -545,15 +555,15 @@ function PremiumGridCard({
             onClick={handleSave}
             aria-pressed={saved}
             aria-label={saved ? "Remove from saved" : "Save this car"}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-slate-900"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-dim transition-colors hover:text-text"
           >
-            <Heart className={clsx("h-[18px] w-[18px]", saved && "fill-slate-900 text-slate-900")} />
+            <Heart className={clsx("h-[18px] w-[18px]", saved && "fill-slate-900 text-text")} />
           </button>
           <button
             type="button"
             onClick={handleShare}
             aria-label="Share this listing"
-            className="relative inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-400 transition-colors hover:text-slate-900"
+            className="relative inline-flex h-8 w-8 items-center justify-center rounded-full text-dim transition-colors hover:text-text"
           >
             <Share2 className="h-[18px] w-[18px]" />
             {copied && (
