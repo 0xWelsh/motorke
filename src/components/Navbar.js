@@ -373,13 +373,12 @@ export default function Navbar({ user, navCounts }) {
         </div>
       </div>
 
-      {/* ─── Desktop tagline strip ─── */}
-      <div className="hidden md:block border-b border-border bg-surface-hover">
-        <div className="home-shell">
-          <p className="py-1.5 text-center text-[11px] font-semibold tracking-wide text-muted">
-            Every car verified. Every sale handled.
-          </p>
-        </div>
+      {/* ─── Desktop tagline — a quiet centered line, not a bar welded to
+          the nav band. ─── */}
+      <div className="hidden md:block py-3">
+        <p className="text-center text-[11px] font-medium tracking-wide text-muted">
+          Every car verified. Every sale handled.
+        </p>
       </div>
       </header>
 
@@ -422,7 +421,7 @@ export default function Navbar({ user, navCounts }) {
             </div>
           </div>
         </div>
-        <p className="px-4 pb-1.5 -mt-1 text-center text-[10px] font-semibold tracking-wide text-dim">
+        <p className="px-4 py-2.5 text-center text-[10px] font-medium tracking-wide text-muted">
           Every car verified. Every sale handled.
         </p>
       </nav>

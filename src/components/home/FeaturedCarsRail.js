@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import CarCard from "@/components/CarCard";
 
 /**
@@ -27,7 +27,6 @@ export default function FeaturedCarsRail({ cars = [] }) {
     <section aria-label="Featured cars" className="mt-1">
       <div className="mb-3 flex items-center justify-between gap-3">
         <h2 className="flex min-w-0 items-center gap-2 text-[15px] sm:text-lg font-black uppercase tracking-[0.14em] text-text">
-          <Sparkles className="h-4 w-4 shrink-0 text-[var(--accent)]" aria-hidden />
           <span className="truncate">Featured</span>
           <span className="hidden sm:inline text-[11px] font-bold tracking-normal text-dim normal-case">
             today&rsquo;s picks from the yard

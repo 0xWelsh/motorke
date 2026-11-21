@@ -347,12 +347,12 @@ export default async function HomePage() {
               {/* Equal halves rather than content-width buttons. At content width they
                   left ~73px dead on the right of a 366px row, which read as
                   a broken edge on a phone. */}
-              <div className="mt-4 grid grid-cols-2 gap-2">
+              <div className="mt-4 grid grid-cols-2 gap-2.5">
                 <TrackedLink
                   href="/cars"
                   eventName="homepage_browse_click"
                   eventPayload={{ area: "top" }}
-                  className="btn btn-primary btn-lg w-full"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-surface text-[13px] font-bold text-text transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
                 >
                   Browse all cars <ArrowRight className="h-4 w-4" aria-hidden />
                 </TrackedLink>
@@ -365,7 +365,7 @@ export default async function HomePage() {
                   href="/sell"
                   eventName="homepage_sell_click"
                   eventPayload={{ area: "top" }}
-                  className="btn btn-outline btn-lg w-full"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-border bg-surface text-[13px] font-bold text-text transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
                 >
                   Sell your car
                 </TrackedLink>

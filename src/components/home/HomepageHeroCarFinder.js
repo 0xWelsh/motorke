@@ -156,7 +156,7 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
 
         <button
           type="submit"
-          className="btn btn-primary btn-lg w-full !py-2.5 sm:!py-3"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-[var(--accent-hover)] px-4 text-[13px] font-bold text-white transition-colors hover:bg-[var(--accent)]"
         >
           <Search className="h-4 w-4" aria-hidden />
           Search listings
