@@ -40,11 +40,11 @@ export default function DealerProfileHeroPanel({
     : "mt-2 text-[13px] sm:text-sm text-white/85 leading-relaxed line-clamp-2";
 
   const pillCls = mobile
-    ? "inline-flex items-center gap-1 bg-white/15 border border-white/20 px-2 py-0.5 text-[9px] font-black text-white"
-    : "inline-flex items-center gap-1.5 bg-white/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white";
+    ? "inline-flex items-center gap-1 bg-glass/15 border border-white/20 px-2 py-0.5 text-[9px] font-black text-white"
+    : "inline-flex items-center gap-1.5 bg-glass/10 border border-white/15 px-2.5 py-1 text-[10px] font-black text-white";
 
   const dotCls = mobile ? "text-white/40" : "text-white/30";
-  const accentIcon = mobile ? "text-[#4ade80]" : "text-[#22c55e]";
+  const accentIcon = mobile ? "text-[#4ade80]" : "text-accent";
 
   return (
     <div className={`flex gap-2.5 sm:gap-3 items-start ${mobile ? "" : "flex-col sm:flex-row sm:gap-4"}`}>
@@ -54,7 +54,7 @@ export default function DealerProfileHeroPanel({
         } ${
           dealer.verified
             ? "p-[2px] bg-gradient-to-br from-[#22c55e] via-[#16a34a] to-emerald-700 shadow-[0_0_20px_-6px_rgba(34,197,94,0.5)]"
-            : "p-[2px] bg-white/10"
+            : "p-[2px] bg-glass/10"
         }`}
         style={{ borderRadius: mobile ? "10px" : "12px" }}
       >
@@ -79,8 +79,8 @@ export default function DealerProfileHeroPanel({
             <span
               className={`inline-flex items-center gap-0.5 text-[9px] font-black uppercase tracking-[0.12em] border ${
                 mobile
-                  ? "bg-[#22c55e]/20 text-[#bbf7d0] border-[#22c55e]/40"
-                  : "bg-[#22c55e]/15 text-[#22c55e] border-[#22c55e]/40"
+                  ? "bg-accent/20 text-[#bbf7d0] border-[#22c55e]/40"
+                  : "bg-accent/15 text-accent border-[#22c55e]/40"
               } px-1.5 py-0.5`}
               style={{ borderRadius: "999px" }}
             >
@@ -105,8 +105,8 @@ export default function DealerProfileHeroPanel({
           <span className="inline-flex items-center gap-1">
             {isActiveToday ? (
               <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#22c55e] opacity-75" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#22c55e]" />
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-75" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
               </span>
             ) : (
               <Activity className={`w-2.5 h-2.5 ${mobile ? "text-white/60" : "text-white/50"}`} />

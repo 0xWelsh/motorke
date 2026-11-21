@@ -23,7 +23,7 @@ function isValidKenyanPhone(value) {
 }
 
 const inputCls =
-  "w-full rounded-lg border border-slate-300 bg-slate-50 px-3.5 py-2.5 text-[13px] text-slate-900 placeholder:text-slate-400 outline-none transition-all focus:border-[var(--accent)] focus:bg-white focus:ring-1 focus:ring-accent-glow";
+  "w-full rounded-lg border border-border bg-surface-hover px-3.5 py-2.5 text-[13px] text-text placeholder:text-dim outline-none transition-all focus:border-[var(--accent)] focus:bg-surface focus:ring-1 focus:ring-accent-glow";
 
 /**
  * Compact "Request callback" form for the listing rail. Posts to the shared
@@ -113,7 +113,7 @@ export default function CallbackRequestForm({ carId, dealerId, carTitle }) {
         aria-label="Your phone number"
         className={inputCls}
       />
-      <p className="text-[10px] leading-snug text-slate-400">{PHONE_COUNTRY_CODE_HELPER}</p>
+      <p className="text-[10px] leading-snug text-dim">{PHONE_COUNTRY_CODE_HELPER}</p>
 
       {error && (
         <p className="rounded-md bg-red-50 px-3 py-2 text-[11px] font-bold text-red-600">{error}</p>

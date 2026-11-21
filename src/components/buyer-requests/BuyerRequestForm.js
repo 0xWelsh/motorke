@@ -11,8 +11,8 @@ import {
 } from "@/lib/buyer-request";
 
 const inputCls =
-  "w-full border border-slate-300 bg-slate-50 px-3 py-2.5 text-sm font-medium text-slate-900 outline-none focus:border-[var(--accent)] transition-colors";
-const labelCls = "text-[10px] font-black uppercase tracking-[0.14em] text-slate-500 mb-1 block";
+  "w-full border border-border bg-surface-hover px-3 py-2.5 text-sm font-medium text-text outline-none focus:border-[var(--accent)] transition-colors";
+const labelCls = "text-[10px] font-black uppercase tracking-[0.14em] text-muted mb-1 block";
 
 export default function BuyerRequestForm() {
   const [loading, setLoading] = useState(false);
@@ -87,13 +87,13 @@ export default function BuyerRequestForm() {
   if (success) {
     return (
       <div
-        className="border border-slate-200 bg-white p-6 sm:p-8 text-center rounded-xl"
+        className="border border-border bg-surface p-6 sm:p-8 text-center rounded-xl"
       >
         <CheckCircle className="w-12 h-12 text-accent mx-auto mb-4" aria-hidden />
-        <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
+        <h2 className="text-xl sm:text-2xl font-bold text-text mb-2">
           Request received
         </h2>
-        <p className="text-sm text-slate-500 leading-relaxed max-w-md mx-auto mb-4">
+        <p className="text-sm text-muted leading-relaxed max-w-md mx-auto mb-4">
           Your reference is <span className="font-black text-[var(--accent)]">{success}</span>. Verified sellers
           will send offers through BIDGARI on WhatsApp, usually within a few hours.
         </p>
@@ -106,7 +106,7 @@ export default function BuyerRequestForm() {
           </Link>
           <Link
             href="/cars"
-            className="inline-flex items-center justify-center border border-slate-300 bg-white px-5 py-3 text-xs font-black uppercase tracking-widest text-slate-700 rounded-xl"
+            className="inline-flex items-center justify-center border border-border bg-surface px-5 py-3 text-xs font-black uppercase tracking-widest text-secondary rounded-xl"
           >
             Browse inventory
           </Link>
@@ -428,7 +428,7 @@ export default function BuyerRequestForm() {
                 className={`px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide border transition-colors rounded-xl ${
                   active
                     ? "bg-accent border-accent text-white"
-                    : "bg-slate-50 border-slate-300 text-slate-500"
+                    : "bg-surface-hover border-border text-muted"
                 }`}
               >
                 {feature}
@@ -454,7 +454,7 @@ export default function BuyerRequestForm() {
         />
       </div>
 
-      <label className="flex items-start gap-2 text-xs text-slate-500 leading-relaxed">
+      <label className="flex items-start gap-2 text-xs text-muted leading-relaxed">
         <input
           type="checkbox"
           className="mt-0.5"

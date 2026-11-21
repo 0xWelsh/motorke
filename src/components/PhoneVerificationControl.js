@@ -76,7 +76,7 @@ export default function PhoneVerificationControl({ phone, className = "" }) {
       <div className="flex items-center gap-2 flex-wrap">
         <span
           className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 ${
-            isVerified ? "bg-slate-50 text-[var(--accent)]" : "bg-amber-100 text-amber-700"
+            isVerified ? "bg-surface-hover text-[var(--accent)]" : "bg-amber-100 text-amber-700"
           }`}
         >
           {isVerified ? "Phone verified" : "Phone not verified"}
@@ -86,7 +86,7 @@ export default function PhoneVerificationControl({ phone, className = "" }) {
             type="button"
             onClick={sendCode}
             disabled={status === "sending" || !normalizedPhone}
-            className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 disabled:opacity-50"
+            className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border border-border bg-surface text-secondary hover:bg-surface-overlay disabled:opacity-50"
           >
             {status === "sending" ? "Sending..." : "Send OTP"}
           </button>
@@ -98,7 +98,7 @@ export default function PhoneVerificationControl({ phone, className = "" }) {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="Enter 6-digit code"
-            className="h-9 w-44 border border-slate-300 bg-slate-50 px-3 text-xs font-semibold"
+            className="h-9 w-44 border border-border bg-surface-hover px-3 text-xs font-semibold"
           />
           <button
             type="button"
@@ -110,7 +110,7 @@ export default function PhoneVerificationControl({ phone, className = "" }) {
           </button>
         </div>
       )}
-      {message ? <p className="text-[11px] font-semibold text-slate-500">{message}</p> : null}
+      {message ? <p className="text-[11px] font-semibold text-muted">{message}</p> : null}
     </div>
   );
 }

@@ -51,13 +51,13 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
   };
 
   return (
-    <div className="border border-slate-200 bg-white p-5 sm:p-6 rounded-xl">
+    <div className="border border-border bg-surface p-5 sm:p-6 rounded-xl">
       <p className="text-[12px] font-bold uppercase tracking-[0.15em] text-[var(--accent)] mb-4">Share your experience</p>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Rating */}
         <div>
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Rate this car</label>
+          <label className="text-xs font-bold text-muted uppercase tracking-widest mb-2 block">Rate this car</label>
           <div className="flex gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
@@ -68,7 +68,7 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
               >
                 <Star
                   className={`w-7 h-7 ${
-                    star <= rating ? "fill-amber-400 text-amber-400" : "text-slate-400"
+                    star <= rating ? "fill-amber-400 text-amber-400" : "text-dim"
                   }`}
                 />
               </button>
@@ -78,16 +78,16 @@ export default function CarReviewForm({ carId, onReviewSubmitted }) {
 
         {/* Comment */}
         <div>
-          <label className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 block">Your review (optional)</label>
+          <label className="text-xs font-bold text-muted uppercase tracking-widest mb-2 block">Your review (optional)</label>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             placeholder="What stood out about this car?"
             maxLength={500}
-            className="w-full border border-slate-300 p-3 text-sm text-slate-900 bg-white placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[var(--accent)] rounded-xl"
+            className="w-full border border-border p-3 text-sm text-text bg-surface placeholder:text-dim focus:outline-none focus:ring-1 focus:ring-[var(--accent)] rounded-xl"
             rows={4}
           />
-          <p className="text-xs text-slate-500 mt-1">{comment.length}/500</p>
+          <p className="text-xs text-muted mt-1">{comment.length}/500</p>
         </div>
 
         {/* Messages */}

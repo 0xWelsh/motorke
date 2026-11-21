@@ -17,7 +17,7 @@ function PasswordStrength({ password }) {
   const label = score > 0 ? labels[score - 1] : "Set a password";
 
   return (
-    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">Strength: {label}</p>
+    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-muted">Strength: {label}</p>
   );
 }
 
@@ -81,18 +81,18 @@ export default function ResetPasswordPage() {
       <div className="mx-auto w-full max-w-md">
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-900 hover:text-slate-900"
+          className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-text hover:text-text"
         >
           <ArrowLeft size={14} /> Back to Sign In
         </Link>
 
-        <div className="mt-6 rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
+        <div className="mt-6 rounded-xl border border-border bg-surface p-6 sm:p-8">
           <div className="mb-6">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-900">
+            <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-overlay text-text">
               <LockKeyhole size={20} />
             </div>
-            <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-900">Create a new password</h1>
-            <p className="mt-2 text-sm font-medium text-slate-500">Use a strong password to secure your account access.</p>
+            <h1 className="mt-4 text-2xl font-black tracking-tight text-text">Create a new password</h1>
+            <p className="mt-2 text-sm font-medium text-muted">Use a strong password to secure your account access.</p>
           </div>
 
           {!isValidRequest && (
@@ -116,7 +116,7 @@ export default function ResetPasswordPage() {
               name="website"
             />
 
-            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-slate-500" htmlFor="password">
+            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-muted" htmlFor="password">
               New Password
             </label>
             <div className="relative">
@@ -129,12 +129,12 @@ export default function ResetPasswordPage() {
                 required
                 autoComplete="new-password"
                 placeholder="At least 8 characters"
-                className="w-full rounded-2xl border border-slate-300 bg-slate-50 py-3 pl-4 pr-11 text-sm font-semibold text-slate-900 outline-none transition focus:border-[var(--accent)]"
+                className="w-full rounded-2xl border border-border bg-surface-hover py-3 pl-4 pr-11 text-sm font-semibold text-text outline-none transition focus:border-[var(--accent)]"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
@@ -143,7 +143,7 @@ export default function ResetPasswordPage() {
 
             <PasswordStrength password={password} />
 
-            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-slate-500" htmlFor="confirm">
+            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-muted" htmlFor="confirm">
               Confirm Password
             </label>
             <div className="relative">
@@ -156,12 +156,12 @@ export default function ResetPasswordPage() {
                 required
                 autoComplete="new-password"
                 placeholder="Re-enter password"
-                className="w-full rounded-2xl border border-slate-300 bg-slate-50 py-3 pl-4 pr-11 text-sm font-semibold text-slate-900 outline-none transition focus:border-[var(--accent)]"
+                className="w-full rounded-2xl border border-border bg-surface-hover py-3 pl-4 pr-11 text-sm font-semibold text-text outline-none transition focus:border-[var(--accent)]"
               />
               <button
                 type="button"
                 onClick={() => setShowConfirm((prev) => !prev)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted"
                 aria-label={showConfirm ? "Hide confirm password" : "Show confirm password"}
               >
                 {showConfirm ? <EyeOff size={16} /> : <Eye size={16} />}

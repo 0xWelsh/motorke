@@ -42,7 +42,7 @@ function renderBlock(block, index) {
     return (
       <h2
         key={index}
-        className="text-xl sm:text-2xl font-bold text-slate-900 mt-10 mb-4"
+        className="text-xl sm:text-2xl font-bold text-text mt-10 mb-4"
       >
         {renderInline(text.slice(3))}
       </h2>
@@ -53,7 +53,7 @@ function renderBlock(block, index) {
     return (
       <h3
         key={index}
-        className="text-lg font-bold text-slate-900 mt-8 mb-3"
+        className="text-lg font-bold text-text mt-8 mb-3"
       >
         {renderInline(text.slice(4))}
       </h3>
@@ -62,7 +62,7 @@ function renderBlock(block, index) {
 
   if (text.split("\n").every((line) => line.trim().startsWith("- "))) {
     return (
-      <ul key={index} className="list-disc pl-5 space-y-2 text-slate-500 my-4">
+      <ul key={index} className="list-disc pl-5 space-y-2 text-muted my-4">
         {text.split("\n").map((line, i) => (
           <li key={i}>{renderInline(line.replace(/^-\s*/, ""))}</li>
         ))}
@@ -71,7 +71,7 @@ function renderBlock(block, index) {
   }
 
   return (
-    <p key={index} className="text-slate-500 leading-relaxed my-4">
+    <p key={index} className="text-muted leading-relaxed my-4">
       {renderInline(text)}
     </p>
   );

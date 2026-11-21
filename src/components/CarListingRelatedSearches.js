@@ -19,10 +19,10 @@ export default function CarListingRelatedSearches({ car }) {
 
   return (
     <nav
-      className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500"
+      className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[11px] font-semibold uppercase tracking-wide text-muted"
       aria-label="Related searches"
     >
-      <span className="text-slate-500 font-black tracking-widest w-full sm:w-auto">
+      <span className="text-muted font-black tracking-widest w-full sm:w-auto">
         Related:
       </span>
       {links.map((item) => (
@@ -33,7 +33,7 @@ export default function CarListingRelatedSearches({ car }) {
           {item.guidePath ? (
             <Link
               href={item.guidePath}
-              className="text-slate-500 hover:text-[var(--accent)] normal-case tracking-normal text-[10px]"
+              className="text-muted hover:text-[var(--accent)] normal-case tracking-normal text-[10px]"
             >
               Guide
             </Link>

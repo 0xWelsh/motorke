@@ -86,15 +86,15 @@ const STEPS = [
 export default function HowToBuyPage() {
   return (
     <div className="min-h-screen bg-[var(--bg)]">
-      <section className="border-b border-slate-200 pt-14 sm:pt-16 pb-8 sm:pb-10 px-4 sm:px-6 bg-gradient-to-b from-white to-[var(--bg)]">
+      <section className="border-b border-border pt-14 sm:pt-16 pb-8 sm:pb-10 px-4 sm:px-6 bg-gradient-to-b from-white to-[var(--bg)]">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--accent)] mb-3">
             How To Buy
           </p>
-          <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-5xl font-bold text-text tracking-tight mb-4">
             Three ways to buy your next car
           </h1>
-          <p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
+          <p className="text-muted text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
             Whether the car is already in stock or you need it sourced, BIDGARI handles the deal for you
             from first enquiry to final paperwork.
           </p>
@@ -107,16 +107,16 @@ export default function HowToBuyPage() {
           {METHODS.map((m) => (
             <div
               key={m.title}
-              className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 sm:p-7 shadow-sm transition-all hover:border-slate-300 hover:shadow-glass"
+              className="flex flex-col rounded-2xl border border-border bg-surface p-6 sm:p-7 shadow-sm transition-all hover:border-border hover:shadow-glass"
             >
               <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-accent-wash text-[var(--accent)]">
                 {m.icon}
               </div>
-              <h2 className="text-xl font-black text-slate-900 tracking-tight">{m.title}</h2>
-              <p className="mt-1 text-sm font-semibold text-slate-500">{m.tagline}</p>
+              <h2 className="text-xl font-black text-text tracking-tight">{m.title}</h2>
+              <p className="mt-1 text-sm font-semibold text-muted">{m.tagline}</p>
               <ul className="mt-4 space-y-2.5 flex-1">
                 {m.points.map((p) => (
-                  <li key={p} className="flex items-start gap-2.5 text-[13px] text-slate-600">
+                  <li key={p} className="flex items-start gap-2.5 text-[13px] text-muted">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
                     {p}
                   </li>
@@ -134,20 +134,20 @@ export default function HowToBuyPage() {
       </section>
 
       {/* Steps */}
-      <section className="border-t border-slate-200 bg-white px-4 sm:px-6 py-10 sm:py-14">
+      <section className="border-t border-border bg-surface px-4 sm:px-6 py-10 sm:py-14">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-center text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-2">
+          <h2 className="text-center text-2xl sm:text-3xl font-bold text-text tracking-tight mb-2">
             How it works
           </h2>
-          <p className="text-center text-sm text-slate-500 mb-8 sm:mb-10">
+          <p className="text-center text-sm text-muted mb-8 sm:mb-10">
             Every purchase follows the same simple, transparent path.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {STEPS.map((s) => (
               <div key={s.n} className="relative">
-                <span className="text-[40px] font-black leading-none text-slate-100">{s.n}</span>
-                <h3 className="mt-2 text-base font-black text-slate-900">{s.title}</h3>
-                <p className="mt-1.5 text-[13px] leading-relaxed text-slate-500">{s.desc}</p>
+                <span className="text-[40px] font-black leading-none text-ghost">{s.n}</span>
+                <h3 className="mt-2 text-base font-black text-text">{s.title}</h3>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -156,14 +156,14 @@ export default function HowToBuyPage() {
 
       {/* Duty helper */}
       <section className="px-4 sm:px-6 py-10 sm:py-14">
-        <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+        <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5 rounded-2xl border border-border bg-surface p-6 sm:p-8 shadow-sm">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
               <Calculator className="h-6 w-6" />
             </div>
             <div>
-              <h3 className="text-lg font-black text-slate-900">Curious about import costs?</h3>
-              <p className="text-sm text-slate-500">
+              <h3 className="text-lg font-black text-text">Curious about import costs?</h3>
+              <p className="text-sm text-muted">
                 Estimate duty and total landed cost for any vehicle in seconds.
               </p>
             </div>

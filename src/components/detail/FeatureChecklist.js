@@ -22,14 +22,14 @@ export default function FeatureChecklist({ car, title = "Features", limit = 24 }
   const hidden = items.length - INITIAL;
 
   return (
-    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-      <h2 className="px-4 pt-4 text-[15px] font-bold text-slate-800 sm:px-5 sm:pt-5">{title}</h2>
+    <section className="overflow-hidden rounded-xl border border-border bg-surface">
+      <h2 className="px-4 pt-4 text-[15px] font-bold text-text sm:px-5 sm:pt-5">{title}</h2>
 
       <ul className="grid grid-cols-2 gap-x-3 gap-y-2.5 px-4 pb-5 pt-4 sm:gap-x-6 sm:px-5 lg:grid-cols-3">
         {visible.map((feature, i) => (
           <li
             key={`${feature}-${i}`}
-            className="flex min-w-0 items-start gap-1.5 text-[13px] leading-snug text-slate-700"
+            className="flex min-w-0 items-start gap-1.5 text-[13px] leading-snug text-secondary"
           >
             <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-500" strokeWidth={3} aria-hidden />
             <span className="min-w-0 break-words font-medium">{feature}</span>
@@ -42,7 +42,7 @@ export default function FeatureChecklist({ car, title = "Features", limit = 24 }
           type="button"
           onClick={() => setShowAll((s) => !s)}
           aria-expanded={showAll}
-          className="flex w-full items-center justify-center gap-1.5 border-t border-slate-100 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-800"
+          className="flex w-full items-center justify-center gap-1.5 border-t border-subtle py-2.5 text-[11px] font-bold uppercase tracking-wider text-muted transition-colors hover:bg-surface-hover hover:text-text"
         >
           {showAll ? "Show less" : `Show all ${items.length} features`}
           <svg

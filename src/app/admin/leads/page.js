@@ -137,8 +137,8 @@ export default async function AdminLeadsPage(props) {
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900">Leads</h1>
-          <p className="mt-0.5 text-xs text-slate-400">Customer enquiries from forms, WhatsApp, and call intents.</p>
+          <h1 className="text-xl font-bold tracking-tight text-text">Leads</h1>
+          <p className="mt-0.5 text-xs text-dim">Customer enquiries from forms, WhatsApp, and call intents.</p>
         </div>
         <ExportButton
           label="Export CSV"
@@ -169,13 +169,13 @@ export default async function AdminLeadsPage(props) {
               className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs font-bold transition-colors ${
                 active
                   ? "border-emerald-500/40 bg-emerald-50 text-emerald-700"
-                  : "border-slate-200 bg-white/40 text-slate-400 hover:border-slate-300 hover:text-slate-700"
+                  : "border-border bg-glass/40 text-dim hover:border-border hover:text-secondary"
               }`}
             >
-              <Icon size={13} className={active ? "text-emerald-600" : "text-slate-400"} />
+              <Icon size={13} className={active ? "text-emerald-600" : "text-dim"} />
               {pill.label}
               <span className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold tabular-nums ${
-                active ? "bg-emerald-500/20 text-emerald-700" : "bg-slate-100 text-slate-500"
+                active ? "bg-emerald-500/20 text-emerald-700" : "bg-surface-overlay text-muted"
               }`}>
                 {pill.count}
               </span>
@@ -185,22 +185,22 @@ export default async function AdminLeadsPage(props) {
       </div>
 
       {/* Search + filter */}
-      <form method="GET" className="rounded-2xl border border-slate-200 bg-white p-2.5">
+      <form method="GET" className="rounded-2xl border border-border bg-surface p-2.5">
         <div className="flex flex-wrap items-center gap-2">
           <div className="relative min-w-[200px] flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-dim" />
             <input
               name="search"
               defaultValue={search}
               placeholder="Buyer, phone, email, or vehicle…"
               autoComplete="off"
-              className="w-full rounded-xl border border-slate-200 bg-[var(--bg)]/60 py-2.5 pl-10 pr-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-emerald-500/50 focus:bg-[var(--bg)] focus:ring-2 focus:ring-emerald-500/15"
+              className="w-full rounded-xl border border-border bg-[var(--bg)]/60 py-2.5 pl-10 pr-3 text-sm text-text placeholder:text-dim outline-none transition focus:border-emerald-500/50 focus:bg-[var(--bg)] focus:ring-2 focus:ring-emerald-500/15"
             />
           </div>
           <select
             name="status"
             defaultValue={statusFilter}
-            className="cursor-pointer rounded-xl border border-slate-200 bg-[var(--bg)]/60 px-3 py-2.5 text-xs font-semibold text-slate-700 outline-none transition focus:border-emerald-500/50"
+            className="cursor-pointer rounded-xl border border-border bg-[var(--bg)]/60 px-3 py-2.5 text-xs font-semibold text-secondary outline-none transition focus:border-emerald-500/50"
           >
             <option value="">All statuses</option>
             {VALID_STATUSES.filter(Boolean).map((s) => (
@@ -216,7 +216,7 @@ export default async function AdminLeadsPage(props) {
           {(search || statusFilter) && (
             <Link
               href="/admin/leads"
-              className="rounded-xl border border-slate-200 px-4 py-2.5 text-xs font-bold text-slate-500 transition-colors hover:text-slate-900"
+              className="rounded-xl border border-border px-4 py-2.5 text-xs font-bold text-muted transition-colors hover:text-text"
             >
               Clear
             </Link>
@@ -227,26 +227,26 @@ export default async function AdminLeadsPage(props) {
       {/* Desktop table */}
       <div className="hidden lg:block">
         <DataTableShell>
-          <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3.5">
-            <p className="text-xs font-medium text-slate-400">
+          <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
+            <p className="text-xs font-medium text-dim">
               {total === 0 ? "No leads" : (
-                <>Showing <span className="font-bold text-slate-900">{from}–{to}</span> of <span className="font-bold text-slate-900">{total}</span></>
+                <>Showing <span className="font-bold text-text">{from}–{to}</span> of <span className="font-bold text-text">{total}</span></>
               )}
             </p>
             {pages > 1 && (
               <div className="flex items-center gap-1">
                 {page <= 1 ? (
-                  <span className="rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase text-slate-500">Prev</span>
+                  <span className="rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase text-muted">Prev</span>
                 ) : (
                   <Link href={adminLeadsHref({ page: page - 1, search, status: statusFilter })}
-                    className="rounded-lg border border-slate-200 bg-[var(--bg)]/60 px-2.5 py-1 text-[11px] font-bold uppercase text-slate-500 transition-colors hover:text-slate-900">Prev</Link>
+                    className="rounded-lg border border-border bg-[var(--bg)]/60 px-2.5 py-1 text-[11px] font-bold uppercase text-muted transition-colors hover:text-text">Prev</Link>
                 )}
-                <span className="px-2 text-xs font-medium tabular-nums text-slate-400">{page} / {pages}</span>
+                <span className="px-2 text-xs font-medium tabular-nums text-dim">{page} / {pages}</span>
                 {page >= pages ? (
-                  <span className="rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase text-slate-500">Next</span>
+                  <span className="rounded-lg px-2.5 py-1 text-[11px] font-bold uppercase text-muted">Next</span>
                 ) : (
                   <Link href={adminLeadsHref({ page: page + 1, search, status: statusFilter })}
-                    className="rounded-lg border border-slate-200 bg-[var(--bg)]/60 px-2.5 py-1 text-[11px] font-bold uppercase text-slate-500 transition-colors hover:text-slate-900">Next</Link>
+                    className="rounded-lg border border-border bg-[var(--bg)]/60 px-2.5 py-1 text-[11px] font-bold uppercase text-muted transition-colors hover:text-text">Next</Link>
                 )}
               </div>
             )}
@@ -255,13 +255,13 @@ export default async function AdminLeadsPage(props) {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[900px] text-left">
               <thead>
-                <tr className="border-b border-slate-200 bg-white/60">
+                <tr className="border-b border-border bg-glass/60">
                   {["Buyer", "Vehicle", "Assigned", "Channel", "Status", "Date", ""].map((h) => (
-                    <th key={h || "actions"} className="whitespace-nowrap px-5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">{h}</th>
+                    <th key={h || "actions"} className="whitespace-nowrap px-5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-dim">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200/70">
+              <tbody className="divide-y divide-border">
                 {leads.map((lead, i) => (
                   <LeadRow key={lead.id} lead={lead} index={i} />
                 ))}
@@ -273,7 +273,7 @@ export default async function AdminLeadsPage(props) {
             <EmptyState
               title="No leads found"
               message={search || statusFilter ? "Try clearing your filters." : "No enquiries yet."}
-              icon={<MessageSquare size={28} className="text-slate-400" />}
+              icon={<MessageSquare size={28} className="text-dim" />}
             />
           )}
         </DataTableShell>
@@ -285,7 +285,7 @@ export default async function AdminLeadsPage(props) {
           <EmptyState
             title="No leads found"
             message={search || statusFilter ? "Try clearing your filters." : "No enquiries yet."}
-            icon={<MessageSquare size={28} className="text-slate-400" />}
+            icon={<MessageSquare size={28} className="text-dim" />}
           />
         )}
         {leads.map((lead) => (
@@ -298,7 +298,7 @@ export default async function AdminLeadsPage(props) {
 
 function LeadRow({ lead, index }) {
   return (
-    <tr className={`transition-colors hover:bg-slate-100/30 ${index % 2 === 0 ? "bg-white/20" : "bg-transparent"}`}>
+    <tr className={`transition-colors hover:bg-surface-overlay ${index % 2 === 0 ? "bg-glass/20" : "bg-transparent"}`}>
       <td className="px-5 py-3.5">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500/25 to-emerald-700/25 text-[11px] font-bold text-emerald-700 ring-1 ring-inset ring-emerald-500/20">
@@ -308,15 +308,15 @@ function LeadRow({ lead, index }) {
             <div className="flex items-center gap-2">
               <Link
                 href={`/admin/leads/${lead.id}`}
-                className="truncate text-sm font-bold text-slate-900 transition-colors hover:text-emerald-600"
+                className="truncate text-sm font-bold text-text transition-colors hover:text-emerald-600"
               >
                 {lead.name}
               </Link>
               {!lead.userId && (
-                <span className="rounded-md border border-slate-200 px-1.5 py-0.5 text-[10px] font-bold text-slate-400">Guest</span>
+                <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] font-bold text-dim">Guest</span>
               )}
             </div>
-            <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-slate-400">
+            <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-dim">
               {lead.phone !== "not-provided" ? (
                 <span className="inline-flex items-center gap-1"><Phone size={11} /> {lead.phone}</span>
               ) : <span className="text-[10px] font-semibold text-amber-500">No phone</span>}
@@ -325,7 +325,7 @@ function LeadRow({ lead, index }) {
               )}
             </div>
             {lead.message && (
-              <p className="mt-1 max-w-[280px] truncate text-[11px] italic text-slate-500" title={lead.message}>
+              <p className="mt-1 max-w-[280px] truncate text-[11px] italic text-muted" title={lead.message}>
                 &ldquo;{lead.message.slice(0, 60)}&rdquo;
               </p>
             )}
@@ -337,20 +337,20 @@ function LeadRow({ lead, index }) {
           href={carListingPath(lead.car)}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-semibold text-slate-900 transition-colors hover:text-emerald-600"
+          className="text-sm font-semibold text-text transition-colors hover:text-emerald-600"
         >
           {lead.car.year} {lead.car.make} {lead.car.model}
         </Link>
       </td>
       <td className="px-5 py-3.5">
-        <span className="text-xs text-slate-500">
+        <span className="text-xs text-muted">
           {lead.assignedTo ? (
             <span className="inline-flex items-center gap-1.5">
               <UserCheck size={12} className="text-emerald-500" />
               {lead.assignedTo.name}
             </span>
           ) : (
-            <span className="text-slate-500">—</span>
+            <span className="text-muted">—</span>
           )}
         </span>
       </td>
@@ -360,7 +360,7 @@ function LeadRow({ lead, index }) {
       <td className="px-5 py-3.5">
         <LeadStatusSelect leadId={lead.id} currentStatus={lead.status} />
       </td>
-      <td className="whitespace-nowrap px-5 py-3.5 text-xs text-slate-400">
+      <td className="whitespace-nowrap px-5 py-3.5 text-xs text-dim">
         <span>{new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short" })}</span>
         <br />
         <span className="text-[10px]">{new Date(lead.createdAt).toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}</span>
@@ -388,7 +388,7 @@ function LeadRow({ lead, index }) {
 
 function LeadCard({ lead }) {
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4">
+    <div className="rounded-2xl border border-border bg-surface p-4">
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500/25 to-emerald-700/25 text-xs font-bold text-emerald-700 ring-1 ring-inset ring-emerald-500/20">
@@ -398,10 +398,10 @@ function LeadCard({ lead }) {
             <div className="flex items-center gap-2">
               <p className="truncate text-sm font-bold text-white">{lead.name}</p>
               {!lead.userId && (
-                <span className="rounded-md border border-slate-200 px-1.5 py-0.5 text-[10px] font-bold text-slate-400">Guest</span>
+                <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] font-bold text-dim">Guest</span>
               )}
             </div>
-            <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-slate-400">
+            <div className="mt-0.5 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-xs text-dim">
               {lead.phone !== "not-provided" ? (
                 <span className="inline-flex items-center gap-1"><Phone size={11} /> {lead.phone}</span>
               ) : <span className="text-[10px] font-semibold text-amber-500">No phone</span>}
@@ -433,13 +433,13 @@ function LeadCard({ lead }) {
       </div>
 
       {lead.message && (
-        <p className="mt-2 truncate text-[11px] italic text-slate-500" title={lead.message}>
+        <p className="mt-2 truncate text-[11px] italic text-muted" title={lead.message}>
           &ldquo;{lead.message.slice(0, 80)}&rdquo;
         </p>
       )}
 
-      <div className="mt-3 flex items-center justify-between gap-2 border-t border-slate-200 pt-3">
-        <span className="text-[11px] text-slate-400">
+      <div className="mt-3 flex items-center justify-between gap-2 border-t border-border pt-3">
+        <span className="text-[11px] text-dim">
           {new Date(lead.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}
           {" · "}
           {new Date(lead.createdAt).toLocaleTimeString("en-KE", { hour: "2-digit", minute: "2-digit" })}

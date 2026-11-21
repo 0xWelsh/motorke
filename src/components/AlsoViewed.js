@@ -26,8 +26,8 @@ export default function AlsoViewed({ carId }) {
   return (
     <section className="mt-10">
       <div className="flex items-center gap-2 mb-4">
-        <Eye className="w-4 h-4 text-slate-400" />
-        <h2 className="text-sm font-bold text-slate-800 tracking-tight">
+        <Eye className="w-4 h-4 text-dim" />
+        <h2 className="text-sm font-bold text-text tracking-tight">
           People who viewed this also looked at
         </h2>
       </div>
@@ -38,9 +38,9 @@ export default function AlsoViewed({ carId }) {
             <Link
               key={car.id}
               href={carListingPath(car)}
-              className="group block rounded-xl border border-slate-200 bg-white overflow-hidden hover:shadow-md transition-shadow"
+              className="group block rounded-xl border border-border bg-surface overflow-hidden hover:shadow-md transition-shadow"
             >
-              <div className="relative aspect-[16/10] bg-slate-100">
+              <div className="relative aspect-[16/10] bg-surface-overlay">
                 {img ? (
                   <Image
                     src={absoluteMediaUrl(img.url)}
@@ -50,19 +50,19 @@ export default function AlsoViewed({ carId }) {
                     sizes="(max-width: 640px) 50vw, 25vw"
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-slate-300 text-xs">
+                  <div className="flex h-full items-center justify-center text-ghost text-xs">
                     No photo
                   </div>
                 )}
               </div>
               <div className="p-2.5">
-                <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400">
+                <p className="text-[9px] font-bold uppercase tracking-wider text-dim">
                   {car.make}
                 </p>
-                <p className="text-xs font-bold text-slate-900 truncate leading-tight">
+                <p className="text-xs font-bold text-text truncate leading-tight">
                   {car.model}
                 </p>
-                <p className="text-[11px] font-bold text-slate-700 mt-1">
+                <p className="text-[11px] font-bold text-secondary mt-1">
                   {formatCarPrice(car)}
                 </p>
               </div>

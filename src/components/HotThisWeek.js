@@ -28,18 +28,18 @@ export default function HotThisWeek({ trending = [] }) {
           <p className="text-[11px] font-extrabold uppercase tracking-[0.16em] text-yellow-500">Trending Now</p>
         </div>
 
-        <h3 className="text-2xl font-black text-slate-900 mb-1 leading-tight">Hot This Week</h3>
-        <p className="text-xs text-slate-500 font-semibold mb-6">Most loved cars right now</p>
+        <h3 className="text-2xl font-black text-text mb-1 leading-tight">Hot This Week</h3>
+        <p className="text-xs text-muted font-semibold mb-6">Most loved cars right now</p>
 
         <div className="space-y-3">
           {trendData.map((item, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between p-3 rounded-2xl bg-slate-50 border border-yellow-400/10 hover:border-yellow-400/30 transition-colors"
+              className="flex items-center justify-between p-3 rounded-2xl bg-surface-hover border border-yellow-400/10 hover:border-yellow-400/30 transition-colors"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-sans font-semibold text-slate-900 truncate">{item.make}</p>
-                <p className="text-[11px] text-slate-500 font-semibold">{item.units} viewed this week</p>
+                <p className="text-sm font-sans font-semibold text-text truncate">{item.make}</p>
+                <p className="text-[11px] text-muted font-semibold">{item.units} viewed this week</p>
               </div>
               <div className="ml-3 flex-shrink-0 flex items-center gap-1">
                 <span className="text-base font-black text-yellow-500">+{item.change}%</span>
@@ -49,7 +49,7 @@ export default function HotThisWeek({ trending = [] }) {
           ))}
         </div>
 
-        <p className="text-[11px] text-slate-500 font-semibold mt-4 pt-4 border-t border-yellow-400/10">
+        <p className="text-[11px] text-muted font-semibold mt-4 pt-4 border-t border-yellow-400/10">
           Updated daily, Based on views, saves, and enquiries
         </p>
       </div>

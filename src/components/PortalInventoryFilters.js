@@ -41,17 +41,17 @@ export default function PortalInventoryFilters({
   ].filter(Boolean).length;
 
   return (
-    <div className="mb-4 sm:mb-6 rounded-2xl border border-[#ddd4c8] bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)] overflow-hidden">
+    <div className="mb-4 sm:mb-6 rounded-2xl border border-[#ddd4c8] bg-surface shadow-[4px_4px_0px_0px_rgba(0,0,0,0.04)] overflow-hidden">
       <button
         type="button"
-        className="flex w-full items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3 text-left transition-colors hover:bg-[#fbfcfe]"
+        className="flex w-full items-center justify-between gap-3 px-3 py-2.5 sm:px-4 sm:py-3 text-left transition-colors hover:bg-surface"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-controls="portal-inventory-filters-panel"
       >
         <span className="inline-flex items-center gap-2 min-w-0">
-          <SlidersHorizontal className="h-4 w-4 shrink-0 text-[#2F855A]" aria-hidden />
-          <span className="text-[11px] sm:text-[12px] font-black uppercase tracking-[0.12em] text-slate-800">
+          <SlidersHorizontal className="h-4 w-4 shrink-0 text-accent" aria-hidden />
+          <span className="text-[11px] sm:text-[12px] font-black uppercase tracking-[0.12em] text-text">
             Inventory filters
           </span>
           {activeCount > 0 ? (
@@ -59,11 +59,11 @@ export default function PortalInventoryFilters({
               {activeCount} active
             </span>
           ) : (
-            <span className="hidden sm:inline text-[10px] font-medium text-slate-500">Search &amp; refine your stock</span>
+            <span className="hidden sm:inline text-[10px] font-medium text-muted">Search &amp; refine your stock</span>
           )}
         </span>
         <ChevronDown
-          className={`h-5 w-5 shrink-0 text-slate-500 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-5 w-5 shrink-0 text-muted transition-transform ${open ? "rotate-180" : ""}`}
           aria-hidden
         />
       </button>

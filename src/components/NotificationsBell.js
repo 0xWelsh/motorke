@@ -33,7 +33,7 @@ export default function NotificationsBell({ variant = "portal" }) {
     () =>
       clsx(
         "absolute right-0 top-full mt-3 w-[380px] max-w-[calc(100vw-1rem)] max-sm:static max-sm:mt-2 max-sm:w-full shadow-[0_20px_50px_rgba(0,0,0,0.2)] z-50 overflow-hidden",
-        "bg-white border border-slate-200 text-slate-900",
+        "bg-surface border border-border text-text",
         "rounded-xl"
       ),
     []
@@ -134,10 +134,10 @@ export default function NotificationsBell({ variant = "portal" }) {
         className={clsx(
           "transition-all relative",
           isAdmin
-            ? "text-slate-500 hover:text-[var(--accent)]"
+            ? "text-muted hover:text-[var(--accent)]"
             : isNavbar
-              ? "w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-500 hover:text-[var(--accent)] hover:border-slate-300 flex items-center justify-center"
-            : "w-10 h-10 rounded-full bg-slate-100 border border-slate-200 text-slate-500 hover:text-[var(--accent)] flex items-center justify-center"
+              ? "w-10 h-10 rounded-full bg-surface border border-border text-muted hover:text-[var(--accent)] hover:border-border flex items-center justify-center"
+            : "w-10 h-10 rounded-full bg-surface-overlay border border-border text-muted hover:text-[var(--accent)] flex items-center justify-center"
         )}
         title="Notifications"
         aria-label="Notifications"
@@ -148,7 +148,7 @@ export default function NotificationsBell({ variant = "portal" }) {
             "absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full text-[11px] font-bold flex items-center justify-center",
             isAdmin || isNavbar
               ? "bg-[var(--accent)] text-white border-2 border-white"
-              : "bg-[var(--accent)] text-white border-2 border-slate-100"
+              : "bg-[var(--accent)] text-white border-2 border-subtle"
           )}>
             {Math.min(unreadCount, 99)}
           </span>
@@ -157,10 +157,10 @@ export default function NotificationsBell({ variant = "portal" }) {
 
       {open && (
         <div className={dropdownClassName}>
-          <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-white">
+          <div className="px-5 py-4 border-b border-border flex items-center justify-between bg-surface">
             <div>
-              <p className="text-sm font-bold uppercase tracking-widest text-slate-900">Notifications</p>
-              <p className="text-[11px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">
+              <p className="text-sm font-bold uppercase tracking-widest text-text">Notifications</p>
+              <p className="text-[11px] font-bold text-muted uppercase tracking-widest mt-0.5">
                 {unreadCount > 0 ? `${unreadCount} unread` : "All caught up"}
               </p>
             </div>
@@ -176,32 +176,32 @@ export default function NotificationsBell({ variant = "portal" }) {
             )}
           </div>
 
-          <div className="max-h-[450px] overflow-auto divide-y divide-slate-100">
+          <div className="max-h-[450px] overflow-auto divide-y divide-border">
             {loading ? (
-              <p className="px-6 py-10 text-xs font-medium text-slate-500 text-center uppercase tracking-widest">
+              <p className="px-6 py-10 text-xs font-medium text-muted text-center uppercase tracking-widest">
                 Loading notifications...
               </p>
             ) : notifications.length === 0 ? (
-              <p className="px-6 py-10 text-xs font-medium text-slate-500 text-center uppercase tracking-widest">
+              <p className="px-6 py-10 text-xs font-medium text-muted text-center uppercase tracking-widest">
                 No notifications yet.
               </p>
             ) : (
               notifications.map((item) => {
                 const itemClass = clsx(
                   "block px-6 py-5 transition-all duration-300",
-                  item.read ? "opacity-60 grayscale-[0.5]" : "bg-slate-50 hover:bg-slate-100"
+                  item.read ? "opacity-60 grayscale-[0.5]" : "bg-surface-hover hover:bg-surface-overlay"
                 );
 
                 const content = (
                   <>
                     <div className="flex items-start justify-between gap-4">
-                      <p className="text-[13px] font-bold leading-snug text-slate-900">{item.title}</p>
+                      <p className="text-[13px] font-bold leading-snug text-text">{item.title}</p>
                       {!item.read && <span className="mt-1 w-2 h-2 rounded-full bg-[var(--accent)] shrink-0 shadow-glow-sm" />}
                     </div>
-                    <p className="text-[12px] text-slate-500 leading-relaxed mt-1.5 line-clamp-2">
+                    <p className="text-[12px] text-muted leading-relaxed mt-1.5 line-clamp-2">
                        {item.message}
                     </p>
-                    <div className="flex items-center gap-2 mt-3 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    <div className="flex items-center gap-2 mt-3 text-[10px] font-bold text-muted uppercase tracking-widest">
                        <span>{formatRelativeTime(item.createdAt)}</span>
                        
                     </div>
@@ -237,8 +237,8 @@ export default function NotificationsBell({ variant = "portal" }) {
               })
             )}
           </div>
-          <div className="p-4 bg-white border-t border-slate-200">
-            <Link href="/notifications" className="block text-center text-[10px] font-bold text-slate-500 uppercase tracking-widest hover:text-slate-900 transition-colors">
+          <div className="p-4 bg-surface border-t border-border">
+            <Link href="/notifications" className="block text-center text-[10px] font-bold text-muted uppercase tracking-widest hover:text-text transition-colors">
               View All Notifications
             </Link>
           </div>

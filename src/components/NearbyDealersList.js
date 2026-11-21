@@ -72,21 +72,21 @@ export default function NearbyDealersList() {
   const btnBase =
     "inline-flex items-center justify-center gap-1.5 rounded-md border text-[10px] font-bold uppercase tracking-[0.1em] transition disabled:opacity-50";
   const btnPrimary = `${btnBase} border-[var(--accent)] bg-[var(--accent)] text-white hover:opacity-90`;
-  const btnSecondary = `${btnBase} border-slate-300 bg-white text-slate-700 hover:bg-slate-100`;
+  const btnSecondary = `${btnBase} border-border bg-surface text-secondary hover:bg-surface-overlay`;
 
   return (
     <div className="space-y-4">
       {/* Controls */}
       <div className="flex flex-col gap-3">
         <div className="w-full">
-          <label className="block text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1.5">
+          <label className="block text-[10px] font-bold uppercase tracking-widest text-muted mb-1.5">
             Search radius
           </label>
           <select
             value={radius}
             onChange={(e) => setRadius(Number(e.target.value))}
             disabled={loading}
-            className="w-full px-3 py-2 text-sm font-medium border border-slate-300 text-slate-900 bg-slate-50 disabled:opacity-50 outline-none rounded-xl"
+            className="w-full px-3 py-2 text-sm font-medium border border-border text-text bg-surface-hover disabled:opacity-50 outline-none rounded-xl"
           >
             <option value={5}>5 km</option>
             <option value={10}>10 km</option>
@@ -169,7 +169,7 @@ export default function NearbyDealersList() {
       {/* Results */}
       {dealers !== null && (
         <div className="space-y-2">
-          <p className="text-[11px] font-semibold text-slate-500">
+          <p className="text-[11px] font-semibold text-muted">
             {dealers.length} dealer{dealers.length !== 1 ? "s" : ""} found
             {locationSource && ` · ${locationSource === "saved" ? "Saved" : "Current"} location`}
           </p>
@@ -180,13 +180,13 @@ export default function NearbyDealersList() {
                 <Link
                   key={dealer.id}
                   href={`/dealers/${dealer.slug}`}
-                  className="flex items-center justify-between gap-3 p-3 border border-slate-200 hover:border-accent-glow hover:bg-slate-100 transition rounded-xl"
+                  className="flex items-center justify-between gap-3 p-3 border border-border hover:border-accent-glow hover:bg-surface-overlay transition rounded-xl"
                 >
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-bold text-slate-900 truncate">{dealer.name}</h3>
-                    <p className="text-xs text-slate-500 truncate">{dealer.location}</p>
+                    <h3 className="text-sm font-bold text-text truncate">{dealer.name}</h3>
+                    <p className="text-xs text-muted truncate">{dealer.location}</p>
                     {dealer._count?.cars > 0 && (
-                      <p className="text-[10px] font-semibold text-slate-500 mt-0.5">
+                      <p className="text-[10px] font-semibold text-muted mt-0.5">
                         {dealer._count.cars} car{dealer._count.cars !== 1 ? "s" : ""}
                       </p>
                     )}
@@ -197,7 +197,7 @@ export default function NearbyDealersList() {
                       <MapPin className="w-3 h-3" />
                       {formatDistance(dealer.distance)}
                     </span>
-                    <ChevronRight className="w-4 h-4 text-slate-500" />
+                    <ChevronRight className="w-4 h-4 text-muted" />
                   </div>
                 </Link>
               ))}

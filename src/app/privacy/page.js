@@ -160,24 +160,24 @@ export default function PrivacyPage() {
         
         {/* Header */}
         <div className="mb-24">
-          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-8">
+          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.2em] text-muted mb-8">
             <span>Legal</span>
             <span>/</span>
-            <span className="text-slate-900">Privacy Protocol</span>
+            <span className="text-text">Privacy Protocol</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold text-slate-900 tracking-tight mb-8">
+          <h1 className="text-4xl sm:text-6xl font-bold text-text tracking-tight mb-8">
             Data <br />
-            <span className="font-black tracking-tight text-slate-500">Governance.</span>
+            <span className="font-black tracking-tight text-muted">Governance.</span>
           </h1>
-          <p className="text-lg text-slate-500 font-medium max-w-2xl">
+          <p className="text-lg text-muted font-medium max-w-2xl">
             Effective as of April 7, 2026. BIDGARI is a trading name of BIDGARI Ltd. This policy explains how we handle
             personal data for the platform.
           </p>
         </div>
 
         {/* Quick Summary Terminal */}
-        <div className="bg-white border border-slate-200 p-8 sm:p-12 mb-24 rounded-xl">
-          <h2 className="text-[10px] font-bold text-slate-900 uppercase tracking-widest mb-8">Executive Summary</h2>
+        <div className="bg-surface border border-border p-8 sm:p-12 mb-24 rounded-xl">
+          <h2 className="text-[10px] font-bold text-text uppercase tracking-widest mb-8">Executive Summary</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
              {[
                "Encryption at rest and in transit.",
@@ -188,7 +188,7 @@ export default function PrivacyPage() {
              ].map((line, i) => (
                <div key={i} className="flex gap-4 items-start">
                   <div className="w-2 h-2 bg-[var(--accent)] shrink-0 mt-1.5" style={{ borderRadius: '1px' }}></div>
-                  <p className="text-sm font-bold text-slate-900 leading-relaxed">{line}</p>
+                  <p className="text-sm font-bold text-text leading-relaxed">{line}</p>
                </div>
              ))}
           </div>
@@ -196,14 +196,14 @@ export default function PrivacyPage() {
 
         {/* Categories Grid */}
         <div className="mb-32">
-          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-12">Asset Classification</h2>
+          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted mb-12">Asset Classification</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {dataCategories.map((cat) => (
-              <div key={cat.label} className="bg-white border border-slate-200 p-8 space-y-6 shadow-sm rounded-xl">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest">{cat.label}</h3>
+              <div key={cat.label} className="bg-surface border border-border p-8 space-y-6 shadow-sm rounded-xl">
+                <h3 className="text-sm font-bold text-text uppercase tracking-widest">{cat.label}</h3>
                 <ul className="space-y-3">
                   {cat.items.map((item) => (
-                    <li key={item} className="text-xs font-medium text-slate-500 whitespace-nowrap">
+                    <li key={item} className="text-xs font-medium text-muted whitespace-nowrap">
                       {item}
                     </li>
                   ))}
@@ -215,22 +215,22 @@ export default function PrivacyPage() {
 
         {/* Processor Registry */}
         <div className="mb-32">
-          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-12">Authorized Sub-Processors</h2>
-          <div className="border border-slate-200 overflow-x-auto rounded-xl">
+          <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted mb-12">Authorized Sub-Processors</h2>
+          <div className="border border-border overflow-x-auto rounded-xl">
             <table className="w-full text-left">
               <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="py-5 px-8 text-[10px] font-bold text-slate-900 uppercase tracking-widest">Entity</th>
-                  <th className="py-5 px-8 text-[10px] font-bold text-slate-900 uppercase tracking-widest">Protocol Purpose</th>
-                  <th className="py-5 px-8 text-[10px] font-bold text-slate-900 uppercase tracking-widest">Data Variable</th>
+                <tr className="bg-surface-hover border-b border-border">
+                  <th className="py-5 px-8 text-[10px] font-bold text-text uppercase tracking-widest">Entity</th>
+                  <th className="py-5 px-8 text-[10px] font-bold text-text uppercase tracking-widest">Protocol Purpose</th>
+                  <th className="py-5 px-8 text-[10px] font-bold text-text uppercase tracking-widest">Data Variable</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {thirdParties.map((party, idx) => (
-                  <tr key={idx} className="hover:bg-slate-100 transition-colors">
-                    <td className="py-6 px-8 text-sm font-bold text-slate-900">{party.name}</td>
-                    <td className="py-6 px-8 text-sm font-medium text-slate-500">{party.purpose}</td>
-                    <td className="py-6 px-8 text-sm font-medium text-slate-500">{party.data}</td>
+                  <tr key={idx} className="hover:bg-surface-overlay transition-colors">
+                    <td className="py-6 px-8 text-sm font-bold text-text">{party.name}</td>
+                    <td className="py-6 px-8 text-sm font-medium text-muted">{party.purpose}</td>
+                    <td className="py-6 px-8 text-sm font-medium text-muted">{party.data}</td>
                   </tr>
                 ))}
               </tbody>
@@ -242,27 +242,27 @@ export default function PrivacyPage() {
         <div className="max-w-4xl space-y-24 mb-32">
           {sections.map((section) => (
             <section key={section.title} className="scroll-mt-40">
-              <h2 className="text-2xl font-bold text-slate-900 mb-8 lg:text-3xl">{section.title}</h2>
+              <h2 className="text-2xl font-bold text-text mb-8 lg:text-3xl">{section.title}</h2>
               
               {section.content && (
-                <p className="text-lg text-slate-500 leading-relaxed font-medium mb-8">{section.content}</p>
+                <p className="text-lg text-muted leading-relaxed font-medium mb-8">{section.content}</p>
               )}
               
               {section.subsections && (
                 <div className="space-y-12">
                   {section.subsections.map((subsection, idx) => (
                     <div key={idx} className="group">
-                      <h3 className="text-xs font-bold text-slate-900 uppercase tracking-widest mb-4 group-hover:text-[var(--accent)] transition-colors">{subsection.heading}</h3>
+                      <h3 className="text-xs font-bold text-text uppercase tracking-widest mb-4 group-hover:text-[var(--accent)] transition-colors">{subsection.heading}</h3>
                       
                       {subsection.content && (
-                        <p className="text-sm font-medium text-slate-500 leading-relaxed">{subsection.content}</p>
+                        <p className="text-sm font-medium text-muted leading-relaxed">{subsection.content}</p>
                       )}
                       
                       {subsection.items && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-3 mt-4">
                           {subsection.items.map((item, i) => (
-                            <div key={i} className="flex items-center gap-3 text-xs font-bold text-slate-500">
-                               <div className="w-1 h-1 bg-slate-200 shrink-0" />
+                            <div key={i} className="flex items-center gap-3 text-xs font-bold text-muted">
+                               <div className="w-1 h-1 bg-surface-overlay shrink-0" />
                                {item}
                             </div>
                           ))}
@@ -277,22 +277,22 @@ export default function PrivacyPage() {
         </div>
 
         {/* Support Grid */}
-        <div className="pt-24 border-t border-slate-200 grid grid-cols-1 md:grid-cols-3 gap-16">
+        <div className="pt-24 border-t border-border grid grid-cols-1 md:grid-cols-3 gap-16">
           <div>
-            <h3 className="text-[10px] font-bold text-slate-900 uppercase tracking-[0.2em] mb-4">Privacy Terminal</h3>
+            <h3 className="text-[10px] font-bold text-text uppercase tracking-[0.2em] mb-4">Privacy Terminal</h3>
             <a href={`mailto:${support}`} className="btn btn-neutral">
               {support}
             </a>
           </div>
           <div>
-            <h3 className="text-[10px] font-bold text-slate-900 uppercase tracking-[0.2em] mb-4">Legal Hub</h3>
+            <h3 className="text-[10px] font-bold text-text uppercase tracking-[0.2em] mb-4">Legal Hub</h3>
             <a href={`mailto:${support}`} className="btn btn-neutral">
               {support}
             </a>
           </div>
           <div>
-            <h3 className="text-[10px] font-bold text-slate-900 uppercase tracking-[0.2em] mb-4">Station HQ</h3>
-            <p className="text-sm font-bold text-slate-500">Nairobi Terminal, Kenya</p>
+            <h3 className="text-[10px] font-bold text-text uppercase tracking-[0.2em] mb-4">Station HQ</h3>
+            <p className="text-sm font-bold text-muted">Nairobi Terminal, Kenya</p>
           </div>
         </div>
       </div>

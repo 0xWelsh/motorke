@@ -97,32 +97,32 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
       <div className="fixed inset-0 bg-black/40 z-40" onClick={onClose} />
 
       <div
-        className="fixed z-50 bg-white rounded-2xl shadow-2xl p-6 w-80 border border-slate-200"
+        className="fixed z-50 bg-surface rounded-2xl shadow-2xl p-6 w-80 border border-border"
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
         }}
       >
         <div className="flex items-start justify-between mb-3">
-          <h3 className="font-bold text-slate-900 pr-4">{step.title}</h3>
+          <h3 className="font-bold text-text pr-4">{step.title}</h3>
           <button
             onClick={onClose}
-            className="text-slate-500 hover:text-slate-900 flex-shrink-0"
+            className="text-muted hover:text-text flex-shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <p className="text-sm text-slate-500 mb-4">{step.content}</p>
+        <p className="text-sm text-muted mb-4">{step.content}</p>
 
         <div className="mb-4">
-          <div className="h-1 bg-slate-200 rounded-2xl overflow-hidden">
+          <div className="h-1 bg-surface-overlay rounded-2xl overflow-hidden">
             <div
               className="h-full bg-[var(--accent)] transition-all"
               style={{ width: `${(currentStep / totalSteps) * 100}%` }}
             />
           </div>
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-xs text-muted mt-2">
             Step {currentStep} of {totalSteps}
           </p>
         </div>
@@ -130,7 +130,7 @@ function OnboardingTooltip({ step, onClose, onNext, currentStep, totalSteps }) {
         <div className="flex gap-3">
           <button
             onClick={onClose}
-            className="flex-1 px-4 py-3 sm:py-2 border border-slate-300 text-slate-700 font-medium rounded-xl bg-white hover:bg-slate-100 transition"
+            className="flex-1 px-4 py-3 sm:py-2 border border-border text-secondary font-medium rounded-xl bg-surface hover:bg-surface-overlay transition"
           >
             Skip
           </button>

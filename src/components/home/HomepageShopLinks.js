@@ -12,7 +12,7 @@ import {
 
 const CHIP_CLASS =
   "inline-flex w-full items-center justify-center rounded-lg px-2 py-1.5 text-[10px] font-semibold leading-tight transition-all " +
-  "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 hover:border-slate-300 hover:text-slate-900";
+  "bg-surface border border-border text-muted hover:bg-surface-hover hover:border-border hover:text-text";
 
 function FilterChips({ items, eventName, area, className = "" }) {
   return (
@@ -36,7 +36,7 @@ function FilterChips({ items, eventName, area, className = "" }) {
 function FilterGroup({ title, children, className = "" }) {
   return (
     <div className={className}>
-      <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400 mb-2">
+      <h3 className="text-[10px] font-black uppercase tracking-[0.14em] text-dim mb-2">
         {title}
       </h3>
       {children}
@@ -47,7 +47,7 @@ function FilterGroup({ title, children, className = "" }) {
 function FilterSubRow({ label, items, eventName, area, columns = "grid-cols-2 sm:grid-cols-4" }) {
   return (
     <div>
-      <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400 mb-1.5">
+      <p className="text-[9px] font-bold uppercase tracking-[0.12em] text-dim mb-1.5">
         {label}
       </p>
       <FilterChips
@@ -68,11 +68,11 @@ export default function HomepageShopLinks({ embedded = false }) {
               <div className="min-w-0 text-left">
                 <h2
                   id="homepage-shop-heading"
-                  className="text-xl sm:text-2xl font-black text-slate-900 leading-tight tracking-tight"
+                  className="text-xl sm:text-2xl font-black text-text leading-tight tracking-tight"
                 >
                   Start with a filter
                 </h2>
-                <p className="mt-1 max-w-2xl text-[13px] sm:text-sm font-medium text-slate-500 group-open:hidden leading-snug">
+                <p className="mt-1 max-w-2xl text-[13px] sm:text-sm font-medium text-muted group-open:hidden leading-snug">
                   Body type, budget, fuel, county and quick shortcuts.
                 </p>
                 <p className="mt-1.5 text-[10px] sm:text-[11px] font-black uppercase tracking-[0.14em] text-[var(--accent)] group-open:hidden">
@@ -159,29 +159,29 @@ export default function HomepageShopLinks({ embedded = false }) {
 
   if (embedded) {
     return (
-      <div className="w-full rounded-xl bg-white ring-1 ring-slate-200 border border-slate-200 p-2.5 sm:p-3 shadow-sm">
+      <div className="w-full rounded-xl bg-surface ring-1 ring-border border border-border p-2.5 sm:p-3 shadow-sm">
         {content}
       </div>
     );
   }
 
   return (
-    <section className="border-b border-slate-200 bg-[var(--bg)] py-3 sm:py-4">
+    <section className="border-b border-border bg-[var(--bg)] py-3 sm:py-4">
       <div className="home-shell">
         <details className="group">
           <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 text-left">
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1.5">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-dim mb-1.5">
                   Browse
                 </p>
                 <h2
                   id="homepage-shop-heading"
-                  className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
+                  className="text-2xl sm:text-3xl font-black text-text tracking-tight"
                 >
                   Start with a filter
                 </h2>
-                <p className="mt-1.5 max-w-2xl text-sm font-medium text-slate-500 group-open:hidden">
+                <p className="mt-1.5 max-w-2xl text-sm font-medium text-muted group-open:hidden">
                   Body type, budget, fuel, county, and quick shortcuts — tap to expand.
                 </p>
               </div>

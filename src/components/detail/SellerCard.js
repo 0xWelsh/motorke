@@ -71,11 +71,11 @@ export default function SellerCard({
   }
 
   return (
-    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <section className="overflow-hidden rounded-xl border border-border bg-surface">
       {/* Seller header — one identity: BIDGARI. Dealerships are where the
          stock is sourced; buyers only ever deal with our team. */}
       <div className="flex items-center gap-3 px-4 py-4">
-        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-slate-100 ring-1 ring-slate-200">
+        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-surface-overlay ring-1 ring-border">
           <span className="flex h-full w-full items-center justify-center bg-[var(--sidebar-bar)] text-[18px] font-black text-white">
             B
           </span>
@@ -83,20 +83,20 @@ export default function SellerCard({
 
         <div className="min-w-0 flex-1">
           <span className="flex items-center gap-1.5">
-            <span className="truncate text-[15px] font-bold text-slate-900">BIDGARI</span>
+            <span className="truncate text-[15px] font-bold text-text">BIDGARI</span>
             <BadgeCheck className="h-4 w-4 shrink-0 text-emerald-500" aria-label="Verified seller" />
           </span>
-          <p className="mt-0.5 text-[11px] leading-snug text-slate-500">
+          <p className="mt-0.5 text-[11px] leading-snug text-muted">
             Every car inspected, priced, and sold directly by our team.
           </p>
           {locationLabel && (
-            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-slate-500">
+            <p className="mt-0.5 flex items-center gap-1 text-[11px] text-muted">
               <MapPin className="h-3 w-3 shrink-0" aria-hidden />
               <span className="truncate">{locationLabel}</span>
             </p>
           )}
           {typeof count === "number" && count > 0 && (
-            <p className="mt-0.5 text-[11px] text-slate-400">
+            <p className="mt-0.5 text-[11px] text-dim">
               {count} vehicle{count !== 1 ? "s" : ""} available now
             </p>
           )}
@@ -104,19 +104,19 @@ export default function SellerCard({
       </div>
 
       {/* Contact rows */}
-      <div className="border-t border-slate-100">
+      <div className="border-t border-subtle">
         {callHref && (
           <a
             href={callHref}
             onClick={onCall}
-            className="flex items-center gap-2.5 px-4 py-3 text-[13px] transition-colors hover:bg-slate-50"
+            className="flex items-center gap-2.5 px-4 py-3 text-[13px] transition-colors hover:bg-surface-hover"
           >
             <Phone className="h-4 w-4 shrink-0 text-emerald-600" aria-hidden />
             <span className="min-w-0">
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-dim">
                 Phone
               </span>
-              <span className="block truncate font-bold text-slate-900">{prettyPhone}</span>
+              <span className="block truncate font-bold text-text">{prettyPhone}</span>
             </span>
           </a>
         )}
@@ -127,13 +127,13 @@ export default function SellerCard({
             target="_blank"
             rel="noopener noreferrer"
             onClick={onWhatsApp}
-            className="flex items-center gap-2.5 border-t border-slate-100 px-4 py-3 text-[13px] transition-colors hover:bg-slate-50"
+            className="flex items-center gap-2.5 border-t border-subtle px-4 py-3 text-[13px] transition-colors hover:bg-surface-hover"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 shrink-0 text-emerald-600" aria-hidden>
               <path d={WHATSAPP_ICON_PATH} />
             </svg>
             <span className="min-w-0 flex-1">
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-dim">
                 WhatsApp
               </span>
               <span className="block font-bold text-emerald-700">Chat now</span>
@@ -143,7 +143,7 @@ export default function SellerCard({
       </div>
 
       {/* Secondary actions — save only; call/WhatsApp already live above */}
-      <div className="border-t border-slate-100 p-3">
+      <div className="border-t border-subtle p-3">
         <SaveButton carId={carId} isLoggedIn={Boolean(clientUser)} className="w-full" />
       </div>
     </section>

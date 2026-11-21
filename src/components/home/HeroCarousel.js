@@ -41,12 +41,12 @@ export default function HeroCarousel({ cars = [] }) {
         <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.28em] text-[var(--accent)]">
           Featured
         </p>
-        <h2 className="mt-1 text-[clamp(1.5rem,4vw,2.4rem)] font-black leading-[1.05] tracking-tight text-slate-900">
+        <h2 className="mt-1 text-[clamp(1.5rem,4vw,2.4rem)] font-black leading-[1.05] tracking-tight text-text">
           Spotlight
         </h2>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
         <Link
           href={carListingPath(featured)}
           onClick={() =>
@@ -58,7 +58,7 @@ export default function HeroCarousel({ cars = [] }) {
           }
           className="group block"
         >
-          <div className="relative aspect-[16/9] sm:aspect-[16/8] lg:aspect-[16/7] w-full overflow-hidden bg-slate-100">
+          <div className="relative aspect-[16/9] sm:aspect-[16/8] lg:aspect-[16/7] w-full overflow-hidden bg-surface-overlay">
             {mainImg ? (
               <Image
                 src={getThumbnailUrl(mainImg, 1920)}
@@ -70,14 +70,14 @@ export default function HeroCarousel({ cars = [] }) {
               />
             ) : (
               <div className="flex h-full w-full items-center justify-center">
-                <span className="text-7xl font-black text-slate-200">{featured.make?.[0]}</span>
+                <span className="text-7xl font-black text-ghost">{featured.make?.[0]}</span>
               </div>
             )}
           </div>
         </Link>
 
         {thumbs.length > 0 && (
-          <div className="grid grid-cols-3 gap-px bg-slate-200">
+          <div className="grid grid-cols-3 gap-px bg-surface-overlay">
             {thumbs.map((thumb, i) => {
               const turl = typeof thumb === "string" ? thumb : thumb?.url;
               if (!turl) return null;
@@ -92,7 +92,7 @@ export default function HeroCarousel({ cars = [] }) {
                       model: featured.model,
                     })
                   }
-                  className="group relative aspect-[4/3] overflow-hidden bg-slate-100"
+                  className="group relative aspect-[4/3] overflow-hidden bg-surface-overlay"
                 >
                   <Image
                     src={getThumbnailUrl(turl, 800)}
@@ -110,18 +110,18 @@ export default function HeroCarousel({ cars = [] }) {
         <div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="min-w-0">
             <Link href={carListingPath(featured)} className="group/link inline-flex items-center gap-2">
-              <h3 className="truncate text-lg font-black text-slate-900 sm:text-xl lg:text-2xl">
+              <h3 className="truncate text-lg font-black text-text sm:text-xl lg:text-2xl">
                 {featured.year} {featured.make} {featured.model}
                 {featured.variant ? ` ${featured.variant}` : ""}
               </h3>
-              <ArrowUpRight className="h-4 w-4 text-slate-400 transition group-hover/link:text-[var(--accent)]" />
+              <ArrowUpRight className="h-4 w-4 text-dim transition group-hover/link:text-[var(--accent)]" />
             </Link>
             {details.length > 0 && (
-              <p className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-slate-500">
+              <p className="mt-1 flex flex-wrap items-center gap-x-2 text-sm text-muted">
                 {details.map((d, i) => (
                   <span key={d} className="inline-flex items-center gap-x-2">
                     {d}
-                    {i < details.length - 1 && <span className="text-slate-300">•</span>}
+                    {i < details.length - 1 && <span className="text-ghost">•</span>}
                   </span>
                 ))}
               </p>
@@ -133,7 +133,7 @@ export default function HeroCarousel({ cars = [] }) {
             </span>
             <Link
               href={carListingPath(featured)}
-              className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-slate-800"
+              className="hidden sm:inline-flex items-center gap-2 rounded-lg bg-accent px-5 py-2.5 text-sm font-bold text-white transition hover:bg-accent-hover"
             >
               View listing
               <ArrowUpRight className="h-4 w-4" />

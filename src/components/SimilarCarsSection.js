@@ -14,7 +14,7 @@ export default function SimilarCarsSection({ cars, make }) {
   if (!cars.length) return null;
 
   return (
-    <div className="border-t border-slate-200 pt-8">
+    <div className="border-t border-border pt-8">
       <div className="flex items-end justify-between gap-4 mb-6">
         <h2 className="text-[12px] font-bold uppercase tracking-[0.15em] text-[var(--accent)]">
           More {make} Cars

@@ -49,18 +49,18 @@ export default function ForgotPasswordPage() {
       <div className="mx-auto w-full max-w-md">
         <Link
           href="/login"
-          className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-slate-900 hover:text-slate-900"
+          className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-text hover:text-text"
         >
           <ArrowLeft size={14} /> Back to Sign In
         </Link>
 
-        <div className="mt-6 rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
+        <div className="mt-6 rounded-xl border border-border bg-surface p-6 sm:p-8">
           <div className="mb-6">
             <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-wash text-[var(--accent)]">
               <ShieldCheck size={20} />
             </div>
-            <h1 className="mt-4 text-2xl font-black tracking-tight text-slate-900">Forgot your password?</h1>
-            <p className="mt-2 text-sm font-medium text-slate-500">
+            <h1 className="mt-4 text-2xl font-black tracking-tight text-text">Forgot your password?</h1>
+            <p className="mt-2 text-sm font-medium text-muted">
               Enter your account email and we will send a secure reset link.
             </p>
           </div>
@@ -80,11 +80,11 @@ export default function ForgotPasswordPage() {
               name="website"
             />
 
-            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-slate-500" htmlFor="email">
+            <label className="block text-[11px] font-black uppercase tracking-[0.22em] text-muted" htmlFor="email">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" size={16} />
+              <Mail className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" size={16} />
               <input
                 id="email"
                 type="email"
@@ -93,7 +93,7 @@ export default function ForgotPasswordPage() {
                 required
                 autoComplete="email"
                 placeholder="you@example.com"
-                className="w-full rounded-2xl border border-slate-300 bg-slate-50 py-3 pl-11 pr-4 text-sm font-semibold text-slate-900 outline-none transition focus:border-[var(--accent)]"
+                className="w-full rounded-2xl border border-border bg-surface-hover py-3 pl-11 pr-4 text-sm font-semibold text-text outline-none transition focus:border-[var(--accent)]"
               />
             </div>
 
@@ -109,8 +109,8 @@ export default function ForgotPasswordPage() {
             </button>
           </form>
 
-          <p className="mt-5 text-xs font-semibold text-slate-500">
-            Need help now? Contact <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="text-slate-900 underline underline-offset-2">{PUBLIC_SUPPORT_EMAIL}</a>
+          <p className="mt-5 text-xs font-semibold text-muted">
+            Need help now? Contact <a href={`mailto:${PUBLIC_SUPPORT_EMAIL}`} className="text-text underline underline-offset-2">{PUBLIC_SUPPORT_EMAIL}</a>
           </p>
         </div>
       </div>

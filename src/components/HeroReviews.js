@@ -17,15 +17,15 @@ export default async function HeroReviews() {
   if (reviews.length === 0) return null;
 
   return (
-    <div className="space-y-3 py-2 border-y border-slate-100">
+    <div className="space-y-3 py-2 border-y border-subtle">
       <div>
         <p className="meta-label mb-2">Buyer Reviews</p>
-        <h3 className="text-sm font-bold text-slate-900">Real Feedback</h3>
+        <h3 className="text-sm font-bold text-text">Real Feedback</h3>
       </div>
 
       <div className="space-y-2">
         {reviews.slice(0, 2).map((review) => (
-          <div key={review.id} className="bg-surface border border-slate-100 p-2.5 text-xs">
+          <div key={review.id} className="bg-surface border border-subtle p-2.5 text-xs">
             <div className="flex gap-0.5 mb-1">
               {Array.from({ length: review.rating }).map((_, i) => (
                 <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />

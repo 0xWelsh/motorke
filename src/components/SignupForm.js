@@ -17,10 +17,10 @@ function PasswordMeter({ password }) {
   }
 
   const segments = [
-    score >= 1 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[var(--accent)]")) : "bg-slate-200",
-    score >= 2 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[var(--accent)]")) : "bg-slate-200",
-    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-[var(--accent)]") : "bg-slate-200",
-    score >= 4 ? "bg-[var(--accent)]" : "bg-slate-200"
+    score >= 1 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[var(--accent)]")) : "bg-surface-overlay",
+    score >= 2 ? (score < 3 ? "bg-rose-500" : (score === 3 ? "bg-amber-400" : "bg-[var(--accent)]")) : "bg-surface-overlay",
+    score >= 3 ? (score === 3 ? "bg-amber-400" : "bg-[var(--accent)]") : "bg-surface-overlay",
+    score >= 4 ? "bg-[var(--accent)]" : "bg-surface-overlay"
   ];
 
   let label = "";
@@ -39,7 +39,7 @@ function PasswordMeter({ password }) {
         ))}
       </div>
       {label && (
-        <p className="text-[9px] font-medium text-slate-500 text-right">{label}</p>
+        <p className="text-[9px] font-medium text-muted text-right">{label}</p>
       )}
     </div>
   );
@@ -110,7 +110,7 @@ export default function SignupForm({ error: initialError }) {
   return (
     <AuthLayout>
       <div className="w-full">
-        <h2 className="text-xl font-black text-slate-900 tracking-tight mb-4">
+        <h2 className="text-xl font-black text-text tracking-tight mb-4">
           Create your account
         </h2>
 
@@ -131,7 +131,7 @@ export default function SignupForm({ error: initialError }) {
           <input type="hidden" name="role" value="BUYER" />
 
           <div className="md:col-span-2">
-            <label htmlFor="signup-email" className="block text-xs font-semibold text-slate-500 mb-1">Email</label>
+            <label htmlFor="signup-email" className="block text-xs font-semibold text-muted mb-1">Email</label>
             <input
               id="signup-email"
               name="email"
@@ -140,24 +140,24 @@ export default function SignupForm({ error: initialError }) {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="you@email.com"
-              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
+              className="w-full bg-surface-overlay border border-border rounded-lg px-3 py-2 text-sm text-text outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
           </div>
 
           <div className="md:col-span-2">
-            <label htmlFor="name" className="block text-xs font-semibold text-slate-500 mb-1">Full Name</label>
+            <label htmlFor="name" className="block text-xs font-semibold text-muted mb-1">Full Name</label>
             <input
               id="name"
               name="name"
               type="text"
               required
               placeholder="John Doe"
-              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
+              className="w-full bg-surface-overlay border border-border rounded-lg px-3 py-2 text-sm text-text outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
           </div>
 
           <div className="md:col-span-1">
-            <label htmlFor="signup-password" className="block text-xs font-semibold text-slate-500 mb-1">Password</label>
+            <label htmlFor="signup-password" className="block text-xs font-semibold text-muted mb-1">Password</label>
             <div className="relative">
               <input
                 id="signup-password"
@@ -167,12 +167,12 @@ export default function SignupForm({ error: initialError }) {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 placeholder="••••••••"
-                className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 pr-9 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
+                className="w-full bg-surface-overlay border border-border rounded-lg px-3 py-2 pr-9 text-sm text-text outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-2.5 bottom-2 text-slate-500 hover:text-slate-500 transition-colors"
+                className="absolute right-2.5 bottom-2 text-muted hover:text-muted transition-colors"
               >
                 {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
               </button>
@@ -181,14 +181,14 @@ export default function SignupForm({ error: initialError }) {
           </div>
 
           <div className="md:col-span-1">
-            <label htmlFor="confirm" className="block text-xs font-semibold text-slate-500 mb-1">Confirm Password</label>
+            <label htmlFor="confirm" className="block text-xs font-semibold text-muted mb-1">Confirm Password</label>
             <input
               id="confirm"
               name="confirm"
               type={showPassword ? "text" : "password"}
               required
               placeholder="••••••••"
-              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
+              className="w-full bg-surface-overlay border border-border rounded-lg px-3 py-2 text-sm text-text outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
           </div>
 
@@ -207,17 +207,17 @@ export default function SignupForm({ error: initialError }) {
           </div>
         </form>
 
-        <p className="mt-4 text-center text-xs font-medium text-slate-500">
+        <p className="mt-4 text-center text-xs font-medium text-muted">
           Already have an account?{" "}
           <Link href="/login" className="text-[var(--accent)] hover:underline underline-offset-2 font-semibold">
             Sign In
           </Link>
         </p>
-        <p className="text-[10px] text-slate-400 mt-2 text-center">
+        <p className="text-[10px] text-dim mt-2 text-center">
           By joining, you agree to our{" "}
-          <Link href="/terms" className="underline underline-offset-2 hover:text-slate-500">Terms</Link>
+          <Link href="/terms" className="underline underline-offset-2 hover:text-muted">Terms</Link>
           {" "}and{" "}
-          <Link href="/privacy" className="underline underline-offset-2 hover:text-slate-500">Privacy Policy</Link>.
+          <Link href="/privacy" className="underline underline-offset-2 hover:text-muted">Privacy Policy</Link>.
         </p>
       </div>
     </AuthLayout>

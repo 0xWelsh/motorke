@@ -18,10 +18,10 @@ import {
  * Status Metadata
  */
 const STATUS_META = {
-  NEW:         { label: "New",         bg: "bg-white/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
-  CONTACTED:   { label: "Contacted",   bg: "bg-white/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
-  INTERESTED:  { label: "Interested",  bg: "bg-white/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
-  NEGOTIATING: { label: "Negotiating", bg: "bg-white/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
+  NEW:         { label: "New",         bg: "bg-glass/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
+  CONTACTED:   { label: "Contacted",   bg: "bg-glass/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
+  INTERESTED:  { label: "Interested",  bg: "bg-glass/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
+  NEGOTIATING: { label: "Negotiating", bg: "bg-glass/[0.03]",   text: "text-zinc-300",   border: "border-white/[0.06]" },
   SOLD:        { label: "Deal Won",  bg: "bg-accent-wash",   text: "text-[var(--accent)]",   border: "border-accent-dim" },
   DEAD:        { label: "Deal Lost", bg: "bg-rose-500/10",      text: "text-rose-400",      border: "border-rose-500/20" },
 };
@@ -110,13 +110,13 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
             <Link key={key} href={`/portal/leads?status=${key}&search=${currentSearch}`}
               className={`px-2 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1 sm:gap-2 whitespace-nowrap flex-shrink-0 ${
                 currentStatus === key 
-                  ? "bg-[#2F855A] text-white shadow-sm" 
-                  : "text-zinc-400 hover:text-white hover:bg-white/[0.03]"
+                  ? "bg-accent text-white shadow-sm" 
+                  : "text-zinc-400 hover:text-white hover:bg-glass/[0.03]"
               }`}>
               {label}
               {count > 0 && (
                 <span className={`px-1.5 py-0.5 rounded text-[11px] sm:text-xs font-medium ${
-                  currentStatus === key ? "bg-white/20 text-white" : "bg-white/[0.03] text-zinc-400"
+                  currentStatus === key ? "bg-glass/20 text-white" : "bg-glass/[0.03] text-zinc-400"
                 }`}>
                   {count}
                 </span>
@@ -126,7 +126,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
         </div>
 
         <form method="GET" className="relative group w-full">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-[#2F855A] transition-colors" size={16} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400 group-focus-within:text-accent transition-colors" size={16} />
           <input name="search" defaultValue={currentSearch} placeholder="Name, phone, email…" 
             className="w-full bg-[#1c1c1c] border border-white/[0.06] rounded-xl pl-10 pr-4 py-2.5 text-sm font-medium text-white placeholder:text-zinc-400 outline-none focus:border-[#2F855A] transition-all shadow-sm" />
           <input type="hidden" name="status" value={currentStatus} />
@@ -141,12 +141,12 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
       {/* Leads list */}
       {leads.length === 0 ? (
         <div className="bg-[#1c1c1c] border border-white/[0.06] rounded-xl p-8 sm:p-12 md:p-20 text-center shadow-sm">
-           <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/[0.03] rounded-xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
+           <div className="w-16 h-16 sm:w-20 sm:h-20 bg-glass/[0.03] rounded-xl flex items-center justify-center mx-auto mb-4 sm:mb-6">
               <MessageSquare size={32} className="text-zinc-400" />
            </div>
            <p className="text-lg sm:text-xl font-bold text-white mb-2">No enquiries match your criteria</p>
            <p className="text-sm text-zinc-400 mb-6 max-w-xs mx-auto">Enquiries will appear here when customers express interest in your vehicles.</p>
-          <Link href="/portal/inventory" className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2F855A] hover:bg-[var(--accent)] text-white text-sm font-semibold rounded-xl transition-colors">
+          <Link href="/portal/inventory" className="inline-flex items-center gap-2 px-4 py-2.5 bg-accent hover:bg-[var(--accent)] text-white text-sm font-semibold rounded-xl transition-colors">
               View Inventory →
            </Link>
         </div>
@@ -168,7 +168,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                 <div onClick={() => setExpanded(isOpen ? null : lead.id)}
                   className="p-4 sm:p-6 flex items-center gap-3 sm:gap-6 cursor-pointer select-none">
 
-                  <div className="w-14 h-10 sm:w-20 sm:h-14 rounded-xl bg-white/[0.03] border border-white/[0.06] overflow-hidden shrink-0">
+                  <div className="w-14 h-10 sm:w-20 sm:h-14 rounded-xl bg-glass/[0.03] border border-white/[0.06] overflow-hidden shrink-0">
                     {img
                       ? <img src={img} alt="" className="w-full h-full object-cover" />
                       : <div className="flex items-center justify-center h-full text-zinc-400"><CarIcon size={20} /></div>
@@ -182,7 +182,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                         {sm.label}
                       </div>
                       {lead.channel === "whatsapp" && (
-                        <div className="flex items-center gap-1 text-xs font-semibold text-zinc-300 bg-white/[0.03] px-2 sm:px-2.5 py-0.5 rounded border border-white/[0.06] flex-shrink-0">
+                        <div className="flex items-center gap-1 text-xs font-semibold text-zinc-300 bg-glass/[0.03] px-2 sm:px-2.5 py-0.5 rounded border border-white/[0.06] flex-shrink-0">
                            <MessageCircle size={10} /> WhatsApp
                         </div>
                       )}
@@ -237,18 +237,18 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
-                          <a href={`tel:${lead.phone}`} className="flex items-center justify-center gap-2 bg-[#2F855A] text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl hover:bg-[var(--accent)] transition-all shadow-sm">
+                          <a href={`tel:${lead.phone}`} className="flex items-center justify-center gap-2 bg-accent text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl hover:bg-[var(--accent)] transition-all shadow-sm">
                             <Phone size={14} /> Call
                           </a>
                           {lead.phone && (
-                            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-[#2F855A] text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl hover:bg-[var(--accent)] transition-all shadow-sm">
+                            <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 bg-accent text-white text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl hover:bg-[var(--accent)] transition-all shadow-sm">
                               <MessageCircle size={14} /> WhatsApp
                             </a>
                           )}
                           {lead.email && (
                             <a
                               href={`mailto:${lead.email}?subject=${emailSubject}&body=${emailBody}`}
-                              className="flex items-center justify-center gap-2 bg-[#1c1c1c] border border-white/[0.06] text-zinc-300 text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl hover:bg-white/[0.03] transition-all shadow-sm"
+                              className="flex items-center justify-center gap-2 bg-[#1c1c1c] border border-white/[0.06] text-zinc-300 text-xs font-semibold px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl hover:bg-glass/[0.03] transition-all shadow-sm"
                             >
                               <Mail size={14} /> Email
                             </a>
@@ -271,7 +271,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                                 className={`flex items-center justify-center gap-1 px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl border text-xs font-semibold transition-all shadow-sm ${
                                   isCurrent 
                                     ? `${m.bg} ${m.text} ${m.border}`
-                                    : "bg-[#1c1c1c] text-zinc-400 border-white/[0.06] hover:border-white/[0.08] hover:bg-white/[0.03]"
+                                    : "bg-[#1c1c1c] text-zinc-400 border-white/[0.06] hover:border-white/[0.08] hover:bg-glass/[0.03]"
                                 }`}>
                                 {m.label}
                               </button>
@@ -286,7 +286,7 @@ export default function LeadManager({ leads: initialLeads, countMap, currentStat
                             onKeyDown={e => e.key === "Enter" && addNote(lead.id)}
                           />
                           <button onClick={() => addNote(lead.id)} disabled={saving[`note_${lead.id}`] || !noteInputs[lead.id]?.trim()}
-                            className="absolute right-2 px-2 sm:px-3 py-1.5 bg-[#2F855A] disabled:bg-white/[0.03] text-white disabled:text-white rounded-xl text-xs font-semibold transition-all shadow-sm hover:bg-[var(--accent)]">
+                            className="absolute right-2 px-2 sm:px-3 py-1.5 bg-accent disabled:bg-glass/[0.03] text-white disabled:text-white rounded-xl text-xs font-semibold transition-all shadow-sm hover:bg-[var(--accent)]">
                             {saving[`note_${lead.id}`] ? "…" : "Save"}
                           </button>
                         </div>

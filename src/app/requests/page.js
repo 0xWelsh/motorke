@@ -16,13 +16,13 @@ export const metadata = {
 export default function BuyerRequestsBoardPage() {
   return (
     <div className="min-h-screen bg-[var(--bg)]">
-      <section className="border-b border-slate-200 pt-14 sm:pt-16 pb-5 sm:pb-6 px-4 sm:px-6">
+      <section className="border-b border-border pt-14 sm:pt-16 pb-5 sm:pb-6 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-3">
+            <h1 className="text-3xl sm:text-4xl font-bold text-text tracking-tight mb-3">
               Open car requests
             </h1>
-            <p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-2xl">
+            <p className="text-muted text-sm sm:text-base leading-relaxed max-w-2xl">
               Buyers post what they want. Send a competitive offer and we deliver it to them on WhatsApp.
             </p>
           </div>

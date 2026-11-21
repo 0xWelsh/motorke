@@ -431,10 +431,10 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
 
               {/* Seller notes */}
               {sellerNotes.length > 0 && (
-                <section className="rounded-xl border border-slate-200 bg-white px-5 py-4">
+                <section className="rounded-xl border border-border bg-surface px-5 py-4">
                   <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {sellerNotes.map((note, i) => (
-                      <li key={i} className="flex items-start gap-2 text-[13px] font-medium text-slate-600">
+                      <li key={i} className="flex items-start gap-2 text-[13px] font-medium text-muted">
                         <Check className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" strokeWidth={3} aria-hidden />
                         <span className="leading-snug">{note}</span>
                       </li>
@@ -468,8 +468,8 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
               </div>
 
               {/* Share */}
-              <section className="rounded-xl border border-slate-200 bg-white px-5 py-4">
-                <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+              <section className="rounded-xl border border-border bg-surface px-5 py-4">
+                <p className="mb-3 text-[10px] font-bold uppercase tracking-widest text-muted">
                   Share this listing
                 </p>
                 <div className="flex items-center justify-between gap-4">
@@ -487,7 +487,7 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
                   />
                   <Link
                     href={`/cars/${slugifyCarSegment(car.make)}`}
-                    className="hidden shrink-0 text-[10px] font-bold uppercase tracking-widest text-slate-400 transition-colors hover:text-slate-700 sm:block"
+                    className="hidden shrink-0 text-[10px] font-bold uppercase tracking-widest text-dim transition-colors hover:text-secondary sm:block"
                   >
                     More {car.make}
                   </Link>
@@ -497,19 +497,19 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
               {/* Explore links */}
               <nav
                 aria-label="Explore related listings"
-                className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-slate-200 bg-white px-5 py-3.5 text-[11px] font-semibold uppercase tracking-wide text-slate-500"
+                className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-border bg-surface px-5 py-3.5 text-[11px] font-semibold uppercase tracking-wide text-muted"
               >
-                <span className="font-black tracking-widest text-slate-500">Explore:</span>
+                <span className="font-black tracking-widest text-muted">Explore:</span>
                 <Link href={`/cars/${slugifyCarSegment(car.make)}`} className="text-[var(--accent)] hover:underline">
                   All {car.make}
                 </Link>
-                <span className="text-slate-300">·</span>
+                <span className="text-ghost">·</span>
                 <Link href={`/cars/${slugifyCarSegment(car.make)}/${slugifyCarSegment(car.model)}`} className="text-[var(--accent)] hover:underline">
                   {car.make} {car.model}
                 </Link>
                 {car.fuelType ? (
                   <>
-                    <span className="text-slate-300">·</span>
+                    <span className="text-ghost">·</span>
                     <Link href={`/cars/${slugifyCarSegment(car.make)}/${facetPathSegment("fuel", car.fuelType)}`} className="text-[var(--accent)] hover:underline">
                       {FUEL_LABELS[car.fuelType] || car.fuelType}
                     </Link>
@@ -617,14 +617,14 @@ const hasFeatures = meaningfulFeatureList(car.features).length > 0;
 
 function ReviewsSkeleton() {
   return (
-    <section className="animate-pulse overflow-hidden rounded-xl border border-slate-200 bg-white">
-      <div className="bg-slate-200 px-4 py-2.5">
-        <div className="h-3 w-24 rounded bg-slate-300" />
+    <section className="animate-pulse overflow-hidden rounded-xl border border-border bg-surface">
+      <div className="bg-surface-overlay px-4 py-2.5">
+        <div className="h-3 w-24 rounded bg-surface-overlay" />
       </div>
       <div className="space-y-3 p-4">
-        <div className="h-3 w-2/3 rounded bg-slate-200" />
-        <div className="h-3 w-1/2 rounded bg-slate-200" />
-        <div className="h-24 w-full rounded bg-slate-100" />
+        <div className="h-3 w-2/3 rounded bg-surface-overlay" />
+        <div className="h-3 w-1/2 rounded bg-surface-overlay" />
+        <div className="h-24 w-full rounded bg-surface-overlay" />
       </div>
     </section>
   );

@@ -19,10 +19,10 @@ export default function CarsFiltersSection({ activeFilters, allMakes, hasActive 
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-controls="cars-filter-panel"
-        className="flex w-full items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 transition-colors hover:border-slate-300"
+        className="flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-surface px-3 py-2.5 transition-colors hover:border-border"
       >
-        <span className="flex items-center gap-2 text-[12px] font-black uppercase tracking-widest text-slate-700">
-          <SlidersHorizontal className="h-4 w-4 text-slate-400" aria-hidden />
+        <span className="flex items-center gap-2 text-[12px] font-black uppercase tracking-widest text-secondary">
+          <SlidersHorizontal className="h-4 w-4 text-dim" aria-hidden />
           Filters
           {activeCount > 0 && (
             <span className="inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-[var(--accent)] px-1.5 py-0.5 text-[10px] font-bold text-white">
@@ -31,7 +31,7 @@ export default function CarsFiltersSection({ activeFilters, allMakes, hasActive 
           )}
         </span>
         <ChevronDown
-          className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 text-dim transition-transform duration-200 ${open ? "rotate-180" : ""}`}
           aria-hidden
         />
       </button>

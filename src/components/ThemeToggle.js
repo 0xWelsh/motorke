@@ -36,14 +36,14 @@ export default function ThemeToggle({ simple = false }) {
     return (
       <button
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-        className="w-8 h-8 flex items-center justify-center text-slate-500 bg-transparent border-none shadow-none hover:text-amber-500 transition-colors shrink-0"
+        className="w-8 h-8 flex items-center justify-center text-muted bg-transparent border-none shadow-none hover:text-amber-500 transition-colors shrink-0"
         style={{ boxShadow: "none", border: "none", background: "none" }}
         aria-label="Toggle Dark Mode"
       >
         {theme === "dark" ? (
-          <SunIcon className="w-4.5 h-4.5" />
+          <SunIcon className="w-5 h-5" />
         ) : (
-          <MoonIcon className="w-4.5 h-4.5" />
+          <MoonIcon className="w-5 h-5" />
         )}
       </button>
     );
@@ -52,7 +52,7 @@ export default function ThemeToggle({ simple = false }) {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="w-10 h-10 flex items-center justify-center bg-white border border-slate-200 text-slate-500 rounded-full hover:bg-slate-100 transition-colors shrink-0"
+      className="w-10 h-10 flex items-center justify-center bg-surface border border-border text-muted rounded-full hover:bg-surface-overlay transition-colors shrink-0"
       aria-label="Toggle Dark Mode"
     >
       {theme === "dark" ? (

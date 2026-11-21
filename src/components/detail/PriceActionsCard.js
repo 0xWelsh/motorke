@@ -93,7 +93,7 @@ export default function PriceActionsCard({ carId, dealerId, carTitle, prettyPhon
         </a>
       )}
       {prettyPhone && whatsappHref && (
-        <p className="text-center text-[10.5px] font-medium text-slate-400">
+        <p className="text-center text-[10.5px] font-medium text-dim">
           Instant reply on {prettyPhone}
         </p>
       )}

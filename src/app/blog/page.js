@@ -16,23 +16,23 @@ export default async function BlogIndexPage() {
   const posts = await listPublishedSeoPages({ type: "BLOG", take: 40 });
 
   return (
-    <div className="min-h-screen bg-white pt-20 pb-24">
+    <div className="min-h-screen bg-surface pt-20 pb-24">
       <div className="home-shell max-w-4xl mx-auto">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-2">Guides</p>
-        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3">Blog</h1>
-        <p className="text-slate-600 mb-10 max-w-2xl">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted mb-2">Guides</p>
+        <h1 className="text-3xl sm:text-4xl font-bold text-text mb-3">Blog</h1>
+        <p className="text-muted mb-10 max-w-2xl">
           Editorial tips for buying and importing vehicles in Kenya. Pair these with live inventory search and our duty calculator.
         </p>
 
         {posts.length === 0 ? (
-          <p className="text-sm text-slate-500">Articles are being published. Check back soon.</p>
+          <p className="text-sm text-muted">Articles are being published. Check back soon.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
             {posts.map((post) => (
               <Link
                 key={post.id}
                 href={blogPagePath(post.slug)}
-                className="group flex flex-col bg-white border border-slate-200 rounded-sm hover:shadow-md hover:border-slate-300 transition-all"
+                className="group flex flex-col bg-surface border border-border rounded-sm hover:shadow-md hover:border-border transition-all"
               >
                 <div className="flex-1 flex flex-col p-5 sm:p-6">
                   <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] mb-2.5">
@@ -41,16 +41,16 @@ export default async function BlogIndexPage() {
                       ? new Date(post.publishedAt).toLocaleDateString("en-KE", { year: "numeric", month: "short", day: "numeric" })
                       : null}
                   </div>
-                  <h2 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-[var(--accent)] transition-colors leading-snug">
+                  <h2 className="text-base sm:text-lg font-bold text-text group-hover:text-[var(--accent)] transition-colors leading-snug">
                     {post.title}
                   </h2>
                   {post.description ? (
-                    <p className="text-sm text-slate-600 mt-2 leading-relaxed line-clamp-3">
+                    <p className="text-sm text-muted mt-2 leading-relaxed line-clamp-3">
                       {post.description}
                     </p>
                   ) : null}
                   <div className="mt-auto pt-4">
-                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-slate-400 group-hover:text-[var(--accent)] transition-colors">
+                    <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-dim group-hover:text-[var(--accent)] transition-colors">
                       Read <ArrowRight className="w-3 h-3" />
                     </span>
                   </div>
@@ -60,7 +60,7 @@ export default async function BlogIndexPage() {
           </div>
         )}
 
-        <p className="mt-10 text-sm text-slate-500">
+        <p className="mt-10 text-sm text-muted">
           <Link href="/guides" className="text-[var(--accent)] font-semibold hover:opacity-80">
             Browse all guides
           </Link>

@@ -44,24 +44,24 @@ export default function HomepageHowItWorks() {
   const steps = tab === "buyer" ? BUYER_STEPS : SELLER_STEPS;
 
   return (
-    <section className="py-10 sm:py-14 bg-white border-y border-slate-200">
+    <section className="py-10 sm:py-14 bg-surface border-y border-border">
       <div className="home-shell">
         <div className="text-center mb-8 sm:mb-10">
           <p className="meta-label text-[var(--accent)] mb-3">How it works</p>
-          <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-2xl sm:text-4xl font-bold text-text tracking-tight">
             {tab === "buyer" ? "Find your next car in 3 steps" : "Sell your car in 3 steps"}
           </h2>
         </div>
 
         {/* Tab switcher */}
         <div className="flex justify-center mb-8 sm:mb-10">
-          <div className="inline-flex rounded-xl border border-slate-200 bg-slate-100 p-1">
+          <div className="inline-flex rounded-xl border border-border bg-surface-overlay p-1">
             <button
               onClick={() => setTab("buyer")}
               className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${
                 tab === "buyer"
                   ? "bg-[var(--accent)] text-white"
-                  : "text-slate-500 hover:text-slate-900"
+                  : "text-muted hover:text-text"
               }`}
             >
               Buying
@@ -71,7 +71,7 @@ export default function HomepageHowItWorks() {
               className={`px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-widest transition-all ${
                 tab === "seller"
                   ? "bg-[var(--accent)] text-white"
-                  : "text-slate-500 hover:text-slate-900"
+                  : "text-muted hover:text-text"
               }`}
             >
               Selling
@@ -85,18 +85,18 @@ export default function HomepageHowItWorks() {
             <div key={`${tab}-${i}`} className="relative text-center group">
               {/* Connector line (desktop) */}
               {i < steps.length - 1 && (
-                <div className="hidden sm:block absolute top-8 left-[60%] w-[calc(100%-20%)] h-px bg-gradient-to-r from-slate-200 to-transparent" aria-hidden />
+                <div className="hidden sm:block absolute top-8 left-[60%] w-[calc(100%-20%)] h-px bg-gradient-to-r 3222-surface-overlay to-transparent" aria-hidden />
               )}
 
-              <div className="relative mx-auto w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-5 group-hover:border-accent-glow group-hover:bg-accent-wash transition-all duration-300">
+              <div className="relative mx-auto w-16 h-16 rounded-2xl bg-surface-hover border border-border flex items-center justify-center mb-5 group-hover:border-accent-glow group-hover:bg-accent-wash transition-all duration-300">
                 <step.icon className="w-7 h-7 text-[var(--accent)]" strokeWidth={1.5} />
                 <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[var(--accent)] text-white text-[10px] font-black flex items-center justify-center">
                   {i + 1}
                 </span>
               </div>
 
-              <h3 className="text-lg font-bold text-slate-900 mb-2">{step.title}</h3>
-              <p className="text-sm text-slate-500 leading-relaxed max-w-[260px] mx-auto font-medium">
+              <h3 className="text-lg font-bold text-text mb-2">{step.title}</h3>
+              <p className="text-sm text-muted leading-relaxed max-w-[260px] mx-auto font-medium">
                 {step.desc}
               </p>
             </div>

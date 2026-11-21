@@ -24,7 +24,7 @@ export default function HomepageMakeGrid({ heading = "Search by Make" }) {
       <div className="mb-2 flex items-baseline justify-between gap-3 border-b-2 border-[var(--accent)] pb-1.5">
         <h2
           id="make-grid-heading"
-          className="text-sm font-black uppercase tracking-wider text-slate-900 sm:text-base"
+          className="text-sm font-black uppercase tracking-wider text-text sm:text-base"
         >
           {heading}
         </h2>
@@ -41,7 +41,7 @@ export default function HomepageMakeGrid({ heading = "Search by Make" }) {
           <Link
             key={make.slug}
             href={`/cars?make=${encodeURIComponent(make.slug)}`}
-            className="group flex flex-col items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-1 py-3 transition-colors hover:border-[var(--accent)] hover:bg-accent-wash"
+            className="group flex flex-col items-center gap-1.5 rounded-lg border border-border bg-surface px-1 py-3 transition-colors hover:border-[var(--accent)] hover:bg-accent-wash"
           >
             <img
               src={make.img}
@@ -49,7 +49,7 @@ export default function HomepageMakeGrid({ heading = "Search by Make" }) {
               loading="lazy"
               className="h-9 w-9 object-contain"
             />
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 transition-colors group-hover:text-[var(--accent)]">
+            <span className="text-[10px] font-black uppercase tracking-wider text-secondary transition-colors group-hover:text-[var(--accent)]">
               {make.name}
             </span>
           </Link>

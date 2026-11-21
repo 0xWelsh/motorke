@@ -38,6 +38,21 @@ module.exports = {
           hover:   "var(--card-bg-hover)",
           border:  "var(--card-border)",
         },
+        text: {
+          DEFAULT:   "var(--text)",
+          secondary: "var(--text-secondary)",
+          muted:     "var(--text-muted)",
+          dim:       "var(--text-dim)",
+          ghost:     "var(--text-ghost)",
+        },
+        border: {
+          DEFAULT: "var(--border)",
+          strong:  "var(--border-strong)",
+          subtle:  "var(--border-subtle)",
+        },
+        // Translucent white (light theme) / near-black (dark theme) glass.
+        // Supports Tailwind alpha modifiers: bg-glass/60.
+        glass: "rgb(var(--glass-rgb) / <alpha-value>)",
         slate: {
           950: "#020617",
           900: "#0f172a",

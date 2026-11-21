@@ -83,7 +83,7 @@ export default async function ComparePage({ searchParams }) {
       <CompareClient initialCars={enriched} />
       {popularComparisons.length ? (
         <div className="home-shell max-w-5xl mx-auto py-12 px-4">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">
+          <h2 className="text-2xl font-bold text-text mb-4">
             Popular car comparisons in Kenya
           </h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -91,10 +91,10 @@ export default async function ComparePage({ searchParams }) {
               <Link
                 key={c.slug}
                 href={c.path}
-                className="block border border-slate-200 rounded-lg p-4 hover:border-emerald-600 hover:shadow-sm transition"
+                className="block border border-border rounded-lg p-4 hover:border-emerald-600 hover:shadow-sm transition"
                 style={{ borderRadius: "var(--radius)" }}
               >
-                <span className="font-medium text-slate-800">{c.label}</span>
+                <span className="font-medium text-text">{c.label}</span>
               </Link>
             ))}
           </div>

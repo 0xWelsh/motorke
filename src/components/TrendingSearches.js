@@ -8,11 +8,11 @@ export default async function TrendingSearches({ limit = 10, className = "" }) {
 
   return (
     <section
-      className={`rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 ${className}`}
+      className={`rounded-xl border border-border bg-surface-hover px-3 py-3 ${className}`}
     >
       <div className="flex items-center gap-2 mb-2">
         <TrendingUp className="w-4 h-4 text-[var(--accent)]" aria-hidden />
-        <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+        <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
           Trending searches
         </h2>
       </div>
@@ -21,7 +21,7 @@ export default async function TrendingSearches({ limit = 10, className = "" }) {
           <li key={item.query}>
             <Link
               href={item.href}
-              className="inline-block px-2.5 py-1 text-[11px] font-semibold border border-slate-200 bg-white text-slate-500 hover:border-slate-400 transition-colors rounded-xl"
+              className="inline-block px-2.5 py-1 text-[11px] font-semibold border border-border bg-surface text-muted hover:border-strong transition-colors rounded-xl"
             >
               {item.query}
             </Link>

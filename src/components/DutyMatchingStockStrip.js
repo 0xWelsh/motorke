@@ -16,23 +16,23 @@ function StripCard({ car }) {
       href={carListingPath(car)}
       eventName="duty_matching_strip_click"
       eventPayload={{ car_id: car.id, make: car.make, model: car.model }}
-      className="group flex w-56 shrink-0 flex-col overflow-hidden border border-slate-200 bg-white hover:border-slate-400 transition-colors"
+      className="group flex w-56 shrink-0 flex-col overflow-hidden border border-border bg-surface hover:border-strong transition-colors"
       style={{ borderRadius: "var(--radius)" }}
     >
-      <div className="relative h-28 w-full bg-slate-100">
+      <div className="relative h-28 w-full bg-surface-overlay">
         {car.image ? (
           <Image src={getThumbnailUrl(car.image, 320)} alt="" fill className="object-cover" sizes="224px" />
         ) : (
-          <div className="flex h-full items-center justify-center text-slate-400">
+          <div className="flex h-full items-center justify-center text-dim">
             <Car className="w-7 h-7" aria-hidden />
           </div>
         )}
       </div>
       <div className="p-3 min-w-0">
-        <p className="text-xs font-bold text-slate-900 truncate group-hover:text-accent transition-colors">
+        <p className="text-xs font-bold text-text truncate group-hover:text-accent transition-colors">
           {title}
         </p>
-        <p className="text-[10px] text-slate-500 mt-0.5 truncate">
+        <p className="text-[10px] text-muted mt-0.5 truncate">
           {car.engineCC ? `${car.engineCC}cc` : "n/a"}, {FUEL_LABELS[car.fuelType] || car.fuelType}
           {car.mileage ? `, ${formatMileage(car.mileage)}` : ""}
         </p>
@@ -76,7 +76,7 @@ export default function DutyMatchingStockStrip({ make, model }) {
   return (
     <div className="duty-print-hide mt-6">
       <div className="flex items-center justify-between gap-3 mb-3">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
           {make} {model || ""} for sale now
         </p>
         <TrackedLink

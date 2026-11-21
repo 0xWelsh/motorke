@@ -14,7 +14,7 @@ export default function CompareNarrative({
   return (
     <div
       id="compare-decision"
-      className="order-5 scroll-mt-24 bg-white border border-slate-200 p-5 sm:p-6 lg:p-8"
+      className="order-5 scroll-mt-24 bg-surface border border-border p-5 sm:p-6 lg:p-8"
       style={{ borderRadius: "var(--radius)" }}
     >
       <div className="flex items-start gap-4 mb-6">
@@ -22,18 +22,18 @@ export default function CompareNarrative({
           <CircleHelp className="w-5 h-5 text-white" />
         </div>
         <div>
-          <h3 className="text-xl font-bold text-slate-900">The Buyer's Verdict</h3>
-          <p className="text-sm text-slate-500 font-medium mt-0.5">
+          <h3 className="text-xl font-bold text-text">The Buyer's Verdict</h3>
+          <p className="text-sm text-muted font-medium mt-0.5">
             AI-powered reasoning based on Kenyan market data.
           </p>
         </div>
       </div>
 
       <div className="prose max-w-none">
-        <div className="bg-slate-50 border border-slate-200 p-4 sm:p-5 shadow-sm" style={{ borderRadius: "var(--radius)" }}>
+        <div className="bg-surface-hover border border-border p-4 sm:p-5 shadow-sm" style={{ borderRadius: "var(--radius)" }}>
           {freeAi.status === "idle" && (
             <div className="py-4 text-center">
-              <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Awaiting analysis request</p>
+              <p className="text-xs font-bold text-muted uppercase tracking-widest mb-4">Awaiting analysis request</p>
               <button
                 type="button"
                 onClick={requestFreeAi}
@@ -59,21 +59,21 @@ export default function CompareNarrative({
           {(freeAi.status === "done" || freeAi.status === "err" || freeAi.status === "nokey") && (
             <div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)] mb-3">Narrative Summary</p>
-              <p className="text-[13px] sm:text-[14px] leading-relaxed font-medium text-slate-500">
+              <p className="text-[13px] sm:text-[14px] leading-relaxed font-medium text-muted">
                 {freeAi.text || freeAi.hint || "Could not generate narrative."}
               </p>
               {freeAi.hint && freeAi.status === "done" && (
-                <p className="mt-3 text-[10px] font-semibold text-slate-500 italic opacity-80">{freeAi.hint}</p>
+                <p className="mt-3 text-[10px] font-semibold text-muted italic opacity-80">{freeAi.hint}</p>
               )}
             </div>
           )}
         </div>
 
-        <div className="mt-6 border-t border-slate-200 pt-5">
-          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500 mb-3">
+        <div className="mt-6 border-t border-border pt-5">
+          <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted mb-3">
             Who should pick which car
           </p>
-          <p className="text-[11px] text-slate-500 mb-3 leading-relaxed">
+          <p className="text-[11px] text-muted mb-3 leading-relaxed">
             One punchy "buy this if…" line per car, grounded in the specs.
           </p>
           <button
@@ -92,14 +92,14 @@ export default function CompareNarrative({
                 return (
                   <li
                     key={car.id}
-                    className="p-3 sm:p-4 border border-slate-200 bg-slate-50 text-sm text-slate-500 leading-snug"
+                    className="p-3 sm:p-4 border border-border bg-surface-hover text-sm text-muted leading-snug"
                     style={{ borderRadius: "var(--radius)" }}
                   >
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 block mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted block mb-1">
                       {car.year} {car.make} {car.model}
                     </span>
                     {line || (
-                      <span className="text-[12px] text-slate-500">
+                      <span className="text-[12px] text-muted">
                         No line returned for this car. Try again.
                       </span>
                     )}

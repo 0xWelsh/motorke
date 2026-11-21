@@ -20,8 +20,8 @@ export default async function SuperAdminPage() {
             <div className="w-2 h-2 rounded-xl bg-yellow-500" />
             <span className="text-xs font-semibold uppercase tracking-wider text-yellow-400">Super Admin</span>
           </div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tight">Admin Controls</h1>
-          <p className="text-slate-500 mt-2 text-sm">
+          <h1 className="text-4xl font-black text-text tracking-tight">Admin Controls</h1>
+          <p className="text-muted mt-2 text-sm">
             {totalCars} cars · {totalViews._sum.views?.toLocaleString() || 0} total views
           </p>
         </div>
@@ -31,10 +31,10 @@ export default async function SuperAdminPage() {
         {/* ── Create Admin ─────────────────────────────────────────── */}
         <section className="bg-[#1c1c1c]/60 border border-white/[0.08] rounded-xl p-6">
           <div className="flex items-center gap-2 mb-5">
-            <UserPlus className="w-5 h-5 text-slate-500" />
-            <h2 className="text-lg font-bold text-slate-900">Add Admin User</h2>
+            <UserPlus className="w-5 h-5 text-muted" />
+            <h2 className="text-lg font-bold text-text">Add Admin User</h2>
           </div>
-          <p className="text-sm text-slate-500 mb-5">
+          <p className="text-sm text-muted mb-5">
             Create a new admin or promote an existing user by email.
           </p>
 

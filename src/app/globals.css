@@ -39,6 +39,8 @@
   --accent-glow:     rgba(6, 105, 28, 0.2);
   /* RGB triplet so Tailwind shadows/keyframes can build rgba() per theme. */
   --accent-rgb:      6, 105, 28;
+  /* RGB triplet for the `glass` token (bg-white/NN replacements). */
+  --glass-rgb:       255 255 255;
 
   /* Structural dark band (header/nav) + strong label colour. */
   --sidebar-bar:       #111713;
@@ -76,6 +78,73 @@
   --text-main:       #18181b;
 
   --font-sans: 'Lato', system-ui, -apple-system, sans-serif;
+}
+
+/* ─── BIDGARI Dark Theme ───
+   Same variable-swap mechanism the admin/portal uses, extended to the whole
+   public site. next-themes toggles the `dark` class on <html>; every component
+   that consumes var()/token utilities re-themes with zero `dark:` classes.
+   Intentionally-dark structures (brand-ink nav band, modals, luxury cards)
+   keep their dark values. */
+.dark {
+  color-scheme: dark;
+  --bg:              #141414;
+  --bg-elevated:     #1a1a1a;
+  --surface:         #1e1e1e;
+  --surface-overlay: #262626;
+  --surface-hover:   #242424;
+  --card-bg:         #1c1c1c;
+  --card-bg-hover:   #242424;
+  --card-border:     rgba(255, 255, 255, 0.06);
+  --card-border-hover: rgba(255, 255, 255, 0.12);
+
+  --brand:           #f7f6f3;
+  --brand-muted:     #a1a1aa;
+  --brand-dim:       #71717a;
+
+  --brand-green:      #00C010;
+  --brand-green-dim:  rgba(0, 192, 16, 0.18);
+  --brand-ink:        #0b0f0c;
+
+  /* Bright brand green: 7.9:1 on --bg, so it clears AA as text on dark. */
+  --accent:          #22C55E;
+  --accent-hover:    #16A34A;
+  --accent-dim:      rgba(34, 197, 94, 0.15);
+  --accent-wash:     rgba(34, 197, 94, 0.08);
+  --accent-glow:     rgba(34, 197, 94, 0.25);
+  --accent-rgb:      34, 197, 94;
+
+  --glass-rgb:       38 38 38;
+
+  /* Structural dark band already reads dark; keep the public identity. */
+  --sidebar-bar:       #111713;
+  --sidebar-bar-hover: #1c251f;
+  /* Light label colour for card titles (was deep green for light bg). */
+  --brand-navy:        #6EE7A0;
+
+  --accent-red:      #EF4444;
+  --accent-red-hover:#dc2626;
+  --accent-red-dim:  rgba(239, 68, 68, 0.15);
+  --accent-orange:   #F97316;
+  --accent-blue:     #3B82F6;
+
+  --text:            #f7f6f3;
+  --text-secondary:  #d4d4d8;
+  --text-muted:      #a1a1aa;
+  --text-dim:        #71717a;
+  --text-ghost:      #52525b;
+
+  --border:          rgba(255, 255, 255, 0.08);
+  --border-strong:   rgba(255, 255, 255, 0.14);
+  --border-subtle:   rgba(255, 255, 255, 0.04);
+
+  --mk-primary:      var(--accent);
+  --mk-primary-hover:var(--accent-hover);
+  --mk-primary-600:  var(--accent);
+
+  --brand-primary:   var(--accent);
+  --brand-faint:     rgba(255, 255, 255, 0.08);
+  --text-main:       #f7f6f3;
 }
 
 /* Admin/portal keeps the dark theme even though the public site is light. */
@@ -225,7 +294,7 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   inset: 0;
   transform: translateX(-100%);
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  background: linear-gradient(90deg, transparent, rgb(var(--glass-rgb) / 0.5), transparent);
   animation: shimmerSweep 1.4s ease-in-out infinite;
 }
 @keyframes shimmerSweep {
@@ -606,7 +675,7 @@ h1, h2, h3, h4, h5, h6 {
 .mk-news-ribbon {
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.9);
+  background: rgb(var(--glass-rgb) / 0.9);
 }
 
 .mk-news-track {

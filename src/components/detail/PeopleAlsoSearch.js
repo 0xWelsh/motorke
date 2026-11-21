@@ -27,7 +27,7 @@ export default function PeopleAlsoSearch({ cars, searchHref, searchLabel = "Brow
             <TrendingUp className="h-4 w-4 shrink-0" strokeWidth={2.5} aria-hidden />
             People also search for
           </h2>
-          <p className="mt-1 text-[11px] leading-snug text-slate-500">
+          <p className="mt-1 text-[11px] leading-snug text-muted">
             What buyers viewed after listings like this one.
           </p>
         </div>
@@ -49,8 +49,8 @@ export default function PeopleAlsoSearch({ cars, searchHref, searchLabel = "Brow
             className="w-[74vw] max-w-[260px] shrink-0 snap-start sm:w-auto sm:max-w-none"
           >
             <CarCard car={car} />
-            <p className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
-              <Search className="h-3 w-3 shrink-0 text-slate-400" strokeWidth={2.5} aria-hidden />
+            <p className="mt-1.5 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted">
+              <Search className="h-3 w-3 shrink-0 text-dim" strokeWidth={2.5} aria-hidden />
               <span className="truncate">
                 {car._reason}
                 {car._cheaper ? " · below asking" : ""}

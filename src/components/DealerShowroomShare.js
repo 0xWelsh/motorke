@@ -101,7 +101,7 @@ export default function DealerShowroomShare({
           type="button"
           onClick={() => shareNative()}
           disabled={!url}
-          className="flex-1 inline-flex items-center justify-center gap-2 bg-white text-slate-700 py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50 border border-slate-300 rounded-xl"
+          className="flex-1 inline-flex items-center justify-center gap-2 bg-surface text-secondary py-3.5 text-center text-[11px] font-bold uppercase tracking-widest disabled:opacity-50 border border-border rounded-xl"
         >
           <Share2 className="w-4 h-4 shrink-0" aria-hidden />
           {copied ? "Link copied" : "Share"}
@@ -127,7 +127,7 @@ export default function DealerShowroomShare({
           type="button"
           onClick={() => shareNative()}
           disabled={!url}
-          className="w-full inline-flex items-center justify-center gap-2 bg-white/[0.03] text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] disabled:opacity-50 hover:bg-white/[0.06] transition-colors rounded-xl"
+          className="w-full inline-flex items-center justify-center gap-2 bg-glass/[0.03] text-white px-4 py-2.5 text-[11px] font-black uppercase tracking-[0.14em] disabled:opacity-50 hover:bg-glass/[0.06] transition-colors rounded-xl"
         >
           <Share2 className="w-3.5 h-3.5 shrink-0" aria-hidden />
           Share link
@@ -136,7 +136,7 @@ export default function DealerShowroomShare({
           type="button"
           onClick={() => copyLink()}
           disabled={!url}
-          className="w-full inline-flex items-center justify-center px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] border border-white/[0.06] bg-[#1c1c1c] text-zinc-300 disabled:opacity-50 hover:bg-white/[0.03] transition-colors rounded-xl"
+          className="w-full inline-flex items-center justify-center px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.14em] border border-white/[0.06] bg-[#1c1c1c] text-zinc-300 disabled:opacity-50 hover:bg-glass/[0.03] transition-colors rounded-xl"
         >
           {copied ? "Copied!" : "Copy showroom URL"}
         </button>

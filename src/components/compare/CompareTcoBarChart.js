@@ -24,11 +24,11 @@ export default function CompareTcoBarChart({ fullComparedCars, initialCarsById, 
   const maxVal = Math.max(...barData.map((d) => d.total), 1);
 
   return (
-    <div className="order-4 lg:order-4 scroll-mt-24 bg-white border border-slate-200 p-5 sm:p-6 lg:p-8"
+    <div className="order-4 lg:order-4 scroll-mt-24 bg-surface border border-border p-5 sm:p-6 lg:p-8"
       style={{ borderRadius: "var(--radius)" }}>
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-xl font-bold text-slate-900">Annual Cost Breakdown</h3>
-        <span className="px-2 py-0.5 bg-slate-50 text-[9px] font-bold text-slate-500 uppercase tracking-widest rounded-xl">
+        <h3 className="text-xl font-bold text-text">Annual Cost Breakdown</h3>
+        <span className="px-2 py-0.5 bg-surface-hover text-[9px] font-bold text-muted uppercase tracking-widest rounded-xl">
           KES '000
         </span>
       </div>
@@ -52,10 +52,10 @@ export default function CompareTcoBarChart({ fullComparedCars, initialCarsById, 
       </ResponsiveContainer>
       <div className="mt-4 grid grid-cols-3 gap-3">
         {barData.map((d) => (
-          <div key={d.name} className="text-center p-2 bg-slate-50 rounded-xl">
-            <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500 truncate">{d.name}</p>
-            <p className="text-sm font-black text-slate-900">KES {formatKesCompact(d.total * 1000)}</p>
-            <p className="text-[8px] text-slate-500">total/yr</p>
+          <div key={d.name} className="text-center p-2 bg-surface-hover rounded-xl">
+            <p className="text-[9px] font-bold uppercase tracking-wider text-muted truncate">{d.name}</p>
+            <p className="text-sm font-black text-text">KES {formatKesCompact(d.total * 1000)}</p>
+            <p className="text-[8px] text-muted">total/yr</p>
           </div>
         ))}
       </div>

@@ -1,5 +1,5 @@
 // Route skeleton shown while /cars fetches on the server.
-const bar = "animate-pulse rounded bg-slate-200/80";
+const bar = "animate-pulse rounded bg-surface-overlay";
 
 export default function CarsLoading() {
   return (

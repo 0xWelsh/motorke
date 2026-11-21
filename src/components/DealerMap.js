@@ -11,7 +11,7 @@ const MapComponent = dynamic(() => import('./DealerMapLeaflet'), {
     <div className="w-full h-full rounded-2xl flex items-center justify-center bg-surface border border-[var(--border)]">
       <div className="flex flex-col items-center gap-2">
         <Loader2 className="w-6 h-6 text-[var(--accent)] animate-spin" />
-        <p className="text-sm font-medium text-slate-600">Loading map...</p>
+        <p className="text-sm font-medium text-muted">Loading map...</p>
       </div>
     </div>
   ),
@@ -29,7 +29,7 @@ export default function DealerMap({ dealers, userLocation }) {
       <div className="w-full h-full rounded-2xl flex items-center justify-center bg-surface border border-[var(--border)]">
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="w-6 h-6 text-[var(--accent)] animate-spin" />
-          <p className="text-sm font-medium text-slate-600">Loading map...</p>
+          <p className="text-sm font-medium text-muted">Loading map...</p>
         </div>
       </div>
     );

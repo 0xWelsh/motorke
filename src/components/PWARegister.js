@@ -31,7 +31,7 @@ export function PWARegister() {
             <p class="text-sm font-semibold">Install BIDGARI</p>
             <p class="mt-0.5 text-xs text-white/90">Tap Share, then &quot;Add to Home Screen&quot;</p>
           </div>
-          <button type="button" class="shrink-0 rounded-lg bg-white/15 px-3 py-2 text-sm font-semibold text-white hover:bg-white/25">Dismiss</button>
+          <button type="button" class="shrink-0 rounded-lg bg-glass/15 px-3 py-2 text-sm font-semibold text-white hover:bg-glass/25">Dismiss</button>
         `;
         banner.style.paddingBottom = "max(1rem, env(safe-area-inset-bottom))";
         const dismissBtn = banner.querySelector("button");

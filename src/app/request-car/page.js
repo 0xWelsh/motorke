@@ -21,17 +21,17 @@ export const metadata = {
 export default function RequestCarPage() {
   return (
     <div className="min-h-screen bg-[var(--bg)]">
-      <section className="border-b border-slate-200 pt-14 sm:pt-16 pb-5 sm:pb-6 px-4 sm:px-6">
+      <section className="border-b border-border pt-14 sm:pt-16 pb-5 sm:pb-6 px-4 sm:px-6">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight mb-3">
+          <h1 className="text-3xl sm:text-4xl font-bold text-text tracking-tight mb-3">
             Request a car
           </h1>
-          <p className="text-slate-500 text-sm sm:text-base leading-relaxed">
+          <p className="text-muted text-sm sm:text-base leading-relaxed">
             Give us the details of the car you want. Verified sellers see your request without your phone
             number and send offers through BIDGARI, usually within a few hours.
           </p>
-          <p className="mt-3 text-xs text-slate-500">
-            Requests stay live for <strong className="text-slate-700">7 days</strong>.
+          <p className="mt-3 text-xs text-muted">
+            Requests stay live for <strong className="text-secondary">7 days</strong>.
             Are you a seller?{" "}
             <Link href="/requests" className="font-bold text-accent hover:underline">
               Browse open requests

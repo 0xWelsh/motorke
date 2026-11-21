@@ -41,18 +41,18 @@ export default function ClientRecentSection() {
   if (loading || recent.length === 0) return null;
 
   return (
-    <section className="bg-white border-y border-slate-200 py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
+    <section className="bg-surface border-y border-border py-20 animate-in fade-in slide-in-from-bottom-4 duration-1000">
       <div className="container mx-auto px-6 max-w-7xl">
         <div className="flex items-center justify-between mb-12">
           <div>
-            <h2 className="text-3xl font-black text-slate-900 tracking-tight">
+            <h2 className="text-3xl font-black text-text tracking-tight">
               Recently Viewed
             </h2>
-            <p className="text-slate-500 text-sm font-medium mt-1">Pick up where you left off</p>
+            <p className="text-muted text-sm font-medium mt-1">Pick up where you left off</p>
           </div>
           <Link
             href="/account?tab=saved"
-            className="hidden sm:inline-flex items-center gap-2 bg-slate-50 border border-slate-200 px-6 py-3 rounded-2xl text-sm font-bold text-slate-900 hover:border-accent-glow hover:text-[var(--brand)] transition-all shadow-sm"
+            className="hidden sm:inline-flex items-center gap-2 bg-surface-hover border border-border px-6 py-3 rounded-2xl text-sm font-bold text-text hover:border-accent-glow hover:text-[var(--brand)] transition-all shadow-sm"
           >
             Saved cars <ChevronRight className="w-4 h-4" />
           </Link>

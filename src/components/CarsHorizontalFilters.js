@@ -98,10 +98,10 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
   const filterCount = [make, transmission, bodyTypes, fuelTypes, minPrice || maxPrice ? "price" : "", minYear || maxYear ? "year" : ""].filter(Boolean).length;
 
   return (
-    <div className="bg-white border border-slate-200 p-3 sm:p-4 space-y-3 rounded-xl shadow-sm">
+    <div className="bg-surface border border-border p-3 sm:p-4 space-y-3 rounded-xl shadow-sm">
       {/* Brands */}
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
-        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">Brand</span>
+        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-dim shrink-0">Brand</span>
         {allMakes.map((m) => (
           <button
             key={m.make}
@@ -109,7 +109,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
             className={`shrink-0 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
               make === m.make
                 ? "border-brand-accent bg-brand-accent/10 text-brand-accent ring-1 ring-brand-accent/30"
-                : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                : "border-border text-muted hover:bg-surface-hover"
             }`}
           >
             {m.make}
@@ -120,7 +120,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
       {/* Price + Transmission */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">Price</span>
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-dim shrink-0">Price</span>
           {PRICE_PRESETS.map((preset, i) => (
             <button
               key={i}
@@ -128,7 +128,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
               className={`shrink-0 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
                 pricePreset === i
                   ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
-                  : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                  : "border-border text-muted hover:bg-surface-hover"
               }`}
             >
               {preset.label}
@@ -136,10 +136,10 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
           ))}
         </div>
 
-        <span className="w-px h-5 bg-slate-200 shrink-0" />
+        <span className="w-px h-5 bg-surface-overlay shrink-0" />
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">Trans</span>
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-dim shrink-0">Trans</span>
           {["AUTOMATIC", "MANUAL"].map((t) => (
             <button
               key={t}
@@ -147,7 +147,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
               className={`shrink-0 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
                 transmission === t
                   ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
-                  : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                  : "border-border text-muted hover:bg-surface-hover"
               }`}
             >
               {t === "AUTOMATIC" ? "Auto" : "Manual"}
@@ -155,19 +155,19 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
           ))}
         </div>
 
-        <span className="w-px h-5 bg-slate-200 shrink-0" />
+        <span className="w-px h-5 bg-surface-overlay shrink-0" />
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">Range</span>
-          <input type="number" value={minPrice} placeholder="Min" onChange={(e) => { setMinPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-slate-50 border border-slate-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-accent focus:bg-white transition-colors rounded-xl" />
-          <span className="text-slate-400 text-[9px]">\u2014</span>
-          <input type="number" value={maxPrice} placeholder="Max" onChange={(e) => { setMaxPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-slate-50 border border-slate-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-accent focus:bg-white transition-colors rounded-xl" />
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-dim shrink-0">Range</span>
+          <input type="number" value={minPrice} placeholder="Min" onChange={(e) => { setMinPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-surface-hover border border-border text-text placeholder:text-dim focus:outline-none focus:border-brand-accent focus:bg-surface transition-colors rounded-xl" />
+          <span className="text-dim text-[9px]">\u2014</span>
+          <input type="number" value={maxPrice} placeholder="Max" onChange={(e) => { setMaxPrice(e.target.value); setPricePreset(null); }} className="w-20 sm:w-24 px-2 py-1 text-[10px] sm:text-[11px] bg-surface-hover border border-border text-text placeholder:text-dim focus:outline-none focus:border-brand-accent focus:bg-surface transition-colors rounded-xl" />
         </div>
       </div>
 
       {/* Body Type multi-select */}
       <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide pb-0.5">
-        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">Body</span>
+        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-dim shrink-0">Body</span>
         {Object.entries(BODY_TYPE_LABELS).map(([key, label]) => (
           <button
             key={key}
@@ -175,7 +175,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
             className={`shrink-0 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
               bodyArr.includes(key)
                 ? "border-brand-accent bg-brand-accent/10 text-brand-accent ring-1 ring-brand-accent/30"
-                : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                : "border-border text-muted hover:bg-surface-hover"
             }`}
           >
             {label}
@@ -186,7 +186,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
       {/* Fuel Type multi-select + Year range */}
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">Fuel</span>
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-dim shrink-0">Fuel</span>
           {Object.entries(FUEL_LABELS).map(([key, label]) => (
             <button
               key={key}
@@ -194,7 +194,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
               className={`shrink-0 px-2.5 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all rounded-xl ${
                 fuelArr.includes(key)
                   ? "border-brand-accent bg-brand-accent/10 text-brand-accent"
-                  : "border-slate-200 text-slate-500 hover:bg-slate-50"
+                  : "border-border text-muted hover:bg-surface-hover"
               }`}
             >
               {label}
@@ -202,13 +202,13 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
           ))}
         </div>
 
-        <span className="w-px h-5 bg-slate-200 shrink-0" />
+        <span className="w-px h-5 bg-surface-overlay shrink-0" />
 
         <div className="flex items-center gap-1.5">
-          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-slate-400 shrink-0">Year</span>
-          <input type="number" value={minYear} placeholder="From" onChange={(e) => setMinYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-slate-50 border border-slate-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-accent focus:bg-white transition-colors rounded-xl" />
-          <span className="text-slate-400 text-[9px]">\u2014</span>
-          <input type="number" value={maxYear} placeholder="To" onChange={(e) => setMaxYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-slate-50 border border-slate-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-accent focus:bg-white transition-colors rounded-xl" />
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-dim shrink-0">Year</span>
+          <input type="number" value={minYear} placeholder="From" onChange={(e) => setMinYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-surface-hover border border-border text-text placeholder:text-dim focus:outline-none focus:border-brand-accent focus:bg-surface transition-colors rounded-xl" />
+          <span className="text-dim text-[9px]">\u2014</span>
+          <input type="number" value={maxYear} placeholder="To" onChange={(e) => setMaxYear(e.target.value)} className="w-16 sm:w-20 px-2 py-1 text-[10px] sm:text-[11px] bg-surface-hover border border-border text-text placeholder:text-dim focus:outline-none focus:border-brand-accent focus:bg-surface transition-colors rounded-xl" />
         </div>
 
         <div className="flex items-center gap-2 ml-auto">
@@ -223,7 +223,7 @@ export default function CarsHorizontalFilters({ activeFilters, allMakes = [] }) 
             className={`inline-flex items-center gap-1.5 px-4 py-2 text-[11px] font-bold uppercase tracking-wider border transition-all relative rounded-xl ${
               hasChanges
                 ? "border-brand-accent bg-brand-accent text-white hover:opacity-90 cursor-pointer"
-                : "border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed"
+                : "border-border bg-surface-overlay text-dim cursor-not-allowed"
             }`}
           >
             <Search className="w-3 h-3 sm:w-3.5 sm:h-3.5" />

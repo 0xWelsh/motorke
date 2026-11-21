@@ -49,12 +49,12 @@ export function CompareBar() {
 
   return (
     <div className="fixed bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-1rem)] sm:w-[95%] max-w-2xl animate-in fade-in slide-in-from-bottom-6 duration-700" style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}>
-      <div className="bg-white/90 backdrop-blur-3xl border border-slate-200 p-2 shadow-2xl flex items-center justify-between gap-3 sm:gap-4 rounded-xl">
+      <div className="bg-glass/90 backdrop-blur-3xl border border-border p-2 shadow-2xl flex items-center justify-between gap-3 sm:gap-4 rounded-xl">
         {/* Selected Cars Thumbnails */}
         <div className="hidden sm:flex items-center gap-2 px-2 overflow-x-auto no-scrollbar">
           {compareCars.map((car) => (
             <div key={car.id} className="relative group shrink-0">
-              <div className="w-12 h-12 overflow-hidden bg-white border border-slate-200 shadow-lg transition-transform hover:scale-110 rounded-lg">
+              <div className="w-12 h-12 overflow-hidden bg-surface border border-border shadow-lg transition-transform hover:scale-110 rounded-lg">
                 {car.image ? (
                   <Image src={getThumbnailUrl(car.image)} alt={car.model} fill className="object-cover" />
                 ) : (
@@ -75,7 +75,7 @@ export function CompareBar() {
             <Link
               key={`empty-${i}`}
               href="/cars"
-              className="w-12 h-12 border border-dashed border-slate-300 hover:border-accent-glow flex items-center justify-center text-slate-400 hover:text-[var(--accent)] transition-colors rounded-lg"
+              className="w-12 h-12 border border-dashed border-border hover:border-accent-glow flex items-center justify-center text-dim hover:text-[var(--accent)] transition-colors rounded-lg"
               title="Add another car"
             >
               <span className="text-xl">+</span>
@@ -87,9 +87,9 @@ export function CompareBar() {
         <div className="flex items-center justify-between sm:justify-end gap-3 sm:gap-4 pr-1 sm:pr-4 w-full sm:w-auto">
           <div className="sm:hidden text-left min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Compare</p>
-            <p className="text-[10px] font-bold text-slate-500">{compareCars.length}/3 selected</p>
+            <p className="text-[10px] font-bold text-muted">{compareCars.length}/3 selected</p>
             {compareCars.length >= 3 && (
-              <p className="text-[9px] font-semibold text-slate-400 mt-0.5 leading-tight">
+              <p className="text-[9px] font-semibold text-dim mt-0.5 leading-tight">
                 Full — tap × on a thumbnail to remove a car
               </p>
             )}
@@ -99,17 +99,17 @@ export function CompareBar() {
                   key={car.id}
                   type="button"
                   onClick={(event) => handleRemove(event, car.id)}
-                  className="inline-flex items-center gap-1 border border-slate-200 px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-slate-700 rounded-lg"
+                  className="inline-flex items-center gap-1 border border-border px-2 py-1 text-[9px] font-bold uppercase tracking-wide text-secondary rounded-lg"
                 >
                   <span className="max-w-[72px] truncate">{car.make}</span>
-                  <span className="text-slate-400">×</span>
+                  <span className="text-dim">×</span>
                 </button>
               ))}
               {Array.from({ length: 3 - compareCars.length }).map((_, i) => (
                 <Link
                   key={`mobile-empty-${i}`}
                   href="/cars"
-                  className="inline-flex items-center justify-center w-7 h-7 border border-dashed border-slate-300 text-slate-400 hover:text-[var(--accent)] hover:border-accent-glow rounded-lg"
+                  className="inline-flex items-center justify-center w-7 h-7 border border-dashed border-border text-dim hover:text-[var(--accent)] hover:border-accent-glow rounded-lg"
                   title="Add another car"
                 >
                   +
@@ -120,9 +120,9 @@ export function CompareBar() {
 
           <div className="hidden sm:block text-right min-w-0">
             <p className="text-[10px] font-bold uppercase tracking-widest text-[var(--accent)]">Comparison Tool</p>
-            <p className="text-xs font-bold text-slate-500">{compareCars.length}/3 selected</p>
+            <p className="text-xs font-bold text-muted">{compareCars.length}/3 selected</p>
             {compareCars.length >= 3 && (
-              <p className="text-[9px] font-semibold text-slate-400 mt-0.5">
+              <p className="text-[9px] font-semibold text-dim mt-0.5">
                 Full — remove one to add another
               </p>
             )}
@@ -184,8 +184,8 @@ export function CompareButton({ car, className = "" }) {
         selected
           ? "bg-[var(--accent)] text-black px-6"
           : cantAdd
-            ? "bg-slate-50 border border-slate-200 text-slate-500 px-4"
-            : "bg-white border border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300 px-6 active:scale-95"
+            ? "bg-surface-hover border border-border text-muted px-4"
+            : "bg-surface border border-border text-muted hover:text-text hover:border-border px-6 active:scale-95"
       }`}
     >
       <span className="relative z-10 flex items-center justify-center gap-2">
@@ -208,7 +208,7 @@ export function CompareButton({ car, className = "" }) {
       )}
     </button>
     {fullHint && (
-      <p className="mt-1.5 text-[10px] font-semibold text-slate-500 leading-snug max-w-[220px]">
+      <p className="mt-1.5 text-[10px] font-semibold text-muted leading-snug max-w-[220px]">
         Compare is full. Remove a car from the bar at the bottom, then add this one.
       </p>
     )}

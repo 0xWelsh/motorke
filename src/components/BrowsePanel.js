@@ -15,7 +15,7 @@ function formatChipCount(count) {
 }
 
 const CHIP_CLASS =
-  "group flex flex-col items-center justify-center gap-1 p-2.5 sm:p-3 w-[76px] sm:w-[82px] lg:w-[88px] min-h-[92px] h-[92px] shrink-0 rounded-lg border border-slate-200 bg-white hover:border-accent-glow hover:bg-slate-50 transition-all duration-300";
+  "group flex flex-col items-center justify-center gap-1 p-2.5 sm:p-3 w-[76px] sm:w-[82px] lg:w-[88px] min-h-[92px] h-[92px] shrink-0 rounded-lg border border-border bg-surface hover:border-accent-glow hover:bg-surface-hover transition-all duration-300";
 
 function ChipCount({ count, className = "text-[9px]" }) {
   return (
@@ -36,7 +36,7 @@ function BrandLogo({ name, make, img, count }) {
     <Link href={`/cars/${slugifyCarSegment(makeQuery)}`} className={CHIP_CLASS}>
       <div className="w-8 h-8 sm:w-9 sm:h-9 flex shrink-0 items-center justify-center">
         {failed ? (
-          <span className="text-lg font-black text-slate-400">{name[0]}</span>
+          <span className="text-lg font-black text-dim">{name[0]}</span>
         ) : (
           <Image
             src={src}
@@ -48,7 +48,7 @@ function BrandLogo({ name, make, img, count }) {
           />
         )}
       </div>
-      <span className="text-[10px] sm:text-[11px] font-sans font-semibold text-slate-500 group-hover:text-slate-900 transition-colors text-center leading-tight line-clamp-2 min-h-[2.5em] flex items-center justify-center w-full px-0.5">
+      <span className="text-[10px] sm:text-[11px] font-sans font-semibold text-muted group-hover:text-text transition-colors text-center leading-tight line-clamp-2 min-h-[2.5em] flex items-center justify-center w-full px-0.5">
         {name}
       </span>
       <ChipCount count={count} />
@@ -75,7 +75,7 @@ function BodyTypeCard({ label, value, img, count }) {
           <span className="text-2xl">🚗</span>
         )}
       </div>
-      <span className="text-[9px] sm:text-[10px] font-black text-slate-500 group-hover:text-slate-900 transition-colors text-center leading-tight line-clamp-2 min-h-[2.5em] flex items-center justify-center w-full px-0.5">
+      <span className="text-[9px] sm:text-[10px] font-black text-muted group-hover:text-text transition-colors text-center leading-tight line-clamp-2 min-h-[2.5em] flex items-center justify-center w-full px-0.5">
         {label}
       </span>
       <ChipCount count={count} className="text-[8px]" />
@@ -116,7 +116,7 @@ function ScrollableRow({ children }) {
           <button
             type="button"
             onClick={() => scroll("left")}
-            className="w-10 h-10 ml-2 sm:ml-4 flex items-center justify-center bg-white border border-slate-200 shadow-sm rounded-md opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-500 hover:text-slate-900"
+            className="w-10 h-10 ml-2 sm:ml-4 flex items-center justify-center bg-surface border border-border shadow-sm rounded-md opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-muted hover:text-text"
             aria-label="Scroll left"
           >
             <ChevronLeft className="w-5 h-5 ml-[-2px]" />
@@ -137,7 +137,7 @@ function ScrollableRow({ children }) {
           <button
             type="button"
             onClick={() => scroll("right")}
-            className="w-10 h-10 mr-2 sm:mr-4 flex items-center justify-center bg-white border border-slate-200 shadow-sm rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-slate-500 hover:text-slate-900"
+            className="w-10 h-10 mr-2 sm:mr-4 flex items-center justify-center bg-surface border border-border shadow-sm rounded-full opacity-0 sm:group-hover/row:opacity-100 scale-90 sm:group-hover/row:scale-100 transition-all duration-300 pointer-events-auto text-muted hover:text-text"
             aria-label="Scroll right"
           >
             <ChevronRight className="w-5 h-5 mr-[-2px]" />
@@ -152,7 +152,7 @@ function ShopRowSection({ title, action }) {
   return (
     <section className="w-full">
       <div className="flex items-center justify-between px-0.5 sm:px-1 mb-2 sm:mb-2.5">
-        <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+        <p className="text-[10px] sm:text-[11px] font-black uppercase tracking-[0.2em] text-dim">
           {title}
         </p>
         {action}
@@ -208,12 +208,12 @@ export default function BrowsePanel({ layout = "full", inventoryCounts = null })
         onSubmit={handleSearch}
         className={`relative w-full max-w-none group ${heroMobile ? "mb-3" : layout === "desktop-hero" ? "mb-5" : "mb-6 sm:mb-8"}`}
       >
-        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-[var(--accent)] transition-colors" />
+        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-dim group-focus-within:text-[var(--accent)] transition-colors" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="What car are you looking for?"
-          className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl py-3.5 sm:py-4 pl-14 pr-[120px] font-bold text-base focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:font-normal placeholder:text-slate-400 shadow-sm"
+          className="w-full bg-surface border border-border text-text rounded-xl py-3.5 sm:py-4 pl-14 pr-[120px] font-bold text-base focus:outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:font-normal placeholder:text-dim shadow-sm"
         />
         {/* The label no longer changes on submit — the click already navigated,
             so a "Locating..." label on a still-live button read as frozen. */}

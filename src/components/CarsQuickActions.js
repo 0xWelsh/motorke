@@ -39,15 +39,15 @@ function destinationMatches(href, pathname, currentSearchParams) {
 function CarsQuickActionsFallback() {
   return (
     <section className="mb-4 sm:mb-6 space-y-2.5" aria-hidden>
-      <div className="sm:hidden h-9 w-full rounded-full bg-slate-100 animate-pulse" />
+      <div className="sm:hidden h-9 w-full rounded-full bg-surface-overlay animate-pulse" />
       <div className="hidden sm:flex flex-wrap items-center gap-2">
-        <span className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">
+        <span className="text-[10px] font-black uppercase tracking-[0.12em] text-muted">
           Smart Filters
         </span>
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className="h-8 w-[5.5rem] sm:w-28 rounded-full bg-slate-100 animate-pulse"
+            className="h-8 w-[5.5rem] sm:w-28 rounded-full bg-surface-overlay animate-pulse"
           />
         ))}
       </div>
@@ -89,7 +89,7 @@ function CarsQuickActionsInner() {
   };
 
   const pillBaseClass =
-    "inline-flex items-center justify-center gap-1.5 min-h-8 px-3 border border-slate-200 bg-white text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors";
+    "inline-flex items-center justify-center gap-1.5 min-h-8 px-3 border border-border bg-surface text-[10px] font-black uppercase tracking-[0.12em] text-muted hover:border-[var(--accent)] hover:text-[var(--accent)] transition-colors";
 
   const totalPillCount = smartPills.length + recent.length;
 
@@ -104,18 +104,18 @@ function CarsQuickActionsInner() {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls="cars-smart-filters-panel"
-        className="sm:hidden inline-flex w-full items-center justify-between gap-2 border border-slate-200 bg-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-slate-700"
+        className="sm:hidden inline-flex w-full items-center justify-between gap-2 border border-border bg-surface px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-secondary"
         style={{ borderRadius: "999px" }}
       >
         <span className="inline-flex items-center gap-1.5">
           <Sparkles className="h-3.5 w-3.5 text-[var(--accent)]" aria-hidden />
           Smart filters
           {totalPillCount > 0 ? (
-            <span className="text-slate-500">({totalPillCount})</span>
+            <span className="text-muted">({totalPillCount})</span>
           ) : null}
         </span>
         <ChevronDown
-          className={`h-3.5 w-3.5 text-slate-500 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-3.5 w-3.5 text-muted transition-transform ${open ? "rotate-180" : ""}`}
           aria-hidden
         />
       </button>
@@ -125,7 +125,7 @@ function CarsQuickActionsInner() {
         className={`${open ? "block" : "hidden"} sm:block space-y-2.5`}
       >
         <div className="flex flex-wrap items-center gap-2">
-          <span className="hidden sm:inline text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">
+          <span className="hidden sm:inline text-[10px] font-black uppercase tracking-[0.12em] text-muted">
             Smart Filters
           </span>
           {smartPills.map((item) => {
@@ -150,7 +150,7 @@ function CarsQuickActionsInner() {
         </div>
         {recent.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">
-            <span className="hidden sm:inline text-[10px] font-black uppercase tracking-[0.12em] text-slate-500">
+            <span className="hidden sm:inline text-[10px] font-black uppercase tracking-[0.12em] text-muted">
               Recent Searches
             </span>
             {recent.map((item) => {

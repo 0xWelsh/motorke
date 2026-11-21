@@ -15,10 +15,10 @@ function statusDot(status) {
   const map = {
     OPEN: "bg-emerald-500",
     MATCHED: "bg-sky-500",
-    CLOSED: "bg-slate-400",
+    CLOSED: "bg-surface-overlay",
     EXPIRED: "bg-amber-500",
   };
-  return map[status] || "bg-slate-400";
+  return map[status] || "bg-surface-overlay";
 }
 
 export default async function AdminBuyerRequestsPage() {
@@ -38,15 +38,15 @@ export default async function AdminBuyerRequestsPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-lg font-bold text-slate-900 tracking-tight">Buyer Requests</h1>
-          <p className="mt-1 flex items-center gap-2 text-[11px] text-slate-400">
+          <h1 className="text-lg font-bold text-text tracking-tight">Buyer Requests</h1>
+          <p className="mt-1 flex items-center gap-2 text-[11px] text-dim">
             <span>{totalCount} total</span>
             <span className="text-emerald-600">{openCount} open</span>
           </p>
         </div>
         <Link
           href="/request-car"
-          className="rounded-lg border border-slate-200 bg-white/60 px-3 py-2 text-[11px] font-bold text-slate-500 hover:text-slate-900 transition-colors shrink-0"
+          className="rounded-lg border border-border bg-glass/60 px-3 py-2 text-[11px] font-bold text-muted hover:text-text transition-colors shrink-0"
         >
           Public board →
         </Link>
@@ -58,19 +58,19 @@ export default async function AdminBuyerRequestsPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[800px] text-left">
               <thead>
-                <tr className="border-b border-slate-200 bg-white/40">
+                <tr className="border-b border-border bg-glass/40">
                   {["Code", "Buyer", "Vehicle", "Budget", "County", "Status", "Expires", ""].map((h) => (
-                    <th key={h || "actions"} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">{h}</th>
+                    <th key={h || "actions"} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-dim">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200/60">
+              <tbody className="divide-y divide-border">
                 {rows.length === 0 ? (
                   <tr>
                     <td colSpan={8} className="py-12 text-center">
                       <EmptyState
                         title="No buyer requests"
-                        icon={<ClipboardList size={28} className="text-slate-400" />}
+                        icon={<ClipboardList size={28} className="text-dim" />}
                       />
                     </td>
                   </tr>
@@ -82,10 +82,10 @@ export default async function AdminBuyerRequestsPage() {
                       `Hi ${row.name}, BIDGARI here about your car request ${row.publicCode} (${row.yearMin || ""} ${row.make} ${row.model}). We have options for you.`
                     )}`;
                     return (
-                      <tr key={row.id} className={`transition-colors hover:bg-slate-100/30 ${i % 2 === 0 ? "bg-white/20" : "bg-transparent"}`}>
-                        <td className="px-4 py-3 font-mono text-[11px] font-bold text-slate-400">{row.publicCode}</td>
+                      <tr key={row.id} className={`transition-colors hover:bg-surface-overlay ${i % 2 === 0 ? "bg-glass/20" : "bg-transparent"}`}>
+                        <td className="px-4 py-3 font-mono text-[11px] font-bold text-dim">{row.publicCode}</td>
                         <td className="px-4 py-3">
-                          <p className="text-sm font-bold text-slate-900">{row.name}</p>
+                          <p className="text-sm font-bold text-text">{row.name}</p>
                           <div className="flex items-center gap-2 mt-0.5">
                             <a
                               href={wa}
@@ -99,29 +99,29 @@ export default async function AdminBuyerRequestsPage() {
                           </div>
                         </td>
                         <td className="px-4 py-3">
-                          <p className="text-sm font-semibold text-slate-900">
+                          <p className="text-sm font-semibold text-text">
                             {row.yearMin || row.yearMax
                               ? `${row.yearMin || "?"}–${row.yearMax || "?"} `
                               : ""}
                             {row.make} {row.model}
                           </p>
                           {(row.bodyType || row.fuelType) && (
-                            <p className="text-[10px] text-slate-400 mt-0.5">
+                            <p className="text-[10px] text-dim mt-0.5">
                               {[row.bodyType, row.fuelType && (FUEL_LABELS[row.fuelType] || row.fuelType)].filter(Boolean).join(" · ")}
                             </p>
                           )}
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-xs font-semibold text-slate-700 tabular-nums">
+                        <td className="px-4 py-3 whitespace-nowrap text-xs font-semibold text-secondary tabular-nums">
                           {row.budgetMin ? formatPrice(row.budgetMin) : "—"} – {formatPrice(row.budgetMax)}
                         </td>
-                        <td className="px-4 py-3 text-xs text-slate-400">{row.county}</td>
+                        <td className="px-4 py-3 text-xs text-dim">{row.county}</td>
                         <td className="px-4 py-3">
-                          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-700">
+                          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-secondary">
                             <span className={`h-1.5 w-1.5 rounded-full ${statusDot(displayStatus)}`} />
                             {displayStatus}
                           </span>
                         </td>
-                        <td className="px-4 py-3 text-xs text-slate-400 whitespace-nowrap">
+                        <td className="px-4 py-3 text-xs text-dim whitespace-nowrap">
                           {new Date(row.expiresAt).toLocaleDateString("en-KE")}
                         </td>
                         <td className="px-4 py-3 text-right">
@@ -146,7 +146,7 @@ export default async function AdminBuyerRequestsPage() {
         {rows.length === 0 ? (
           <EmptyState
             title="No buyer requests"
-            icon={<ClipboardList size={28} className="text-slate-400" />}
+            icon={<ClipboardList size={28} className="text-dim" />}
           />
         ) : null}
         {rows.map((row) => {
@@ -156,17 +156,17 @@ export default async function AdminBuyerRequestsPage() {
             `Hi ${row.name}, BIDGARI here about your car request ${row.publicCode} (${row.yearMin || ""} ${row.make} ${row.model}). We have options for you.`
           )}`;
           return (
-            <div key={row.id} className="rounded-lg border border-slate-200 bg-white/60 p-3 space-y-2">
+            <div key={row.id} className="rounded-lg border border-border bg-glass/60 p-3 space-y-2">
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-[10px] font-bold text-slate-400">{row.publicCode}</span>
-                    <span className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-slate-700`}>
+                    <span className="font-mono text-[10px] font-bold text-dim">{row.publicCode}</span>
+                    <span className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-secondary`}>
                       <span className={`h-1.5 w-1.5 rounded-full ${statusDot(displayStatus)}`} />
                       {displayStatus}
                     </span>
                   </div>
-                  <p className="text-sm font-bold text-slate-900 mt-1">{row.name}</p>
+                  <p className="text-sm font-bold text-text mt-1">{row.name}</p>
                   <a
                     href={wa}
                     target="_blank"
@@ -183,8 +183,8 @@ export default async function AdminBuyerRequestsPage() {
                   status={displayStatus}
                 />
               </div>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-400">
-                <span className="font-semibold text-slate-900">
+              <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-dim">
+                <span className="font-semibold text-text">
                   {row.yearMin || row.yearMax ? `${row.yearMin || "?"}–${row.yearMax || "?"} ` : ""}
                   {row.make} {row.model}
                 </span>
@@ -198,7 +198,7 @@ export default async function AdminBuyerRequestsPage() {
       </div>
 
       {/* Footer links */}
-      <p className="text-[11px] text-slate-500">
+      <p className="text-[11px] text-muted">
         Public board:{" "}
         <Link href="/requests" className="text-emerald-600 hover:underline font-semibold">/requests</Link>
         {" · "}

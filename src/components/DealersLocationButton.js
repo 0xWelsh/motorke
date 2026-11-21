@@ -67,7 +67,7 @@ export default function DealersLocationButton() {
         <button
           type="button"
           onClick={clearLocation}
-          className="w-full inline-flex items-center justify-center gap-2 border border-slate-300 bg-white text-slate-500 px-4 py-2.5 text-[10px] font-black uppercase tracking-widest hover:text-slate-900 transition-colors rounded-xl"
+          className="w-full inline-flex items-center justify-center gap-2 border border-border bg-surface text-muted px-4 py-2.5 text-[10px] font-black uppercase tracking-widest hover:text-text transition-colors rounded-xl"
         >
           <X className="w-3.5 h-3.5" />
           Clear location

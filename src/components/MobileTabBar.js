@@ -45,7 +45,7 @@ export default function MobileTabBar() {
   return (
     <nav
       aria-label="Primary mobile navigation"
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 backdrop-blur md:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-glass/95 backdrop-blur md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <ul className="mx-auto grid max-w-lg grid-cols-5">
@@ -58,7 +58,7 @@ export default function MobileTabBar() {
                 href={tab.href}
                 aria-current={isActive ? "page" : undefined}
                 className={`relative flex flex-col items-center gap-0.5 py-2 text-[10px] font-bold tracking-wide transition-colors ${
-                  isActive ? "text-[var(--accent)]" : "text-slate-500 hover:text-slate-800"
+                  isActive ? "text-[var(--accent)]" : "text-muted hover:text-text"
                 }`}
               >
                 <span className="relative">

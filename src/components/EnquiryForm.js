@@ -179,14 +179,14 @@ export default function EnquiryForm({
   }
 
   const inputCls =
-    "w-full bg-slate-50 border border-slate-300 px-3.5 py-2.5 sm:px-4 sm:py-3 text-[13px] sm:text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all rounded-lg";
+    "w-full bg-surface-hover border border-border px-3.5 py-2.5 sm:px-4 sm:py-3 text-[13px] sm:text-sm text-text placeholder:text-dim outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all rounded-lg";
 
   if (state === "sent") {
     return (
-      <div className="text-center py-12 px-6 bg-white border border-slate-200 rounded-xl">
-        <p className="font-extrabold text-slate-900 mb-2 uppercase tracking-widest text-xs">Enquiry Sent</p>
-        <p className="text-xs text-slate-500 leading-relaxed">
-          Thanks! Our team will contact you shortly regarding the <span className="font-bold text-slate-900">{carTitle}</span>.
+      <div className="text-center py-12 px-6 bg-surface border border-border rounded-xl">
+        <p className="font-extrabold text-text mb-2 uppercase tracking-widest text-xs">Enquiry Sent</p>
+        <p className="text-xs text-muted leading-relaxed">
+          Thanks! Our team will contact you shortly regarding the <span className="font-bold text-text">{carTitle}</span>.
         </p>
       </div>
     );
@@ -232,7 +232,7 @@ export default function EnquiryForm({
               placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
               className={inputCls}
             />
-            <p className="mt-1.5 text-[10px] font-medium text-slate-500 leading-snug">{PHONE_COUNTRY_CODE_HELPER}</p>
+            <p className="mt-1.5 text-[10px] font-medium text-muted leading-snug">{PHONE_COUNTRY_CODE_HELPER}</p>
           </div>
           
           <textarea
@@ -244,7 +244,7 @@ export default function EnquiryForm({
         </div>
 
         <div className="space-y-4 pt-2">
-          <label className="flex items-start gap-3 text-[11px] text-slate-500 cursor-pointer select-none">
+          <label className="flex items-start gap-3 text-[11px] text-muted cursor-pointer select-none">
             <input
               type="checkbox"
               checked={notifySimilar}
@@ -254,7 +254,7 @@ export default function EnquiryForm({
             Notify me when similar listings appear
           </label>
           
-          <label className="flex items-start gap-3 text-[11px] text-slate-500 cursor-pointer select-none">
+          <label className="flex items-start gap-3 text-[11px] text-muted cursor-pointer select-none">
             <input
               type="checkbox"
               checked={consent}
@@ -262,7 +262,7 @@ export default function EnquiryForm({
               className="mt-1 accent-[var(--accent)]"
               required
             />
-            <span>I agree to the <Link href="/terms" className="underline hover:text-slate-900 transition-colors">Terms of Use</Link> and <Link href="/privacy" className="underline hover:text-slate-900 transition-colors">Privacy Policy</Link></span>
+            <span>I agree to the <Link href="/terms" className="underline hover:text-text transition-colors">Terms of Use</Link> and <Link href="/privacy" className="underline hover:text-text transition-colors">Privacy Policy</Link></span>
           </label>
         </div>
 
@@ -291,7 +291,7 @@ export default function EnquiryForm({
               <a
                 href={callLink}
                 onClick={handleCall}
-                className="flex min-h-12 items-center justify-center gap-2 bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold text-[10px] py-3.5 uppercase tracking-widest transition-all rounded-xl"
+                className="flex min-h-12 items-center justify-center gap-2 bg-surface hover:bg-surface-overlay border border-border text-secondary font-bold text-[10px] py-3.5 uppercase tracking-widest transition-all rounded-xl"
               >
                 Call Now
               </a>

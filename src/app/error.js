@@ -12,8 +12,8 @@ export default function GlobalError({ error, reset }) {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 py-16">
       <p className="text-5xl font-black text-[var(--accent)] mb-3">!</p>
-      <h1 className="text-2xl font-black mb-2 text-slate-900">Something went wrong</h1>
-      <p className="text-slate-500 text-sm mb-8 max-w-sm">
+      <h1 className="text-2xl font-black mb-2 text-text">Something went wrong</h1>
+      <p className="text-muted text-sm mb-8 max-w-sm">
         An unexpected error occurred. This has been logged and we'll look into it.
       </p>
       <div className="flex gap-3">

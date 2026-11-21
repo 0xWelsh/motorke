@@ -12,7 +12,7 @@ export default function SpecSheet({ car }) {
   const printFeatures = buildFeatureItems(car, 16);
 
   return (
-    <div id="spec-sheet" className="hidden print:block bg-white text-black p-8 font-sans min-h-[297mm] w-[210mm] mx-auto border border-gray-100">
+    <div id="spec-sheet" className="hidden print:block bg-surface text-black p-8 font-sans min-h-[297mm] w-[210mm] mx-auto border border-subtle">
       {/* Header */}
       <div className="flex justify-between items-start border-b-4 border-accent pb-6 mb-8 mt-4">
         <div>
@@ -24,7 +24,7 @@ export default function SpecSheet({ car }) {
           </p>
         </div>
         <div className="text-right">
-          <p className="text-sm font-bold uppercase tracking-widest text-gray-400">Inventory ID</p>
+          <p className="text-sm font-bold uppercase tracking-widest text-dim">Inventory ID</p>
           <p className="text-lg font-black text-black">#{car.id.slice(-6).toUpperCase()}</p>
         </div>
       </div>
@@ -33,15 +33,15 @@ export default function SpecSheet({ car }) {
       <div className="grid grid-cols-2 gap-8 mb-10">
         <div>
            {primaryImg && (
-             <div className="aspect-[4/3] bg-gray-100 rounded-2xl overflow-hidden border border-gray-200">
+             <div className="aspect-[4/3] bg-gray-100 rounded-2xl overflow-hidden border border-border">
                 <img src={getHeroImageUrl(primaryImg.url, 85, 800)} alt={title} className="w-full h-full object-cover" />
              </div>
            )}
            <div className="mt-8">
              <h3 className="text-xs font-bold uppercase tracking-widest text-accent mb-2">Sold by</h3>
              <p className="text-xl font-black text-black">BIDGARI</p>
-              <p className="text-sm text-gray-600">Vehicle Sales &amp; Buyer Support, Kenya</p>
-              <p className="mt-4 text-sm font-bold text-gray-600">Contact BIDGARI for more details.</p>
+              <p className="text-sm text-muted">Vehicle Sales &amp; Buyer Support, Kenya</p>
+              <p className="mt-4 text-sm font-bold text-muted">Contact BIDGARI for more details.</p>
            </div>
         </div>
 
@@ -49,13 +49,13 @@ export default function SpecSheet({ car }) {
           <h2 className="text-3xl font-sans font-bold mb-2 leading-tight">{title}</h2>
           <div className="flex items-baseline gap-2 mb-8">
              <p className="text-4xl font-black text-accent">{formatCarPrice(car)}</p>
-             {car.negotiable && <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">(Negotiable)</span>}
+             {car.negotiable && <span className="text-xs font-bold text-dim uppercase tracking-widest">(Negotiable)</span>}
           </div>
 
-          <div className="grid grid-cols-2 gap-y-4 gap-x-6 border-t border-gray-100 pt-6">
+          <div className="grid grid-cols-2 gap-y-4 gap-x-6 border-t border-subtle pt-6">
             {specs.map(({ label, value }) => (
               <div key={label} className="border-b border-gray-50 pb-2">
-                <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400 mb-0.5">{label}</p>
+                <p className="text-[9px] font-bold uppercase tracking-widest text-dim mb-0.5">{label}</p>
                 <p className="text-sm font-bold text-black">{value}</p>
               </div>
             ))}
@@ -63,8 +63,8 @@ export default function SpecSheet({ car }) {
 
           {car.description && (
             <div className="mt-8">
-              <p className="text-[11px] font-bold uppercase tracking-widest text-gray-400 mb-2">Technical Description</p>
-              <p className="text-xs text-gray-700 leading-relaxed line-clamp-[12]">{car.description}</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest text-dim mb-2">Technical Description</p>
+              <p className="text-xs text-secondary leading-relaxed line-clamp-[12]">{car.description}</p>
             </div>
           )}
         </div>
@@ -76,7 +76,7 @@ export default function SpecSheet({ car }) {
           <h3 className="text-xs font-bold uppercase tracking-widest text-accent mb-4">Included Features</h3>
           <div className="grid grid-cols-4 gap-2">
 {printFeatures.map((f, i) => (
-              <div key={`${f}-${i}`} className="text-[11px] font-bold bg-gray-50 border border-gray-100 px-3 py-2 text-gray-700">
+              <div key={`${f}-${i}`} className="text-[11px] font-bold bg-gray-50 border border-subtle px-3 py-2 text-secondary">
                 , {f}
               </div>
             ))}
@@ -85,10 +85,10 @@ export default function SpecSheet({ car }) {
       )}
 
       {/* Footer */}
-      <div className="mt-auto pt-8 border-t border-gray-100 flex justify-between items-end">
+      <div className="mt-auto pt-8 border-t border-subtle flex justify-between items-end">
         <div>
-          <p className="text-[11px] text-gray-400 font-medium">Generated on {new Date().toLocaleDateString('en-KE', { dateStyle: 'long' })}</p>
-          <p className="text-[11px] text-gray-400 font-medium">Visit BIDGARI for full listing and interactive comparison.</p>
+          <p className="text-[11px] text-dim font-medium">Generated on {new Date().toLocaleDateString('en-KE', { dateStyle: 'long' })}</p>
+          <p className="text-[11px] text-dim font-medium">Visit BIDGARI for full listing and interactive comparison.</p>
         </div>
         <div className="bg-black text-white px-4 py-2 text-[11px] font-black uppercase tracking-tighter">
           BIDGARI Showcase Cert.

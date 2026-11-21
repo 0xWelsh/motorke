@@ -263,7 +263,7 @@ function PriceBandRow({ priceBands }) {
 
   return (
     <nav aria-label="Browse by price" className="mt-6 sm:mt-8">
-      <h2 className="mb-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
+      <h2 className="mb-2 text-[11px] font-black uppercase tracking-[0.2em] text-dim">
         Browse by budget
       </h2>
       {/* A 3-column grid rather than flex-wrap. With six bands, wrapping
@@ -283,10 +283,10 @@ function PriceBandRow({ priceBands }) {
             <Link
               key={band.slug}
               href={`/cars/${band.slug}`}
-              className="flex min-w-0 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2 py-2.5 text-center text-[12px] font-semibold leading-tight text-slate-700 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
+              className="flex min-w-0 items-center justify-center gap-1.5 rounded-lg border border-border bg-surface px-2 py-2.5 text-center text-[12px] font-semibold leading-tight text-secondary transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
             >
               <span className="min-w-0 truncate">{short}</span>
-              <span className="shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-bold text-slate-500">
+              <span className="shrink-0 rounded bg-surface-overlay px-1.5 py-0.5 text-[10px] font-bold text-muted">
                 {count}
               </span>
             </Link>
@@ -318,7 +318,7 @@ export default async function HomePage() {
 
 
       {/* Nikkyo-style two-column from the top: sidebar + main content */}
-      <section className="border-b border-slate-200 bg-[var(--bg)]">
+      <section className="border-b border-border bg-[var(--bg)]">
         <div className="home-shell">
           <div className="lg:grid lg:grid-cols-[190px_minmax(0,1fr)] xl:grid-cols-[190px_minmax(0,1fr)_240px] lg:gap-3 xl:gap-3 lg:items-start lg:py-6">
             <aside className="hidden lg:block lg:sticky lg:top-28 lg:self-start">
@@ -424,7 +424,7 @@ export default async function HomePage() {
       <div>
         <Suspense
           fallback={
-            <div className="border-b border-slate-200 bg-[var(--bg)] py-6 sm:py-8">
+            <div className="border-b border-border bg-[var(--bg)] py-6 sm:py-8">
               <div className="home-shell">
                 <HomeTrendingSkeleton />
               </div>

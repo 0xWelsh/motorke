@@ -24,7 +24,7 @@ export default function RecacheHomepageButton() {
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className="flex items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-[var(--bg)]/60 px-3 py-2 text-[11px] font-bold text-slate-700 hover:border-emerald-500/40 hover:text-emerald-600 transition-colors disabled:opacity-50"
+      className="flex items-center justify-center gap-1.5 rounded-lg border border-border bg-[var(--bg)]/60 px-3 py-2 text-[11px] font-bold text-secondary hover:border-emerald-500/40 hover:text-emerald-600 transition-colors disabled:opacity-50"
     >
       <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
       {done ? "Done!" : "Recache Homepage"}

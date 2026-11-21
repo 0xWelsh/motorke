@@ -119,13 +119,13 @@ export default function LocationSearch() {
         className="flex flex-col sm:flex-row sm:items-center bg-[#1e1e1e] border border-slate-800 rounded-2xl p-2.5 sm:p-2 focus-within:border-accent-glow transition-all duration-300"
       >
         <div className="flex-1 flex items-center px-3 sm:px-4 gap-3 min-w-0">
-          <Search className="w-5 h-5 text-slate-400 shrink-0" />
+          <Search className="w-5 h-5 text-dim shrink-0" />
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
             onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
             placeholder="Search by make, model or keyword…"
-            className="w-full bg-transparent border-none outline-none py-3 text-sm sm:text-base text-slate-200 placeholder:text-slate-300 font-semibold"
+            className="w-full bg-transparent border-none outline-none py-3 text-sm sm:text-base text-ghost placeholder:text-dim font-semibold"
           />
         </div>
 
@@ -134,7 +134,7 @@ export default function LocationSearch() {
             type="button"
             onClick={detectLocation}
             className={`h-11 px-3 sm:px-4 rounded-2xl transition-all duration-200 flex items-center justify-center gap-2 group w-full sm:w-auto ${
-              location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent border border-slate-800 hover:text-slate-900 text-white"
+              location ? "bg-[var(--brand-light)] text-[var(--brand)]" : "bg-transparent border border-slate-800 hover:text-text text-white"
             }`}
             title="Use my location"
           >
@@ -168,9 +168,9 @@ export default function LocationSearch() {
 
       {location && (
         <div className="flex items-center gap-3 mt-4 animate-in fade-in slide-in-from-top-2 duration-300">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 rounded-2xl border border-slate-800">
-            <MapPin className="w-3 h-3 text-slate-500" />
-            <span className="text-[11px] font-black text-slate-500 uppercase tracking-widest">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-surface-overlay rounded-2xl border border-slate-800">
+            <MapPin className="w-3 h-3 text-muted" />
+            <span className="text-[11px] font-black text-muted uppercase tracking-widest">
               Searching near you
             </span>
             <button 

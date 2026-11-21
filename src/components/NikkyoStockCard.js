@@ -31,13 +31,13 @@ function CardImage({ img, alt, priority, fill, sold, sizes }) {
           className="absolute inset-0 h-full w-full object-cover transition-[filter] duration-300 ease-out group-hover:brightness-110"
           sizes={sizes || GRID_SIZES}
           fallback={
-            <div className="flex h-full w-full items-center justify-center text-slate-300">
+            <div className="flex h-full w-full items-center justify-center text-ghost">
               <ImageOff className="h-7 w-7" aria-hidden />
             </div>
           }
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center text-slate-300">
+        <div className="flex h-full w-full items-center justify-center text-ghost">
           <ImageOff className="h-7 w-7" />
         </div>
       )}
@@ -67,8 +67,8 @@ export default function NikkyoStockCard({ car, priority = false, fill = false, s
 
   if (fill) {
     return (
-      <article className="group relative flex flex-col overflow-hidden border border-[#D8D8D8] bg-white h-full" style={{ touchAction: "manipulation" }}>
-        <Link href={carListingPath(car)} className="absolute inset-0 overflow-hidden bg-slate-100">
+      <article className="group relative flex flex-col overflow-hidden border border-[#D8D8D8] bg-surface h-full" style={{ touchAction: "manipulation" }}>
+        <Link href={carListingPath(car)} className="absolute inset-0 overflow-hidden bg-surface-overlay">
           <CardImage img={img} alt={alt} priority={priority} fill sold={sold} sizes={sizes} />
         </Link>
         <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-y-0.5 p-2.5">
@@ -87,9 +87,9 @@ export default function NikkyoStockCard({ car, priority = false, fill = false, s
   }
 
   return (
-    <article className="group flex flex-col overflow-hidden border border-[#D8D8D8] bg-white" style={{ touchAction: "manipulation" }}>
+    <article className="group flex flex-col overflow-hidden border border-[#D8D8D8] bg-surface" style={{ touchAction: "manipulation" }}>
       <Link href={carListingPath(car)} className="flex flex-1 flex-col">
-        <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-slate-100">
+        <div className="relative aspect-[4/3] w-full shrink-0 overflow-hidden bg-surface-overlay">
           <CardImage img={img} alt={alt} priority={priority} fill={false} sold={sold} sizes={sizes} />
         </div>
 
@@ -108,7 +108,7 @@ export default function NikkyoStockCard({ car, priority = false, fill = false, s
           <p className="mt-1 text-[16px] font-bold leading-snug tracking-tight text-[var(--accent)]">
             {formatCarPrice(car)}
           </p>
-          <p className="text-[12px] leading-snug text-slate-500">
+          <p className="text-[12px] leading-snug text-muted">
             {car.year}
             {car.mileage != null ? ` · ${Math.round(car.mileage).toLocaleString()} km` : ""}
           </p>

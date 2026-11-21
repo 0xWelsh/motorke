@@ -107,10 +107,10 @@ export default function SafetyPage() {
         {/* Hero */}
         <section className="text-center mb-16 sm:mb-20">
           <p className="meta-label text-[var(--accent)] mb-4">Buyer safety</p>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight mb-6 max-w-4xl mx-auto leading-[1.1]">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-text tracking-tight mb-6 max-w-4xl mx-auto leading-[1.1]">
             Don't get <span className="text-[var(--accent)]">scammed</span> buying a car in Kenya
           </h1>
-          <p className="text-base sm:text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto font-medium">
+          <p className="text-base sm:text-lg text-muted leading-relaxed max-w-2xl mx-auto font-medium">
             Car scams cost Kenyans millions every year. Here&apos;s how the most common ones work, how to spot them, and how BIDGARI keeps your money safe.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
@@ -127,18 +127,18 @@ export default function SafetyPage() {
         <section className="mb-16 sm:mb-24">
           <div className="flex items-center gap-3 mb-8 sm:mb-12">
             <ShieldAlert className="w-6 h-6 text-rose-500" />
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-text tracking-tight">
               The scams we see most in Kenya
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
             {SCAMS.map((scam, i) => (
-              <div key={i} className="rounded-xl border border-rose-200 bg-white p-6">
+              <div key={i} className="rounded-xl border border-rose-200 bg-surface p-6">
                 <div className="flex items-start gap-3">
                   <AlertTriangle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900 mb-2">{scam.title}</h3>
-                    <p className="text-xs text-slate-500 leading-relaxed font-medium">{scam.desc}</p>
+                    <h3 className="text-sm font-bold text-text mb-2">{scam.title}</h3>
+                    <p className="text-xs text-muted leading-relaxed font-medium">{scam.desc}</p>
                   </div>
                 </div>
               </div>
@@ -150,15 +150,15 @@ export default function SafetyPage() {
         <section className="mb-16 sm:mb-24">
           <div className="flex items-center gap-3 mb-8 sm:mb-12">
             <FileWarning className="w-6 h-6 text-amber-500" />
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-text tracking-tight">
               Red flags to walk away from
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             {RED_FLAGS.map((flag, i) => (
-              <div key={i} className="flex items-start gap-3 rounded-xl border border-slate-200 bg-white px-5 py-4">
+              <div key={i} className="flex items-start gap-3 rounded-xl border border-border bg-surface px-5 py-4">
                 <span className="text-[10px] font-black text-rose-500 mt-0.5 shrink-0">FLAG</span>
-                <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed">{flag}</p>
+                <p className="text-xs sm:text-sm text-muted font-medium leading-relaxed">{flag}</p>
               </div>
             ))}
           </div>
@@ -168,16 +168,16 @@ export default function SafetyPage() {
         <section className="mb-16 sm:mb-24">
           <div className="flex items-center gap-3 mb-8 sm:mb-12">
             <ShieldCheck className="w-6 h-6 text-[var(--accent)]" />
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-bold text-text tracking-tight">
               How to buy safely
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
             {SAFE_STEPS.map((step, i) => (
-              <div key={i} className="rounded-xl border border-slate-200 bg-white p-6">
+              <div key={i} className="rounded-xl border border-border bg-surface p-6">
                 <step.icon className="w-6 h-6 text-[var(--accent)] mb-4" strokeWidth={1.5} />
-                <h3 className="text-sm font-bold text-slate-900 mb-2">{step.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed font-medium">{step.desc}</p>
+                <h3 className="text-sm font-bold text-text mb-2">{step.title}</h3>
+                <p className="text-xs text-muted leading-relaxed font-medium">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -196,7 +196,7 @@ export default function SafetyPage() {
             ].map((point, i) => (
               <div key={i} className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
-                <p className="text-sm text-slate-300 leading-relaxed font-medium">{point}</p>
+                <p className="text-sm text-ghost leading-relaxed font-medium">{point}</p>
               </div>
             ))}
           </div>
@@ -204,10 +204,10 @@ export default function SafetyPage() {
 
         {/* Official channels */}
         <section className="mb-16 sm:mb-24">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight mb-4 text-center">
+          <h2 className="text-xl sm:text-2xl font-bold text-text tracking-tight mb-4 text-center">
             Only ever deal with our official channels
           </h2>
-          <p className="text-sm sm:text-base text-slate-500 font-medium max-w-2xl mx-auto text-center mb-10 leading-relaxed">
+          <p className="text-sm sm:text-base text-muted font-medium max-w-2xl mx-auto text-center mb-10 leading-relaxed">
             Scammers impersonate us. If someone claims to be BIDGARI, verify it through one of these — and never send money to a personal number.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
@@ -218,34 +218,34 @@ export default function SafetyPage() {
                   href={ch.href}
                   target={ch.href.startsWith("http") ? "_blank" : undefined}
                   rel={ch.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="group rounded-xl border border-slate-200 bg-white p-6 text-center hover:border-accent-glow hover:shadow-lg transition-all"
+                  className="group rounded-xl border border-border bg-surface p-6 text-center hover:border-accent-glow hover:shadow-lg transition-all"
                 >
                   <ch.icon className="w-6 h-6 text-[var(--accent)] mx-auto mb-3" strokeWidth={1.5} />
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">{ch.label}</p>
-                  <p className="text-sm font-bold text-slate-900 group-hover:text-[var(--accent)] transition-colors break-words">{ch.value}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-dim mb-1">{ch.label}</p>
+                  <p className="text-sm font-bold text-text group-hover:text-[var(--accent)] transition-colors break-words">{ch.value}</p>
                 </a>
               ) : (
-                <div key={i} className="rounded-xl border border-slate-200 bg-white p-6 text-center">
+                <div key={i} className="rounded-xl border border-border bg-surface p-6 text-center">
                   <ch.icon className="w-6 h-6 text-[var(--accent)] mx-auto mb-3" strokeWidth={1.5} />
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">{ch.label}</p>
-                  <p className="text-sm font-bold text-slate-900 break-words">{ch.value}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-dim mb-1">{ch.label}</p>
+                  <p className="text-sm font-bold text-text break-words">{ch.value}</p>
                 </div>
               )
             ))}
           </div>
           {whatsappHref && (
-            <p className="text-xs text-slate-400 font-medium text-center mt-6">
+            <p className="text-xs text-dim font-medium text-center mt-6">
               Message us on WhatsApp with the listing reference if you&apos;re unsure a listing is real.
             </p>
           )}
         </section>
 
         {/* CTA */}
-        <section className="text-center rounded-2xl border border-slate-200 bg-white p-8 sm:p-14">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-4">
+        <section className="text-center rounded-2xl border border-border bg-surface p-8 sm:p-14">
+          <h2 className="text-2xl sm:text-3xl font-bold text-text tracking-tight mb-4">
             Think you&apos;ve been targeted or scammed?
           </h2>
-          <p className="text-sm sm:text-base text-slate-500 font-medium max-w-xl mx-auto mb-8 leading-relaxed">
+          <p className="text-sm sm:text-base text-muted font-medium max-w-xl mx-auto mb-8 leading-relaxed">
             Report it to us and we&apos;ll investigate immediately, remove fraudulent listings, and alert other buyers. Include the listing reference if you have one.
           </p>
           <div className="flex flex-wrap justify-center gap-3">

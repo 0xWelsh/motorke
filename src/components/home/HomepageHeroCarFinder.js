@@ -7,9 +7,9 @@ import { BRANDS } from "@/lib/browse-catalog";
 import { trackUiEvent } from "@/lib/analytics";
 
 const selectCls =
-  "w-full appearance-none border border-slate-200 bg-white px-3 py-2.5 pr-8 text-[12px] font-semibold text-slate-900 outline-none focus:border-[var(--accent)] rounded-lg bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2394a3b8%22 stroke-width=%223%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E')] bg-no-repeat bg-[right_0.6rem_center]";
+  "w-full appearance-none border border-border bg-surface px-3 py-2.5 pr-8 text-[12px] font-semibold text-text outline-none focus:border-[var(--accent)] rounded-lg bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2212%22 height=%2212%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%2394a3b8%22 stroke-width=%223%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E')] bg-no-repeat bg-[right_0.6rem_center]";
 
-const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-slate-400";
+const labelCls = "text-[9px] font-black uppercase tracking-[0.16em] text-dim";
 
 export default function HomepageHeroCarFinder({ embedded = false, className = "" }) {
   const router = useRouter();
@@ -67,8 +67,8 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
     <div
       className={
         embedded
-          ? `h-full w-full rounded-xl border border-slate-200 bg-white p-3 sm:p-4 shadow-sm ${className}`.trim()
-          : `mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 md:p-6 shadow-sm ${className}`.trim()
+          ? `h-full w-full rounded-xl border border-border bg-surface p-3 sm:p-4 shadow-sm ${className}`.trim()
+          : `mt-8 sm:mt-10 lg:mt-12 w-full max-w-4xl mx-auto rounded-2xl border border-border bg-surface p-4 sm:p-5 md:p-6 shadow-sm ${className}`.trim()
       }
       style={{ borderRadius: "var(--radius)" }}
     >
@@ -80,7 +80,7 @@ export default function HomepageHeroCarFinder({ embedded = false, className = ""
         Find your car
       </p>
       <h2
-        className={`font-bold text-slate-900 mb-2 sm:mb-3 ${
+        className={`font-bold text-text mb-2 sm:mb-3 ${
           embedded ? "text-base text-left" : "text-lg sm:text-xl text-center"
         }`}
       >

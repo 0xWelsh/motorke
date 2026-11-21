@@ -67,13 +67,13 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
   }
 
   return (
-    <div className="space-y-5 bg-white border border-slate-200 p-4 sm:p-6 rounded-xl">
+    <div className="space-y-5 bg-surface border border-border p-4 sm:p-6 rounded-xl">
       <div>
-        <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 mb-2">
+        <h3 className="text-sm font-bold text-text flex items-center gap-2 mb-2">
           <MapPin className="w-4 h-4 text-[var(--accent)]" />
           Your Location
         </h3>
-        <p className="text-xs text-slate-500 mb-4 leading-relaxed">
+        <p className="text-xs text-muted mb-4 leading-relaxed">
           Share your location to help us show you nearby dealerships. This is optional and you can update or remove it anytime.
         </p>
       </div>
@@ -92,18 +92,18 @@ export default function BuyerLocationSettings({ initialLat, initialLng }) {
       )}
 
       {lat && lng ? (
-        <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+        <div className="p-4 bg-surface-hover border border-border rounded-xl">
           <div className="flex items-start justify-between mb-3">
             <div>
-              <p className="text-xs font-bold text-slate-500 uppercase mb-2">Current Location</p>
+              <p className="text-xs font-bold text-muted uppercase mb-2">Current Location</p>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-[11px] text-slate-500 uppercase font-semibold">Latitude</p>
-                  <p className="text-sm font-mono text-slate-900">{lat.toFixed(6)}</p>
+                  <p className="text-[11px] text-muted uppercase font-semibold">Latitude</p>
+                  <p className="text-sm font-mono text-text">{lat.toFixed(6)}</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-slate-500 uppercase font-semibold">Longitude</p>
-                  <p className="text-sm font-mono text-slate-900">{lng.toFixed(6)}</p>
+                  <p className="text-[11px] text-muted uppercase font-semibold">Longitude</p>
+                  <p className="text-sm font-mono text-text">{lng.toFixed(6)}</p>
                 </div>
               </div>
             </div>

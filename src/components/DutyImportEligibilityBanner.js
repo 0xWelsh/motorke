@@ -15,7 +15,7 @@ export default function DutyImportEligibilityBanner({ eligibility, compact = fal
         <CheckCircle2 className="w-5 h-5 text-[var(--accent)] shrink-0 mt-0.5" aria-hidden />
         <div>
           <p className="text-xs font-bold text-[var(--accent)]">Eligible to import (8-year rule)</p>
-          <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">{message}</p>
+          <p className="text-[11px] text-muted mt-1 leading-relaxed">{message}</p>
         </div>
       </div>
     );

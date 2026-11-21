@@ -11,13 +11,13 @@ function TooltipLabel({ label, tip }) {
         <button
           type="button"
           aria-label={`${label} info`}
-          className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-slate-200 text-slate-500 hover:text-slate-700"
+          className="inline-flex items-center justify-center w-3.5 h-3.5 rounded-full border border-border text-muted hover:text-secondary"
         >
           <Info className="w-2.5 h-2.5" />
         </button>
         <span
           role="tooltip"
-          className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-[calc(100%+6px)] z-30 w-48 p-2 text-[10px] font-semibold normal-case tracking-normal leading-relaxed text-slate-700 bg-white border border-slate-200 shadow-lg opacity-0 group-hover/tt:opacity-100 group-focus-within/tt:opacity-100 transition-opacity"
+          className="pointer-events-none absolute left-1/2 -translate-x-1/2 top-[calc(100%+6px)] z-30 w-48 p-2 text-[10px] font-semibold normal-case tracking-normal leading-relaxed text-secondary bg-surface border border-border shadow-lg opacity-0 group-hover/tt:opacity-100 group-focus-within/tt:opacity-100 transition-opacity"
           style={{ borderRadius: "8px" }}
         >
           {tip}
@@ -65,14 +65,14 @@ export default function CompareTcoSummary({
       {stats.map((stat, i) => (
         <div
           key={stat.label}
-          className="bg-white border border-slate-200 p-4 sm:p-5 flex flex-col justify-between"
+          className="bg-surface border border-border p-4 sm:p-5 flex flex-col justify-between"
           style={{ borderRadius: "var(--radius)" }}
         >
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted mb-1">
               <TooltipLabel label={stat.label} tip={stat.tip} />
             </p>
-            <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+            <p className="text-xl sm:text-2xl font-black text-text tracking-tight">
               {stat.value}
             </p>
           </div>

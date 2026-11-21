@@ -347,7 +347,7 @@ export default function CompareClient({ initialCars }) {
   const currentTutorial = TUTORIAL_STEPS[tutorialStep];
   const currentTutorialKey = showTutorial ? currentTutorial.key : null;
 
-  if (!isInitialized) return <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center"><p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 animate-pulse">Initializing engine…</p></div>;
+  if (!isInitialized) return <div className="min-h-screen bg-[var(--bg)] flex items-center justify-center"><p className="text-[10px] font-bold uppercase tracking-widest text-muted animate-pulse">Initializing engine…</p></div>;
 
   return (
     <div className="min-h-screen bg-[var(--bg)] pb-24 lg:pb-12 selection:bg-accent-dim">
@@ -356,11 +356,11 @@ export default function CompareClient({ initialCars }) {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8 lg:mb-12">
           <div className="space-y-2">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">Compare <span className="text-[var(--accent)]">Hub</span></h1>
-            <p className="text-sm sm:text-base font-medium text-slate-500">Deep technical analysis for the Kenyan market.</p>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-text tracking-tight">Compare <span className="text-[var(--accent)]">Hub</span></h1>
+            <p className="text-sm sm:text-base font-medium text-muted">Deep technical analysis for the Kenyan market.</p>
           </div>
           <div className="flex items-center gap-3">
-             <button onClick={clearCompare} className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-red-500 transition-colors">Clear Set</button>
+             <button onClick={clearCompare} className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-muted hover:text-red-500 transition-colors">Clear Set</button>
              <button onClick={startTutorial} className="btn btn-neutral btn-sm">Tutorial</button>
           </div>
         </div>
@@ -369,16 +369,16 @@ export default function CompareClient({ initialCars }) {
           <div className="xl:col-span-8 2xl:col-span-9 space-y-8 lg:space-y-10">
             
             {/* Filters Row */}
-            <div data-tour="filters" className={`flex flex-wrap items-center justify-between gap-4 p-2 bg-white border border-slate-200 rounded-xl shadow-sm ${currentTutorialKey === "filters" ? "ring-2 ring-[var(--accent)]" : ""}`}>
+            <div data-tour="filters" className={`flex flex-wrap items-center justify-between gap-4 p-2 bg-surface border border-border rounded-xl shadow-sm ${currentTutorialKey === "filters" ? "ring-2 ring-[var(--accent)]" : ""}`}>
                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar p-1">
                   {PRESETS.map((p) => (
-                    <button key={p.id} onClick={() => setPreset(p.id)} className={`shrink-0 px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-all rounded-lg ${preset === p.id ? "bg-[var(--accent)] text-black" : "bg-slate-50 border border-slate-200 text-slate-500 hover:text-slate-900 hover:border-slate-300"}`}>{p.label}</button>
+                    <button key={p.id} onClick={() => setPreset(p.id)} className={`shrink-0 px-4 py-2 text-[10px] font-bold uppercase tracking-widest transition-all rounded-lg ${preset === p.id ? "bg-[var(--accent)] text-black" : "bg-surface-hover border border-border text-muted hover:text-text hover:border-border"}`}>{p.label}</button>
                   ))}
                </div>
                <div className="flex items-center gap-4 px-3">
                   <label className="flex items-center gap-2 cursor-pointer group">
-                    <input type="checkbox" checked={showDiffOnly} onChange={(e) => setShowDiffOnly(e.target.checked)} className="w-4 h-4 rounded border-slate-300 text-[var(--accent)] focus:ring-[var(--accent)]" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 group-hover:text-slate-900">Diffs Only</span>
+                    <input type="checkbox" checked={showDiffOnly} onChange={(e) => setShowDiffOnly(e.target.checked)} className="w-4 h-4 rounded border-border text-[var(--accent)] focus:ring-[var(--accent)]" />
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-muted group-hover:text-text">Diffs Only</span>
                   </label>
                </div>
             </div>
@@ -415,11 +415,11 @@ export default function CompareClient({ initialCars }) {
               />
 
               {/* Action Center - Desktop */}
-              <div id="compare-export" className="max-lg:hidden pt-12 border-t border-slate-200">
+              <div id="compare-export" className="max-lg:hidden pt-12 border-t border-border">
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
-                    <h3 className="text-xl font-bold text-slate-900">Export Analysis</h3>
-                    <p className="text-sm text-slate-500 font-medium">Save this comparison for offline viewing or share with others.</p>
+                    <h3 className="text-xl font-bold text-text">Export Analysis</h3>
+                    <p className="text-sm text-muted font-medium">Save this comparison for offline viewing or share with others.</p>
                   </div>
                   <div className="flex items-center gap-4">
                     <button onClick={handleSaveComparison} className="btn btn-neutral btn-lg">{saveState === "copied" ? "URL Copied" : "Copy Link"}</button>
@@ -432,15 +432,15 @@ export default function CompareClient({ initialCars }) {
           </div>
           
           <aside className="hidden xl:block xl:col-span-4 2xl:col-span-3 sticky top-24 self-start">
-             <nav className="space-y-1 bg-white border border-slate-200 p-4 rounded-xl">
-                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500 mb-4 px-2">Navigation</p>
+             <nav className="space-y-1 bg-surface border border-border p-4 rounded-xl">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted mb-4 px-2">Navigation</p>
                 {[
                   ["Summary", "#compare-summary"],
                   ["Performance", "#compare-radar"],
                   ["The Verdict", "#compare-decision"],
                   ["Specifications", "#compare-specs"],
                 ].map(([label, href]) => (
-                  <a key={href} href={href} className="block px-3 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-100 hover:text-[var(--accent)] transition-all rounded-lg">{label}</a>
+                  <a key={href} href={href} className="block px-3 py-2.5 text-sm font-bold text-muted hover:bg-surface-overlay hover:text-[var(--accent)] transition-all rounded-lg">{label}</a>
                 ))}
              </nav>
           </aside>
@@ -457,7 +457,7 @@ export default function CompareClient({ initialCars }) {
 
       {/* Mobile Action Bar */}
       <MobileBottomBarSignal />
-      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 border-t border-slate-200 bg-white/95 backdrop-blur-md px-4 py-3 flex gap-2" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-50 border-t border-border bg-glass/95 backdrop-blur-md px-4 py-3 flex gap-2" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
         <button onClick={handleSaveComparison} className="flex-1 btn btn-neutral">{saveState === "copied" ? "Copied" : "Share"}</button>
         <button onClick={handleDownloadPdf} className="flex-1 btn btn-primary">PDF</button>
       </div>
@@ -465,14 +465,14 @@ export default function CompareClient({ initialCars }) {
       {/* Tutorial Overlay */}
       {showTutorial && currentTutorial && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-           <div className="max-w-md w-full bg-white border border-slate-200 p-6 shadow-2xl space-y-6 rounded-2xl">
+           <div className="max-w-md w-full bg-surface border border-border p-6 shadow-2xl space-y-6 rounded-2xl">
               <div className="space-y-2">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--accent)]">Step {tutorialStep + 1} of {TUTORIAL_STEPS.length}</p>
-                <h4 className="text-xl font-bold text-slate-900">{currentTutorial.title}</h4>
-                <p className="text-sm text-slate-500 font-medium leading-relaxed">{currentTutorial.body}</p>
+                <h4 className="text-xl font-bold text-text">{currentTutorial.title}</h4>
+                <p className="text-sm text-muted font-medium leading-relaxed">{currentTutorial.body}</p>
               </div>
               <div className="flex items-center justify-between pt-4">
-                <button onClick={closeTutorial} className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Skip</button>
+                <button onClick={closeTutorial} className="text-[10px] font-bold uppercase tracking-widest text-muted">Skip</button>
                 <button onClick={nextStep} className="btn btn-primary">{tutorialStep < TUTORIAL_STEPS.length - 1 ? "Next" : "Finish"}</button>
               </div>
            </div>

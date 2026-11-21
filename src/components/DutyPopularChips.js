@@ -16,8 +16,8 @@ export default function DutyPopularChips({ vehicles = [], activeId = null, onSel
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">Popular estimates</p>
-        <p className="text-[10px] text-slate-500 hidden sm:block">Tap to calculate instantly</p>
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">Popular estimates</p>
+        <p className="text-[10px] text-muted hidden sm:block">Tap to calculate instantly</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
         {vehicles.map((vehicle) => {
@@ -31,7 +31,7 @@ export default function DutyPopularChips({ vehicles = [], activeId = null, onSel
               className={`text-left flex items-center gap-3 px-4 py-3 border transition-all disabled:opacity-50 hover:scale-[0.98] active:scale-95 ${
                 isActive
                   ? "border-[var(--accent)] bg-accent-wash"
-                  : "border-slate-200 bg-white hover:border-slate-400"
+                  : "border-border bg-surface hover:border-strong"
               }`}
               style={{ borderRadius: "var(--radius)" }}
             >
@@ -44,13 +44,13 @@ export default function DutyPopularChips({ vehicles = [], activeId = null, onSel
               </div>
               <div className="min-w-0">
                 <p className={`text-xs font-bold truncate ${
-                  isActive ? "text-slate-900" : "text-slate-900"
+                  isActive ? "text-text" : "text-text"
                 }`}>
                   {vehicle.label}
                 </p>
                 {vehicleDetail(vehicle) && (
                   <p className={`text-[10px] mt-0.5 truncate ${
-                    isActive ? "text-slate-600" : "text-slate-500"
+                    isActive ? "text-muted" : "text-muted"
                   }`}>
                     {vehicleDetail(vehicle)}
                   </p>

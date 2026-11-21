@@ -49,7 +49,7 @@ function BudgetFilterInner() {
 
   return (
     <div className="mb-4">
-      <p className="mb-1.5 text-[11px] font-black uppercase tracking-widest text-slate-400">
+      <p className="mb-1.5 text-[11px] font-black uppercase tracking-widest text-dim">
         Budget
       </p>
       <div className="flex flex-wrap items-center gap-x-5 gap-y-2">

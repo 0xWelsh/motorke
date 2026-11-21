@@ -129,7 +129,7 @@ export default function HumanCheck({ value, onChange, onFallbackChange, compactM
 
   if (!provider) {
     return (
-      <div className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-500">
+      <div className="rounded-lg border border-border bg-surface px-3 py-2 text-xs font-medium text-muted">
         Security check disabled
       </div>
     );
@@ -139,7 +139,7 @@ export default function HumanCheck({ value, onChange, onFallbackChange, compactM
     if (typeof window !== "undefined") window.location.reload();
   }
 
-  const shellClass = "rounded-lg border border-slate-200 bg-white p-2 flex justify-center overflow-hidden";
+  const shellClass = "rounded-lg border border-border bg-surface p-2 flex justify-center overflow-hidden";
 
   return (
     <div className="space-y-2">
@@ -157,15 +157,15 @@ export default function HumanCheck({ value, onChange, onFallbackChange, compactM
       />
 
       {!scriptReady && !scriptTimeout && !scriptError && (
-        <div className="rounded-lg border border-slate-200 bg-white px-3 py-3 flex items-center justify-center gap-2">
-          <Loader2 size={14} className="animate-spin text-slate-500" />
-          <p className="text-xs font-medium text-slate-500">Loading security check...</p>
+        <div className="rounded-lg border border-border bg-surface px-3 py-3 flex items-center justify-center gap-2">
+          <Loader2 size={14} className="animate-spin text-muted" />
+          <p className="text-xs font-medium text-muted">Loading security check...</p>
         </div>
       )}
 
       {(scriptTimeout || scriptError) && !scriptReady && (
-        <div className="space-y-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5">
-          <p className="text-xs font-medium text-slate-500">
+        <div className="space-y-2 rounded-lg border border-border bg-surface px-3 py-2.5">
+          <p className="text-xs font-medium text-muted">
             We couldn&rsquo;t load the security check. Check your connection and reload the page to try again.
           </p>
           <button
@@ -184,7 +184,7 @@ export default function HumanCheck({ value, onChange, onFallbackChange, compactM
         </div>
       )}
 
-      <p className="text-[10px] font-medium text-slate-400">
+      <p className="text-[10px] font-medium text-dim">
         {provider === "recaptcha" ? "Protected by Google reCAPTCHA" : "Powered by Cloudflare Turnstile"}
       </p>
     </div>

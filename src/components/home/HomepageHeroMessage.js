@@ -16,11 +16,11 @@ export default function HomepageHeroMessage() {
       </p>
       <h1
         id="homepage-hero-heading"
-        className="mt-2 text-[clamp(1.75rem,6vw,2.75rem)] font-black leading-[1.05] tracking-tight text-slate-900"
+        className="mt-2 text-[clamp(1.75rem,6vw,2.75rem)] font-black leading-[1.05] tracking-tight text-text"
       >
         Buy a verified car in Kenya
       </h1>
-      <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-slate-600 sm:text-base">
+      <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted sm:text-base">
         Every listing is inspected and priced fairly. Every sale is handled end-to-end by one
         trusted BIDGARI team — so you never pay a deposit to a private number.
       </p>
@@ -47,7 +47,7 @@ export default function HomepageHeroMessage() {
         )}
         <Link
           href="/how-to-buy"
-          className="text-sm font-bold text-slate-600 underline-offset-4 hover:text-[var(--accent)] hover:underline"
+          className="text-sm font-bold text-muted underline-offset-4 hover:text-[var(--accent)] hover:underline"
         >
           How buying works
         </Link>

@@ -32,26 +32,26 @@ export default function DutyPageHero({ compact = false, children = null }) {
   const { oldestImportableYear } = getImportYearWindow();
 
   return (
-    <section className="relative mb-0 overflow-hidden border-b border-slate-200 bg-accent-wash">
+    <section className="relative mb-0 overflow-hidden border-b border-border bg-accent-wash">
       <div className="home-shell pt-2 pb-4 sm:pb-6 lg:pb-8">
         <div className="max-w-6xl mx-auto">
-          <nav className="text-xs text-slate-500 mb-4" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-slate-900 font-medium">
+          <nav className="text-xs text-muted mb-4" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-text font-medium">
               Home
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-slate-800">Duty calculator</span>
+            <span className="text-text">Duty calculator</span>
           </nav>
 
           <div className="max-w-2xl lg:max-w-[55%]">
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-accent mb-2">
               Kenya import decision engine
             </p>
-            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-black text-slate-900 mb-3 leading-[1.05] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-[2.75rem] font-black text-text mb-3 leading-[1.05] tracking-tight">
               Vehicle{" "}
               <span className="text-accent">duty calculator</span>
             </h1>
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed mb-4">
+            <p className="text-sm sm:text-base text-muted leading-relaxed mb-4">
               Instant KRA-style tax breakdown for popular imports, then browse matching stock we sell directly.
             </p>
 
@@ -72,7 +72,7 @@ export default function DutyPageHero({ compact = false, children = null }) {
               </Link>
             </div>
 
-            <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-slate-600 mb-5">
+            <ul className="flex flex-wrap gap-x-4 gap-y-2 text-xs font-semibold text-muted mb-5">
               <li className="inline-flex items-center gap-1.5">
                 <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" aria-hidden />
                 Instant estimate
@@ -92,11 +92,11 @@ export default function DutyPageHero({ compact = false, children = null }) {
             </ul>
 
             <div className="max-w-xl">
-              <div className="flex flex-col sm:flex-row sm:items-end gap-3 p-4 border border-slate-200 bg-white/80 rounded-xl">
+              <div className="flex flex-col sm:flex-row sm:items-end gap-3 p-4 border border-border bg-glass/80 rounded-xl">
                 <div className="flex-1">
                   <label
                     htmlFor="eligibility-year"
-                    className="block text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-1.5"
+                    className="block text-[10px] font-bold uppercase tracking-[0.2em] text-muted mb-1.5"
                   >
                     Is your model importable? Enter model year
                   </label>
@@ -107,12 +107,12 @@ export default function DutyPageHero({ compact = false, children = null }) {
                     value={checkYear}
                     onChange={handleYearChange}
                     placeholder={`e.g. ${currentYear - 4} (need ${oldestImportableYear} or newer)`}
-                    className="w-full h-11 px-4 text-sm font-medium bg-slate-50 border border-slate-300 text-slate-900 focus:border-[var(--accent)] outline-none rounded-xl"
+                    className="w-full h-11 px-4 text-sm font-medium bg-surface-hover border border-border text-text focus:border-[var(--accent)] outline-none rounded-xl"
                   />
                 </div>
                 <Link
                   href="#duty-calculator"
-                  className="h-11 inline-flex items-center justify-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-4 text-[10px] font-bold uppercase tracking-widest transition-colors rounded-xl"
+                  className="h-11 inline-flex items-center justify-center gap-1.5 bg-accent hover:bg-accent-hover text-white px-4 text-[10px] font-bold uppercase tracking-widest transition-colors rounded-xl"
                 >
                   Calculate taxes <ArrowRight className="w-3.5 h-3.5 shrink-0" aria-hidden />
                 </Link>

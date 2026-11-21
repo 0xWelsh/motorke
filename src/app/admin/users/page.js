@@ -57,10 +57,10 @@ export default async function AdminUsersPage(props) {
   const roleDot = {
     ADMIN: "bg-emerald-500",
     DEALER: "bg-amber-500",
-    BUYER: "bg-slate-400",
+    BUYER: "bg-surface-overlay",
   };
 
-  const rowBg = (i) => i % 2 === 0 ? "bg-white/20" : "bg-transparent";
+  const rowBg = (i) => i % 2 === 0 ? "bg-glass/20" : "bg-transparent";
 
   return (
     <div className="space-y-4">
@@ -68,8 +68,8 @@ export default async function AdminUsersPage(props) {
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-lg font-bold text-slate-900 tracking-tight">Users</h1>
-          <div className="mt-1 flex items-center gap-3 text-[11px] text-slate-400">
+          <h1 className="text-lg font-bold text-text tracking-tight">Users</h1>
+          <div className="mt-1 flex items-center gap-3 text-[11px] text-dim">
             <span>{total} total</span>
             <span className="text-emerald-500">{adminCount} admin</span>
             <span>{buyerCount} buyer</span>
@@ -85,16 +85,16 @@ export default async function AdminUsersPage(props) {
       </div>
 
       {/* Search */}
-      <form action="/admin/users" method="GET" className="rounded-lg border border-slate-200 bg-white/60 p-2">
+      <form action="/admin/users" method="GET" className="rounded-lg border border-border bg-glass/60 p-2">
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-dim" />
             <input
               name="search"
               defaultValue={search}
               placeholder="Search by name or email…"
               autoComplete="off"
-              className="w-full rounded-md border border-slate-200 bg-[var(--bg)]/60 py-2 pl-9 pr-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-emerald-500/50 focus:bg-[var(--bg)]"
+              className="w-full rounded-md border border-border bg-[var(--bg)]/60 py-2 pl-9 pr-3 text-sm text-text placeholder:text-dim outline-none transition focus:border-emerald-500/50 focus:bg-[var(--bg)]"
             />
           </div>
           <button
@@ -106,7 +106,7 @@ export default async function AdminUsersPage(props) {
           {search && (
             <Link
               href="/admin/users"
-              className="rounded-md border border-slate-200 px-3 py-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors"
+              className="rounded-md border border-border px-3 py-2 text-xs font-bold text-muted hover:text-text transition-colors"
             >
               Clear
             </Link>
@@ -145,41 +145,41 @@ export default async function AdminUsersPage(props) {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px] text-left">
               <thead>
-                <tr className="border-b border-slate-200 bg-white/40">
+                <tr className="border-b border-border bg-glass/40">
                   {["User", "Role", "Status", "Joined", ""].map((h) => (
-                    <th key={h || "actions"} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">{h}</th>
+                    <th key={h || "actions"} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-dim">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200/60">
+              <tbody className="divide-y divide-border">
                 {users.map((user, i) => (
-                  <tr key={user.id} className={`transition-colors hover:bg-slate-100/30 ${rowBg(i)}`}>
+                  <tr key={user.id} className={`transition-colors hover:bg-surface-overlay ${rowBg(i)}`}>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-bold text-slate-700">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-sm font-bold text-secondary">
                           {user.name[0]}
                         </div>
                         <div>
-                          <p className="text-sm font-bold text-slate-900">{user.name}</p>
-                          <p className="text-xs text-slate-400">{user.email}</p>
+                          <p className="text-sm font-bold text-text">{user.name}</p>
+                          <p className="text-xs text-dim">{user.email}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-secondary">
                         <span className={`h-1.5 w-1.5 rounded-full ${roleDot[user.role]}`} />
                         {user.role}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
-                        user.active ? "text-emerald-600" : "text-slate-400"
+                        user.active ? "text-emerald-600" : "text-dim"
                       }`}>
                         {user.active ? <CheckCircle2 size={12} /> : <Ban size={12} />}
                         {user.active ? "Active" : "Locked"}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-xs text-slate-400">
+                    <td className="px-4 py-3 text-xs text-dim">
                       {new Date(user.createdAt).toLocaleDateString("en-KE", {
                         day: "numeric",
                         month: "short",
@@ -190,7 +190,7 @@ export default async function AdminUsersPage(props) {
                       <div className="flex items-center justify-end gap-1.5">
                         <Link
                           href={`/admin/users/${user.id}/edit`}
-                          className="rounded-md border border-slate-200 bg-[var(--bg)]/60 p-1.5 text-slate-400 hover:text-slate-900 hover:border-slate-300 transition-colors inline-flex"
+                          className="rounded-md border border-border bg-[var(--bg)]/60 p-1.5 text-dim hover:text-text hover:border-border transition-colors inline-flex"
                           title="Edit"
                         >
                           <Edit3 size={14} />
@@ -200,7 +200,7 @@ export default async function AdminUsersPage(props) {
                             type="submit"
                             className={`rounded-md border p-1.5 transition-colors ${
                               user.active
-                                ? "border-slate-200 bg-[var(--bg)]/60 text-slate-400 hover:text-slate-800 hover:border-slate-300"
+                                ? "border-border bg-[var(--bg)]/60 text-dim hover:text-text hover:border-border"
                                 : "border-emerald-800/50 bg-emerald-950/30 text-emerald-600 hover:bg-emerald-950/60"
                             }`}
                             title={user.active ? "Lock account" : "Unlock account"}
@@ -210,7 +210,7 @@ export default async function AdminUsersPage(props) {
                         </form>
                         <Link
                           href={`/admin/users/${user.id}/edit#security`}
-                          className="rounded-md border border-slate-200 bg-[var(--bg)]/60 p-1.5 text-slate-400 hover:text-slate-900 hover:border-slate-300 transition-colors inline-flex"
+                          className="rounded-md border border-border bg-[var(--bg)]/60 p-1.5 text-dim hover:text-text hover:border-border transition-colors inline-flex"
                           title="Reset security"
                         >
                           <RefreshCw size={14} />
@@ -242,7 +242,7 @@ export default async function AdminUsersPage(props) {
               actionLabel="Add user"
               secondaryHref={search ? "/admin/users" : null}
               secondaryLabel={search ? "Clear search" : null}
-              icon={<Users size={28} className="text-slate-400" />}
+              icon={<Users size={28} className="text-dim" />}
             />
           )}
         </DataTableShell>
@@ -258,41 +258,41 @@ export default async function AdminUsersPage(props) {
             actionLabel="Add user"
             secondaryHref={search ? "/admin/users" : null}
             secondaryLabel={search ? "Clear search" : null}
-            icon={<Users size={28} className="text-slate-400" />}
+            icon={<Users size={28} className="text-dim" />}
           />
         ) : null}
         {users.map((user) => (
-          <div key={user.id} className="rounded-lg border border-slate-200 bg-white/60 p-3">
+          <div key={user.id} className="rounded-lg border border-border bg-glass/60 p-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-slate-200 bg-white text-sm font-bold text-slate-700">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-sm font-bold text-secondary">
                 {user.name[0]}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm font-bold text-slate-900 truncate">{user.name}</p>
+                  <p className="text-sm font-bold text-text truncate">{user.name}</p>
                   <span className={`inline-flex items-center gap-1.5 text-xs font-semibold ${
-                    user.active ? "text-emerald-600" : "text-slate-400"
+                    user.active ? "text-emerald-600" : "text-dim"
                   }`}>
                     {user.active ? <CheckCircle2 size={11} /> : <Ban size={11} />}
                     {user.active ? "Active" : "Locked"}
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                <p className="text-xs text-dim truncate">{user.email}</p>
                 <div className="mt-1 flex items-center gap-2">
-                  <span className={`inline-flex items-center gap-1 text-[10px] font-semibold text-slate-500`}>
+                  <span className={`inline-flex items-center gap-1 text-[10px] font-semibold text-muted`}>
                     <span className={`h-1.5 w-1.5 rounded-full ${roleDot[user.role]}`} />
                     {user.role}
                   </span>
-                  <span className="text-[10px] text-slate-500">
+                  <span className="text-[10px] text-muted">
                     {new Date(user.createdAt).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" })}
                   </span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-slate-200">
+            <div className="flex items-center gap-1.5 mt-3 pt-3 border-t border-border">
               <Link
                 href={`/admin/users/${user.id}/edit`}
-                className="rounded-md border border-slate-200 bg-[var(--bg)]/60 px-3 py-1.5 text-[11px] font-bold text-slate-500 hover:text-slate-900 transition-colors"
+                className="rounded-md border border-border bg-[var(--bg)]/60 px-3 py-1.5 text-[11px] font-bold text-muted hover:text-text transition-colors"
               >
                 Edit
               </Link>
@@ -301,7 +301,7 @@ export default async function AdminUsersPage(props) {
                   type="submit"
                   className={`rounded-md border px-3 py-1.5 text-[11px] font-bold transition-colors ${
                     user.active
-                      ? "border-slate-200 bg-[var(--bg)]/60 text-slate-400 hover:text-slate-800"
+                      ? "border-border bg-[var(--bg)]/60 text-dim hover:text-text"
                       : "border-emerald-800/50 bg-emerald-950/30 text-emerald-600 hover:bg-emerald-950/60"
                   }`}
                 >

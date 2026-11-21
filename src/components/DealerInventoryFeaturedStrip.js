@@ -29,11 +29,11 @@ export default function DealerInventoryFeaturedStrip({ car, freshnessLabel }) {
   const activeSrc = imageUrls[slide] || imageUrls[0];
 
   return (
-    <article className="w-full overflow-hidden border-y border-slate-200 bg-white">
+    <article className="w-full overflow-hidden border-y border-border bg-surface">
       <div className="flex w-full min-h-[92px]">
         <Link
           href={carListingPath(car)}
-          className="relative w-[30%] min-w-[108px] max-w-[132px] shrink-0 self-stretch bg-slate-50"
+          className="relative w-[30%] min-w-[108px] max-w-[132px] shrink-0 self-stretch bg-surface-hover"
           aria-label={`${title} photos`}
         >
           {activeSrc ? (
@@ -45,13 +45,13 @@ export default function DealerInventoryFeaturedStrip({ car, freshnessLabel }) {
               className="object-cover transition-opacity duration-500"
               sizes="132px"
               fallback={
-                <div className="flex h-full w-full items-center justify-center text-slate-400">
+                <div className="flex h-full w-full items-center justify-center text-dim">
                   <ImageOff className="h-5 w-5" aria-hidden />
                 </div>
               }
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-slate-400">
+            <div className="flex h-full w-full items-center justify-center text-dim">
               <ImageOff className="h-5 w-5" aria-hidden />
             </div>
           )}
@@ -63,7 +63,7 @@ export default function DealerInventoryFeaturedStrip({ car, freshnessLabel }) {
               {imageUrls.slice(0, 5).map((_, i) => (
                 <span
                   key={i}
-                  className={`h-1 w-1 rounded-full ${i === slide % 5 ? "bg-white" : "bg-white/45"}`}
+                  className={`h-1 w-1 rounded-full ${i === slide % 5 ? "bg-surface" : "bg-glass/45"}`}
                   aria-hidden
                 />
               ))}
@@ -73,28 +73,28 @@ export default function DealerInventoryFeaturedStrip({ car, freshnessLabel }) {
 
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-1.5 px-2.5 py-2">
           {freshnessLabel ? (
-            <p className="text-[8px] font-bold uppercase tracking-[0.12em] text-slate-500">{freshnessLabel}</p>
+            <p className="text-[8px] font-bold uppercase tracking-[0.12em] text-muted">{freshnessLabel}</p>
           ) : null}
           <div className="min-w-0">
             <p className="text-[9px] font-black uppercase tracking-[0.12em] text-[var(--accent)]">{car.year}</p>
             <Link href={carListingPath(car)}>
-              <h3 className="text-[12px] font-black leading-tight tracking-tight text-slate-900 line-clamp-1">
+              <h3 className="text-[12px] font-black leading-tight tracking-tight text-text line-clamp-1">
                 {car.make} {car.model}
               </h3>
             </Link>
             {specLine ? (
-              <p className="mt-0.5 text-[10px] font-semibold leading-snug text-slate-500 line-clamp-1">
+              <p className="mt-0.5 text-[10px] font-semibold leading-snug text-muted line-clamp-1">
                 {specLine}
               </p>
             ) : null}
           </div>
           <div className="flex items-center justify-between gap-2">
-            <p className="text-[14px] font-black tracking-tight text-slate-900">
+            <p className="text-[14px] font-black tracking-tight text-text">
               {formatCarPrice(car)}
             </p>
             <Link
               href={carListingPath(car)}
-              className="inline-flex shrink-0 items-center gap-0.5 bg-slate-100 px-2 py-1 text-[8px] font-black uppercase tracking-[0.1em] text-slate-700 hover:bg-slate-200 transition-colors"
+              className="inline-flex shrink-0 items-center gap-0.5 bg-surface-overlay px-2 py-1 text-[8px] font-black uppercase tracking-[0.1em] text-secondary hover:bg-surface-overlay transition-colors"
               style={{ borderRadius: "4px" }}
             >
               View

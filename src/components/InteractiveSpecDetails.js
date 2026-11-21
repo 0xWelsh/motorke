@@ -63,15 +63,15 @@ export default function InteractiveSpecDetails({ specRows }) {
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="divide-y divide-slate-100">
+      <div className="overflow-hidden rounded-2xl border border-border bg-surface shadow-sm">
+        <div className="divide-y divide-border">
           {specRows.map((row) => {
             const isExpanded = expandedRow === row.label;
             const details = GLOSSARY[row.label];
             const IconComponent = ICON_MAP[row.iconName] || Cog;
 
             return (
-              <div key={row.label} className="transition-all duration-200 hover:bg-slate-50/40">
+              <div key={row.label} className="transition-all duration-200 hover:bg-surface-hover">
                 {/* Header/Row click trigger */}
                 <button
                   onClick={() => toggleRow(row.label)}
@@ -81,22 +81,22 @@ export default function InteractiveSpecDetails({ specRows }) {
                     <IconComponent className="mt-0.5 size-4 shrink-0 text-emerald-500" />
                     <div className="min-w-0">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-slate-400">
+                        <span className="text-[10px] font-extrabold uppercase tracking-[0.12em] text-dim">
                           {row.label}
                         </span>
                         {details && (
-                          <span className="inline-flex items-center rounded bg-slate-100 px-1 py-0.5 text-[8px] font-bold text-slate-500 uppercase tracking-wider">
+                          <span className="inline-flex items-center rounded bg-surface-overlay px-1 py-0.5 text-[8px] font-bold text-muted uppercase tracking-wider">
                             Tap to learn
                           </span>
                         )}
                       </div>
-                      <p className="mt-0.5 text-sm font-extrabold text-slate-900 md:text-base">
+                      <p className="mt-0.5 text-sm font-extrabold text-text md:text-base">
                         {row.value}
                       </p>
                     </div>
                   </div>
                   {details && (
-                    <div className="ml-2 mt-1 text-slate-400">
+                    <div className="ml-2 mt-1 text-dim">
                       {isExpanded ? (
                         <ChevronUp className="size-4 text-emerald-600" />
                       ) : (
@@ -108,24 +108,24 @@ export default function InteractiveSpecDetails({ specRows }) {
 
                 {/* Expanded explanation box */}
                 {isExpanded && details && (
-                  <div className="border-t border-slate-100 bg-emerald-50/30 px-5 py-4 animate-fade-in">
+                  <div className="border-t border-subtle bg-emerald-50/30 px-5 py-4 animate-fade-in">
                     <div className="space-y-3">
                       <div>
-                        <h4 className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                        <h4 className="flex items-center gap-1.5 text-xs font-bold text-text">
                           <HelpCircle className="size-3.5 text-emerald-600" />
                           About {details.title}
                         </h4>
-                        <p className="mt-1 text-xs leading-relaxed text-slate-600">
+                        <p className="mt-1 text-xs leading-relaxed text-muted">
                           {details.explanation}
                         </p>
                       </div>
 
-                      <div className="rounded-xl bg-white border border-emerald-100/60 p-3 shadow-sm">
+                      <div className="rounded-xl bg-surface border border-emerald-100/60 p-3 shadow-sm">
                         <h5 className="flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-wide text-emerald-800">
                           <BadgeCheck className="size-3.5 text-emerald-600" />
                           Kenyan Market Guide
                         </h5>
-                        <p className="mt-1 text-xs leading-relaxed text-slate-700 font-medium">
+                        <p className="mt-1 text-xs leading-relaxed text-secondary font-medium">
                           {details.kenyanTip}
                         </p>
                       </div>

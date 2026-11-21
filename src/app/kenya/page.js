@@ -73,15 +73,15 @@ export default async function KenyaPage() {
   return (
     <div className="min-h-screen bg-[var(--bg)]">
       {/* Hero */}
-      <section className="border-b border-slate-200 bg-gradient-to-b from-white to-[var(--bg)] px-4 sm:px-6 pt-14 sm:pt-20 pb-10 sm:pb-14">
+      <section className="border-b border-border bg-gradient-to-b from-white to-[var(--bg)] px-4 sm:px-6 pt-14 sm:pt-20 pb-10 sm:pb-14">
         <div className="max-w-3xl mx-auto text-center">
           <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[var(--accent)] mb-3">
             Kenya
           </p>
-          <h1 className="text-3xl sm:text-5xl font-bold text-slate-900 tracking-tight mb-4">
+          <h1 className="text-3xl sm:text-5xl font-bold text-text tracking-tight mb-4">
             Import used cars into Kenya the easy way
           </h1>
-          <p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
+          <p className="text-muted text-sm sm:text-base leading-relaxed max-w-xl mx-auto">
             Verified Japanese and European imports, priced transparently and handled by BIDGARI
             across Nairobi and Mombasa. Compare costs and buy with confidence.
           </p>
@@ -107,7 +107,7 @@ export default async function KenyaPage() {
         <section className="px-4 sm:px-6 py-10 sm:py-14">
           <div className="max-w-6xl mx-auto">
             <div className="mb-5 flex items-baseline justify-between gap-3">
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-xl sm:text-2xl font-black text-text tracking-tight">
                 Popular cars in Kenya right now
               </h2>
               <Link
@@ -127,25 +127,25 @@ export default async function KenyaPage() {
       )}
 
       {/* Import steps */}
-      <section className="border-t border-slate-200 bg-white px-4 sm:px-6 py-10 sm:py-14">
+      <section className="border-t border-border bg-surface px-4 sm:px-6 py-10 sm:py-14">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-center text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-2">
+          <h2 className="text-center text-2xl sm:text-3xl font-bold text-text tracking-tight mb-2">
             From listing to your driveway
           </h2>
-          <p className="text-center text-sm text-slate-500 mb-8 sm:mb-10">
+          <p className="text-center text-sm text-muted mb-8 sm:mb-10">
             A transparent, BIDGARI-handled process for Kenyan buyers.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {STEPS.map((s, i) => (
-              <div key={s.title} className="relative rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+              <div key={s.title} className="relative rounded-2xl border border-border bg-surface p-5 shadow-sm">
                 <div className="mb-3 flex items-center justify-between">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-wash text-[var(--accent)]">
                     {s.icon}
                   </div>
-                  <span className="text-[28px] font-black leading-none text-slate-100">0{i + 1}</span>
+                  <span className="text-[28px] font-black leading-none text-ghost">0{i + 1}</span>
                 </div>
-                <h3 className="text-base font-black text-slate-900">{s.title}</h3>
-                <p className="mt-1.5 text-[13px] leading-relaxed text-slate-500">{s.desc}</p>
+                <h3 className="text-base font-black text-text">{s.title}</h3>
+                <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{s.desc}</p>
               </div>
             ))}
           </div>
@@ -154,10 +154,10 @@ export default async function KenyaPage() {
 
       {/* CTA band */}
       <section className="px-4 sm:px-6 py-10 sm:py-14">
-        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5 rounded-2xl border border-slate-200 bg-white p-6 sm:p-8 shadow-sm">
+        <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-5 rounded-2xl border border-border bg-surface p-6 sm:p-8 shadow-sm">
           <div>
-            <h3 className="text-lg font-black text-slate-900">Can&apos;t find what you want?</h3>
-            <p className="mt-1 text-sm text-slate-500">
+            <h3 className="text-lg font-black text-text">Can&apos;t find what you want?</h3>
+            <p className="mt-1 text-sm text-muted">
               Post a request and let the BIDGARI team source it for you.
             </p>
           </div>

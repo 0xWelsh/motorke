@@ -43,10 +43,10 @@ export function GoogleAuthDivider({
   return (
     <div className={clsx("relative my-4", className)} role="separator" aria-label={label}>
       <div className="absolute inset-0 flex items-center" aria-hidden>
-        <div className="w-full border-t border-slate-200" />
+        <div className="w-full border-t border-border" />
       </div>
       <div className="relative flex justify-center">
-        <span className="bg-[var(--bg)] px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-slate-500">
+        <span className="bg-[var(--bg)] px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-muted">
           {label}
         </span>
       </div>

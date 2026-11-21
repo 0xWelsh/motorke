@@ -263,8 +263,8 @@ export default function TikTokVideoButton({ car, className, compact }) {
         className={
           className ||
           (compact
-            ? "inline-flex items-center gap-1 rounded-md border border-slate-200 bg-[var(--bg)]/60 p-1.5 text-pink-400 hover:bg-pink-600 hover:text-white hover:border-pink-600 transition-colors disabled:opacity-50"
-            : "inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-[var(--bg)]/60 px-2.5 py-1.5 text-[11px] font-bold text-pink-400 hover:bg-pink-600 hover:text-white hover:border-pink-600 transition-colors disabled:opacity-50")
+            ? "inline-flex items-center gap-1 rounded-md border border-border bg-[var(--bg)]/60 p-1.5 text-pink-400 hover:bg-pink-600 hover:text-white hover:border-pink-600 transition-colors disabled:opacity-50"
+            : "inline-flex items-center gap-1.5 rounded-md border border-border bg-[var(--bg)]/60 px-2.5 py-1.5 text-[11px] font-bold text-pink-400 hover:bg-pink-600 hover:text-white hover:border-pink-600 transition-colors disabled:opacity-50")
         }
         title="Create TikTok video"
       >
@@ -285,20 +285,20 @@ export default function TikTokVideoButton({ car, className, compact }) {
 
       {state !== "idle" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-          <div className="mx-4 w-full max-w-sm rounded-xl border border-slate-200 bg-[var(--bg)] p-6 text-center shadow-2xl">
+          <div className="mx-4 w-full max-w-sm rounded-xl border border-border bg-[var(--bg)] p-6 text-center shadow-2xl">
             {state === "loading" && (
               <div className="flex flex-col items-center gap-4">
                 <span className="w-8 h-8 rounded-full border-2 border-pink-400 border-t-transparent animate-spin" />
-                <p className="text-sm text-slate-700">{progress}</p>
+                <p className="text-sm text-secondary">{progress}</p>
                 {progress.includes("Recording") && (
-                  <p className="text-[11px] text-slate-500">Recording in real-time. This waits for the full video duration.</p>
+                  <p className="text-[11px] text-muted">Recording in real-time. This waits for the full video duration.</p>
                 )}
               </div>
             )}
             {state === "done" && (
               <div className="flex flex-col items-center gap-3">
                 <span className="text-3xl">{'\u2705'}</span>
-                <p className="text-sm text-slate-700">{progress}</p>
+                <p className="text-sm text-secondary">{progress}</p>
               </div>
             )}
             {state === "error" && (

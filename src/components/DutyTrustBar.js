@@ -7,7 +7,7 @@ export default function DutyTrustBar({ lastUpdated = null }) {
 
   return (
     <section
-      className="border border-slate-200 bg-slate-50 px-4 py-4 sm:px-6 sm:py-5"
+      className="border border-border bg-surface-hover px-4 py-4 sm:px-6 sm:py-5"
       style={{ borderRadius: "var(--radius)" }}
       aria-label="Trust and methodology"
     >
@@ -15,8 +15,8 @@ export default function DutyTrustBar({ lastUpdated = null }) {
         <div className="flex gap-3">
           <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" aria-hidden />
           <div>
-            <p className="text-xs font-bold text-slate-900">KRA-style structure</p>
-            <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+            <p className="text-xs font-bold text-text">KRA-style structure</p>
+            <p className="text-[11px] text-muted mt-1 leading-relaxed">
               IDF, excise bands, VAT, and railway levy using current import methodology.
             </p>
           </div>
@@ -24,15 +24,15 @@ export default function DutyTrustBar({ lastUpdated = null }) {
         <div className="flex gap-3">
           <RefreshCw className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" aria-hidden />
           <div>
-            <p className="text-xs font-bold text-slate-900">Rates last reviewed</p>
-            <p className="text-[11px] text-slate-500 mt-1">{updatedLabel}</p>
+            <p className="text-xs font-bold text-text">Rates last reviewed</p>
+            <p className="text-[11px] text-muted mt-1">{updatedLabel}</p>
           </div>
         </div>
         <div className="flex gap-3">
           <FileCheck2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" aria-hidden />
           <div>
-            <p className="text-xs font-bold text-slate-900">For buyers &amp; dealers</p>
-            <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+            <p className="text-xs font-bold text-text">For buyers &amp; dealers</p>
+            <p className="text-[11px] text-muted mt-1 leading-relaxed">
               Illustrative CRSP references, not a binding KRA assessment. Always confirm before payment.
             </p>
           </div>

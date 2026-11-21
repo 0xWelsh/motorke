@@ -157,16 +157,16 @@ function FAQCategory({ category, items }) {
 
   const icons = {
     "For Buyers": <Shield className="w-5 h-5 text-[var(--accent)]" />,
-    "For Sellers": <Zap className="w-5 h-5 text-slate-900" />,
-    "Technical & Logistics": <MapPin className="w-5 h-5 text-slate-500" />,
-    "Trust & Security": <CreditCard className="w-5 h-5 text-slate-900" />,
+    "For Sellers": <Zap className="w-5 h-5 text-text" />,
+    "Technical & Logistics": <MapPin className="w-5 h-5 text-muted" />,
+    "Trust & Security": <CreditCard className="w-5 h-5 text-text" />,
   };
 
   return (
     <div className="mb-12">
       <div className="flex items-center gap-3 mb-8">
         {icons[category]}
-        <h2 className="text-[10px] font-bold text-slate-900 uppercase tracking-[0.2em]">{category}</h2>
+        <h2 className="text-[10px] font-bold text-text uppercase tracking-[0.2em]">{category}</h2>
       </div>
 
       <div className="space-y-4">
@@ -175,8 +175,8 @@ function FAQCategory({ category, items }) {
             key={idx}
             className={`border transition-all duration-300 ${
               openId === idx 
-                ? "border-accent-glow bg-slate-50" 
-                : "border-slate-200 hover:border-slate-300"
+                ? "border-accent-glow bg-surface-hover" 
+                : "border-border hover:border-border"
             }`}
             style={{ borderRadius: 'var(--radius)' }}
           >
@@ -185,20 +185,20 @@ function FAQCategory({ category, items }) {
               className="w-full px-8 py-6 flex items-start justify-between gap-4 bg-transparent transition"
             >
               <span className={`text-left font-bold uppercase tracking-tight text-[11px] sm:text-xs leading-relaxed ${
-                openId === idx ? "text-slate-900" : "text-slate-500"
+                openId === idx ? "text-text" : "text-muted"
               }`}>
                 {item.q}
               </span>
               <ChevronDown
                 className={`w-5 h-5 transition-transform ${
-                  openId === idx ? "rotate-180 text-[var(--accent)]" : "text-slate-500"
+                  openId === idx ? "rotate-180 text-[var(--accent)]" : "text-muted"
                 }`}
               />
             </button>
 
             {openId === idx && (
               <div className="px-8 pb-8 animate-in fade-in slide-in-from-top-2 duration-300">
-                <p className="text-sm font-medium text-slate-500 leading-relaxed max-w-3xl">{item.a}</p>
+                <p className="text-sm font-medium text-muted leading-relaxed max-w-3xl">{item.a}</p>
               </div>
             )}
           </div>
@@ -212,18 +212,18 @@ export default function FAQPage() {
   return (
     <div className="bg-[var(--bg)] min-h-screen">
       {/* Header */}
-      <section className="bg-[var(--bg)] pt-32 sm:pt-40 pb-20 px-6 border-b border-slate-200">
+      <section className="bg-[var(--bg)] pt-32 sm:pt-40 pb-20 px-6 border-b border-border">
         <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-8">
+          <div className="flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted mb-8">
             <span>Resources</span>
             <span>/</span>
-            <span className="text-slate-900">Knowledge Base</span>
+            <span className="text-text">Knowledge Base</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold text-slate-900 tracking-tight leading-[1.1] mb-6">
+          <h1 className="text-4xl sm:text-6xl font-bold text-text tracking-tight leading-[1.1] mb-6">
             Frequently <br />
-            <span className="font-black tracking-tight text-slate-500">Asked Questions.</span>
+            <span className="font-black tracking-tight text-muted">Asked Questions.</span>
           </h1>
-          <p className="text-slate-500 text-lg font-medium max-w-2xl mx-auto leading-relaxed">
+          <p className="text-muted text-lg font-medium max-w-2xl mx-auto leading-relaxed">
             Everything you need to know about buying, selling, and trusting the BIDGARI network. 
             Direct, transparent, and verified.
           </p>
@@ -238,9 +238,9 @@ export default function FAQPage() {
           ))}
 
           {/* Need Support */}
-          <div className="mt-24 sm:mt-32 pt-16 sm:pt-20 border-t border-slate-200 text-center">
-             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-6">Still have questions?</h3>
-             <h4 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-10">Reach our support terminal.</h4>
+          <div className="mt-24 sm:mt-32 pt-16 sm:pt-20 border-t border-border text-center">
+             <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted mb-6">Still have questions?</h3>
+             <h4 className="text-2xl sm:text-3xl font-bold text-text mb-10">Reach our support terminal.</h4>
              <Link href="/contact" className="btn btn-primary btn-lg">
                 Contact Support Hub
              </Link>

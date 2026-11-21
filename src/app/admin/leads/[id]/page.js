@@ -66,7 +66,7 @@ export default async function LeadDetailPage({ params }) {
       {/* Back link */}
       <Link
         href="/admin/leads"
-        className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 transition-colors hover:text-emerald-600"
+        className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-dim transition-colors hover:text-emerald-600"
       >
         <ArrowLeft size={14} />
         Back to leads
@@ -76,7 +76,7 @@ export default async function LeadDetailPage({ params }) {
         {/* Left — Lead info */}
         <div className="space-y-6 lg:col-span-2">
           {/* Lead card */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-6">
+          <div className="rounded-2xl border border-border bg-surface p-6">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="flex min-w-0 items-center gap-4">
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500/25 to-emerald-700/25 text-lg font-bold text-emerald-700 ring-1 ring-inset ring-emerald-500/20">
@@ -84,12 +84,12 @@ export default async function LeadDetailPage({ params }) {
                 </div>
                 <div className="min-w-0">
                   <div className="flex items-center gap-2.5">
-                    <h2 className="truncate text-xl font-bold tracking-tight text-slate-900">{lead.name}</h2>
+                    <h2 className="truncate text-xl font-bold tracking-tight text-text">{lead.name}</h2>
                     {!lead.userId && (
-                      <span className="rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[10px] font-bold text-slate-400">Guest</span>
+                      <span className="rounded-md border border-border bg-surface px-2 py-0.5 text-[10px] font-bold text-dim">Guest</span>
                     )}
                   </div>
-                  <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-slate-500">
+                  <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm text-muted">
                     {lead.phone !== "not-provided" ? (
                       <a href={`tel:${lead.phone}`} className="inline-flex items-center gap-1.5 transition-colors hover:text-emerald-600">
                         <Phone size={14} />
@@ -125,12 +125,12 @@ export default async function LeadDetailPage({ params }) {
                 {lead.channel}
               </span>
               {lead.assignedTo && (
-                <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600">
+                <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-600">
                   <UserCheck size={11} />
                   {lead.assignedTo.name}
                 </span>
               )}
-              <span className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+              <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-surface px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-muted">
                 <Calendar size={11} />
                 {new Date(lead.createdAt).toLocaleDateString("en-KE", {
                   day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
@@ -140,19 +140,19 @@ export default async function LeadDetailPage({ params }) {
 
             {/* Message */}
             {lead.message && (
-              <div className="mt-5 rounded-xl border border-slate-200 bg-[var(--bg)]/50 p-4">
-                <p className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+              <div className="mt-5 rounded-xl border border-border bg-[var(--bg)]/50 p-4">
+                <p className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
                   <MessageSquare size={11} /> Message
                 </p>
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate-700">{lead.message}</p>
+                <p className="whitespace-pre-wrap text-sm leading-relaxed text-secondary">{lead.message}</p>
               </div>
             )}
           </div>
 
           {/* Notes Timeline */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-6">
-            <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-slate-900">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100/80 text-slate-500">
+          <div className="rounded-2xl border border-border bg-surface p-6">
+            <h3 className="mb-4 flex items-center gap-2 text-sm font-bold text-text">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface-overlay text-muted">
                 <Clock size={14} />
               </span>
               Activity Timeline
@@ -168,15 +168,15 @@ export default async function LeadDetailPage({ params }) {
         {/* Right — Car info + actions */}
         <div className="space-y-4">
           {/* Car card */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <p className="mb-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100/80 text-slate-500">
+          <div className="rounded-2xl border border-border bg-surface p-5">
+            <p className="mb-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface-overlay text-muted">
                 <Car size={14} />
               </span>
               Vehicle
             </p>
             <div className="flex items-center gap-3">
-              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
+              <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-surface-overlay text-dim">
                 <Car size={24} />
               </div>
               <div className="min-w-0">
@@ -184,12 +184,12 @@ export default async function LeadDetailPage({ params }) {
                   href={carListingPath(lead.car)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block truncate text-sm font-bold text-slate-900 transition-colors hover:text-emerald-600"
+                  className="block truncate text-sm font-bold text-text transition-colors hover:text-emerald-600"
                 >
                   {lead.car.year} {lead.car.make} {lead.car.model}
                 </Link>
                 {lead.car.variant && (
-                  <p className="truncate text-[11px] text-slate-400">{lead.car.variant}</p>
+                  <p className="truncate text-[11px] text-dim">{lead.car.variant}</p>
                 )}
               </div>
             </div>
@@ -210,9 +210,9 @@ export default async function LeadDetailPage({ params }) {
           </div>
 
           {/* Actions */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <p className="mb-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
-              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100/80 text-slate-500">
+          <div className="rounded-2xl border border-border bg-surface p-5">
+            <p className="mb-3 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
+              <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface-overlay text-muted">
                 <UserCheck size={14} />
               </span>
               Actions

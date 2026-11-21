@@ -85,25 +85,25 @@ export default function TrustPage() {
         {/* Hero */}
         <section className="text-center mb-16 sm:mb-20">
           <p className="meta-label text-[var(--accent)] mb-4">Trust & transparency</p>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight mb-6 max-w-3xl mx-auto leading-[1.1]">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-text tracking-tight mb-6 max-w-3xl mx-auto leading-[1.1]">
             How we keep BIDGARI{" "}
             <span className="text-[var(--accent)]">trustworthy</span>
           </h1>
-          <p className="text-base sm:text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto font-medium">
+          <p className="text-base sm:text-lg text-muted leading-relaxed max-w-2xl mx-auto font-medium">
             A car marketplace is only as good as the cars on it. Here&apos;s how we verify listings, handle every sale, and protect buyers.
           </p>
         </section>
 
         {/* Trust badges strip */}
-        <section className="mb-16 sm:mb-20 py-8 border-y border-slate-200">
+        <section className="mb-16 sm:mb-20 py-8 border-y border-border">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
             {TRUST_SIGNALS.map((signal, i) => (
               <div key={i} className="flex flex-col items-center text-center">
                 <div className="w-10 h-10 rounded-xl bg-accent-wash border border-accent-dim flex items-center justify-center mb-3">
                   <signal.icon className="w-5 h-5 text-[var(--accent)]" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-xs font-bold text-slate-900 mb-1">{signal.title}</h3>
-                <p className="text-[11px] text-slate-500 leading-relaxed font-medium">{signal.desc}</p>
+                <h3 className="text-xs font-bold text-text mb-1">{signal.title}</h3>
+                <p className="text-[11px] text-muted leading-relaxed font-medium">{signal.desc}</p>
               </div>
             ))}
           </div>
@@ -113,7 +113,7 @@ export default function TrustPage() {
         <section className="mb-16 sm:mb-20">
           <div className="text-center mb-10 sm:mb-14">
             <p className="meta-label text-[var(--accent)] mb-3">Our process</p>
-            <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-bold text-text tracking-tight">
               How we verify listings
             </h2>
           </div>
@@ -122,16 +122,16 @@ export default function TrustPage() {
             {VERIFICATION_STEPS.map((step, i) => (
               <div key={i} className="relative">
                 {i < VERIFICATION_STEPS.length - 1 && (
-                  <div className="hidden lg:block absolute top-8 left-[60%] w-[calc(100%-20%)] h-px bg-gradient-to-r from-slate-200 to-transparent" aria-hidden />
+                  <div className="hidden lg:block absolute top-8 left-[60%] w-[calc(100%-20%)] h-px bg-gradient-to-r 5603-surface-overlay to-transparent" aria-hidden />
                 )}
-                <div className="relative mx-auto w-16 h-16 rounded-2xl bg-white border border-slate-200 flex items-center justify-center mb-5">
+                <div className="relative mx-auto w-16 h-16 rounded-2xl bg-surface border border-border flex items-center justify-center mb-5">
                   <step.icon className="w-7 h-7 text-[var(--accent)]" strokeWidth={1.5} />
                   <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[var(--accent)] text-black text-[10px] font-black flex items-center justify-center">
                     {i + 1}
                   </span>
                 </div>
-                <h3 className="text-base font-bold text-slate-900 mb-2 text-center">{step.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed text-center font-medium">
+                <h3 className="text-base font-bold text-text mb-2 text-center">{step.title}</h3>
+                <p className="text-sm text-muted leading-relaxed text-center font-medium">
                   {step.desc}
                 </p>
               </div>
@@ -140,8 +140,8 @@ export default function TrustPage() {
         </section>
 
         {/* What buyers see */}
-        <section className="mb-16 sm:mb-20 rounded-xl border border-slate-200 bg-white p-6 sm:p-10">
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-6">What you see on every listing</h2>
+        <section className="mb-16 sm:mb-20 rounded-xl border border-border bg-surface p-6 sm:p-10">
+          <h2 className="text-xl sm:text-2xl font-bold text-text mb-6">What you see on every listing</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
               "BIDGARI Verified — every listing checked before it goes live",
@@ -153,7 +153,7 @@ export default function TrustPage() {
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-[var(--accent)] shrink-0 mt-0.5" strokeWidth={2} />
-                <span className="text-sm text-slate-500 font-medium">{item}</span>
+                <span className="text-sm text-muted font-medium">{item}</span>
               </div>
             ))}
           </div>
@@ -162,13 +162,13 @@ export default function TrustPage() {
         {/* FAQ */}
         <section className="mb-16 sm:mb-20">
           <div className="text-center mb-10">
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Frequently asked questions</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-text">Frequently asked questions</h2>
           </div>
-          <div className="max-w-2xl mx-auto space-y-0 divide-y divide-slate-100 border-t border-slate-200">
+          <div className="max-w-2xl mx-auto space-y-0 divide-y divide-border border-t border-border">
             {FAQS.map((faq, i) => (
               <div key={i} className="py-5">
-                <h3 className="text-sm font-bold text-slate-900 mb-2">{faq.q}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed font-medium">{faq.a}</p>
+                <h3 className="text-sm font-bold text-text mb-2">{faq.q}</h3>
+                <p className="text-sm text-muted leading-relaxed font-medium">{faq.a}</p>
               </div>
             ))}
           </div>
@@ -176,11 +176,11 @@ export default function TrustPage() {
 
         {/* CTA */}
         <section className="text-center">
-          <div className="rounded-xl border border-slate-200 bg-white p-8 sm:p-12">
-            <h2 className="text-xl sm:text-3xl font-bold text-slate-900 mb-4">
+          <div className="rounded-xl border border-border bg-surface p-8 sm:p-12">
+            <h2 className="text-xl sm:text-3xl font-bold text-text mb-4">
               Ready to buy or sell with confidence?
             </h2>
-            <p className="text-sm text-slate-500 mb-8 max-w-lg mx-auto font-medium">
+            <p className="text-sm text-muted mb-8 max-w-lg mx-auto font-medium">
               Browse verified inventory, or sell your car with the BIDGARI team handling the paperwork.
             </p>
             <div className="flex flex-wrap justify-center gap-3">

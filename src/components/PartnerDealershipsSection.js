@@ -14,14 +14,14 @@ function UnitCount({ count }) {
   const n = count ?? 0;
   return (
     <div className="flex items-center gap-2 min-w-0">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-[var(--accent)]">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-overlay text-[var(--accent)]">
         <Car className="h-4 w-4" aria-hidden />
       </span>
       <div className="min-w-0 leading-tight">
-        <p className="text-sm font-bold tabular-nums text-slate-900">
+        <p className="text-sm font-bold tabular-nums text-text">
           {n === 0 ? "0" : `${n}+`}
         </p>
-        <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">
+        <p className="text-[10px] font-bold uppercase tracking-widest text-muted">
           Units available
         </p>
       </div>
@@ -49,15 +49,15 @@ export default function PartnerDealershipsSection({ dealers }) {
 
       <div className="home-shell relative z-10">
         <div className="mx-auto mb-8 max-w-3xl text-center lg:mb-10">
-          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-slate-100 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--accent)] shadow-sm">
+          <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-surface-overlay px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.22em] text-[var(--accent)] shadow-sm">
             <Handshake className="h-3.5 w-3.5" aria-hidden />
             Trusted partners
           </p>
-          <h2 className="mb-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-[2.5rem] lg:leading-tight">
-            <span className="text-slate-900">Partner </span>
+          <h2 className="mb-4 text-3xl font-bold tracking-tight text-text sm:text-4xl lg:text-[2.5rem] lg:leading-tight">
+            <span className="text-text">Partner </span>
             <span className="text-[var(--accent)]">Dealerships</span>
           </h2>
-          <p className="text-base font-medium leading-relaxed text-slate-500 sm:text-lg">
+          <p className="text-base font-medium leading-relaxed text-muted sm:text-lg">
             We work exclusively with certified dealerships that meet our standards for verification,
             pricing transparency, and how inventory is presented to buyers.
           </p>
@@ -74,11 +74,11 @@ export default function PartnerDealershipsSection({ dealers }) {
                 eventName="homepage_partner_dealer_card_click"
                 eventPayload={{ dealerId: dealer.id, slug: dealer.slug, featured: isFeatured }}
                 className={[
-                  "group relative flex h-full flex-col overflow-visible bg-white",
+                  "group relative flex h-full flex-col overflow-visible bg-surface",
                   "border p-5 pt-7 transition-all hover:shadow-xl sm:p-6 sm:pt-8",
                   isFeatured
                     ? "z-[1] border-[var(--accent)] shadow-md ring-2 ring-accent-glow"
-                    : "border-slate-200",
+                    : "border-border",
                 ].join(" ")}
                 style={{ borderRadius }}
               >
@@ -100,7 +100,7 @@ export default function PartnerDealershipsSection({ dealers }) {
                       Verified
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 rounded-full border border-slate-200 bg-slate-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-slate-600">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-border bg-surface-overlay px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest text-muted">
                       Partner
                     </span>
                   )}
@@ -108,7 +108,7 @@ export default function PartnerDealershipsSection({ dealers }) {
 
                 <div className="mb-4 flex items-start gap-4 pr-16 sm:pr-20">
                   <div
-                    className="relative h-16 w-16 shrink-0 overflow-hidden border border-slate-200 bg-slate-50"
+                    className="relative h-16 w-16 shrink-0 overflow-hidden border border-border bg-surface-hover"
                     style={{ borderRadius }}
                   >
                     {dealer.logoUrl ? (
@@ -120,28 +120,28 @@ export default function PartnerDealershipsSection({ dealers }) {
                         sizes="64px"
                       />
                     ) : (
-                      <span className="flex h-full w-full items-center justify-center text-xl font-bold text-slate-900">
+                      <span className="flex h-full w-full items-center justify-center text-xl font-bold text-text">
                         {dealer.name?.[0] ?? "?"}
                       </span>
                     )}
                   </div>
                   <div className="min-w-0 pt-0.5">
-                    <h3 className="mb-1 break-words text-lg font-bold text-slate-900 transition-colors group-hover:text-[var(--accent)]">
+                    <h3 className="mb-1 break-words text-lg font-bold text-text transition-colors group-hover:text-[var(--accent)]">
                       {dealer.name}
                     </h3>
-                    <p className="flex items-start gap-1.5 text-xs font-bold uppercase tracking-widest text-slate-500">
+                    <p className="flex items-start gap-1.5 text-xs font-bold uppercase tracking-widest text-muted">
                       <MapPin className="mt-0.5 h-3 w-3 shrink-0" aria-hidden />
                       <span className="leading-snug">{dealer.location}</span>
                     </p>
                   </div>
                 </div>
 
-                <p className="mb-6 line-clamp-3 flex-1 text-sm leading-relaxed text-slate-500">
+                <p className="mb-6 line-clamp-3 flex-1 text-sm leading-relaxed text-muted">
                   {dealer.description || "Partnering with BIDGARI to provide verified vehicles and transparent buyer contact."}
                 </p>
 
                 <div
-                  className="mt-auto flex flex-col gap-4 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between"
+                  className="mt-auto flex flex-col gap-4 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <UnitCount count={count} />
                   <span
@@ -158,7 +158,7 @@ export default function PartnerDealershipsSection({ dealers }) {
         </div>
 
         <div
-          className="mt-10 flex flex-col gap-5 rounded-2xl border border-slate-200 bg-white p-6 sm:mt-12 sm:flex-row sm:items-center sm:justify-between sm:gap-8 lg:p-8"
+          className="mt-10 flex flex-col gap-5 rounded-2xl border border-border bg-surface p-6 sm:mt-12 sm:flex-row sm:items-center sm:justify-between sm:gap-8 lg:p-8"
           style={{ borderRadius }}
         >
           <div className="flex min-w-0 items-start gap-4">
@@ -166,10 +166,10 @@ export default function PartnerDealershipsSection({ dealers }) {
               <Handshake className="h-5 w-5" aria-hidden />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
                 Grow with us
               </p>
-              <p className="mt-1 text-base font-semibold leading-snug text-slate-900">
+              <p className="mt-1 text-base font-semibold leading-snug text-text">
                 Want to partner with BIDGARI? Join our network of trusted dealerships and reach serious buyers.
               </p>
             </div>

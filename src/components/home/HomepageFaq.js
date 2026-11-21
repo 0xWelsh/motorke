@@ -23,16 +23,16 @@ const FAQ_ITEMS = [
 
 function FaqItem({ item, isOpen, onToggle }) {
   return (
-    <div className="border-b border-slate-200 last:border-b-0">
+    <div className="border-b border-border last:border-b-0">
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between py-5 text-left group"
       >
-        <span className="text-sm sm:text-base font-bold text-slate-900 pr-4 group-hover:text-[var(--accent)] transition-colors">
+        <span className="text-sm sm:text-base font-bold text-text pr-4 group-hover:text-[var(--accent)] transition-colors">
           {item.q}
         </span>
         <ChevronDown
-          className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-200 ${
+          className={`w-4 h-4 text-dim shrink-0 transition-transform duration-200 ${
             isOpen ? "rotate-180 text-[var(--accent)]" : ""
           }`}
         />
@@ -42,7 +42,7 @@ function FaqItem({ item, isOpen, onToggle }) {
           isOpen ? "max-h-60 pb-5" : "max-h-0"
         }`}
       >
-        <p className="text-sm text-slate-500 leading-relaxed font-medium">
+        <p className="text-sm text-muted leading-relaxed font-medium">
           {item.a}
         </p>
       </div>
@@ -54,16 +54,16 @@ export default function HomepageFaq() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section className="py-10 sm:py-14 bg-white border-y border-slate-200">
+    <section className="py-10 sm:py-14 bg-surface border-y border-border">
       <div className="home-shell max-w-3xl">
         <div className="text-center mb-8 sm:mb-10">
           <p className="meta-label text-[var(--accent)] mb-3">FAQ</p>
-          <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-2xl sm:text-4xl font-bold text-text tracking-tight">
             Common questions
           </h2>
         </div>
 
-        <div className="border-t border-slate-200">
+        <div className="border-t border-border">
           {FAQ_ITEMS.map((item, i) => (
             <FaqItem
               key={i}

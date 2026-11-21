@@ -46,14 +46,14 @@ export default async function GuideLandingPage({ params }) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="home-shell max-w-3xl mx-auto">
-        <Link href="/guides" className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900">
+        <Link href="/guides" className="text-[10px] font-bold uppercase tracking-widest text-muted hover:text-text">
           ← Guides
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mt-4 mb-3">
+        <h1 className="text-3xl sm:text-4xl font-bold text-text mt-4 mb-3">
           {page.title}
         </h1>
         {page.description ? (
-          <p className="text-lg text-slate-500 mb-8">{page.description}</p>
+          <p className="text-lg text-muted mb-8">{page.description}</p>
         ) : null}
         {landing?.hubPath ? (
           <Link

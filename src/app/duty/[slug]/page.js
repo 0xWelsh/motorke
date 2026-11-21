@@ -57,16 +57,16 @@ export default async function DutyVehiclePage({ params }) {
       <DutyJsonLd vehicle={vehicle} pathname={`/duty/${pathSlug}`} />
       <div className="home-shell pt-[4.75rem] md:pt-24 pb-8">
         <div className="max-w-6xl mx-auto">
-          <nav className="text-xs text-slate-500 mb-4 duty-print-hide" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-slate-900 font-medium">
+          <nav className="text-xs text-muted mb-4 duty-print-hide" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-text font-medium">
               Home
             </Link>
             <span className="mx-2">/</span>
-            <Link href="/duty" className="hover:text-slate-900">
+            <Link href="/duty" className="hover:text-text">
               Duty calculator
             </Link>
             <span className="mx-2">/</span>
-            <span className="text-slate-500">{dutyVehicleLabel(vehicle)}</span>
+            <span className="text-muted">{dutyVehicleLabel(vehicle)}</span>
           </nav>
         </div>
       </div>

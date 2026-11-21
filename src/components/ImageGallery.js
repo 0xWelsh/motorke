@@ -277,7 +277,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
 
   if (!images?.length) {
     return (
-      <div className="w-full aspect-video bg-slate-100 flex items-center justify-center text-sm font-bold uppercase tracking-widest text-slate-400 max-h-[600px]">
+      <div className="w-full aspect-video bg-surface-overlay flex items-center justify-center text-sm font-bold uppercase tracking-widest text-dim max-h-[600px]">
         No image
       </div>
     );
@@ -295,7 +295,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
       <div
         id="hero-gallery"
         ref={heroRef}
-        className="relative w-full aspect-[4/3] max-h-[52vh] sm:max-h-[420px] lg:h-auto lg:aspect-[4/3] lg:max-h-[640px] bg-slate-100 overflow-hidden select-none rounded-none border-0 lg:rounded-lg border-slate-200 bg-white shadow-none sm:shadow-sm"
+        className="relative w-full aspect-[4/3] max-h-[52vh] sm:max-h-[420px] lg:h-auto lg:aspect-[4/3] lg:max-h-[640px] bg-surface-overlay overflow-hidden select-none rounded-none border-0 lg:rounded-lg border-border bg-surface shadow-none sm:shadow-sm"
       >
         <div
           className="absolute inset-0 cursor-pointer"
@@ -332,7 +332,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
         {/* Overlay nav */}
         <div
           className={`absolute inset-x-0 top-0 z-20 flex items-center justify-between px-3 py-2 transition-colors duration-300 ${
-            navOpaque ? "bg-white/90 backdrop-blur-md" : "bg-transparent"
+            navOpaque ? "bg-glass/90 backdrop-blur-md" : "bg-transparent"
           }`}
         >
           <button
@@ -340,8 +340,8 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
             onClick={() => startTransition(() => { window.history.length > 1 ? router.back() : router.push("/cars"); })}
             className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors ${
               navOpaque
-                ? "text-slate-900 hover:bg-slate-100"
-                : "text-white/90 hover:bg-white/20"
+                ? "text-text hover:bg-surface-overlay"
+                : "text-white/90 hover:bg-glass/20"
             }`}
             aria-label="Go back"
           >
@@ -356,8 +356,8 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
               aria-pressed={saved}
               className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors ${
                 navOpaque
-                  ? saved ? "text-red-500" : "text-slate-500 hover:text-red-500 hover:bg-slate-100"
-                  : saved ? "text-red-400" : "text-white/80 hover:bg-white/20"
+                  ? saved ? "text-red-500" : "text-muted hover:text-red-500 hover:bg-surface-overlay"
+                  : saved ? "text-red-400" : "text-white/80 hover:bg-glass/20"
               }`}
               aria-label={saved ? "Remove from saved" : "Save this car"}
             >
@@ -374,8 +374,8 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
                 onClick={() => setMenuOpen((o) => !o)}
                 className={`flex items-center justify-center w-9 h-9 rounded-full transition-colors ${
                   navOpaque
-                    ? "text-slate-500 hover:bg-slate-100"
-                    : "text-white/80 hover:bg-white/20"
+                    ? "text-muted hover:bg-surface-overlay"
+                    : "text-white/80 hover:bg-glass/20"
                 }`}
                 aria-label="More options"
               >
@@ -383,21 +383,21 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
               </button>
 
               {menuOpen && (
-                <div className="absolute right-0 top-full mt-1 w-44 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-30 overflow-hidden">
+                <div className="absolute right-0 top-full mt-1 w-44 bg-surface rounded-xl shadow-xl border border-border py-1.5 z-30 overflow-hidden">
                   <button
                     type="button"
                     onClick={handleShare}
-                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-semibold text-slate-500 hover:bg-slate-100 transition-colors"
+                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-semibold text-muted hover:bg-surface-overlay transition-colors"
                   >
-                    <Share2 className={`w-4 h-4 ${shareDone ? "text-emerald-600" : "text-slate-500"}`} />
+                    <Share2 className={`w-4 h-4 ${shareDone ? "text-emerald-600" : "text-muted"}`} />
                     {shareDone ? "Shared" : "Share"}
                   </button>
                   <button
                     type="button"
                     onClick={copyLink}
-                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-semibold text-slate-500 hover:bg-slate-100 transition-colors"
+                    className="flex items-center gap-3 w-full px-4 py-2.5 text-sm font-semibold text-muted hover:bg-surface-overlay transition-colors"
                   >
-                    <svg className="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <svg className="w-4 h-4 text-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
                       <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                     </svg>
@@ -473,8 +473,8 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
                 onClick={(e) => { e.stopPropagation(); setActive(i); }}
                 className={`transition-all rounded-full ${
                   i === active
-                    ? "w-5 h-1.5 bg-white shadow-sm"
-                    : "w-1.5 h-1.5 bg-white/40 hover:bg-white/60"
+                    ? "w-5 h-1.5 bg-surface shadow-sm"
+                    : "w-1.5 h-1.5 bg-glass/40 hover:bg-glass/60"
                 }`}
                 aria-label={`Go to photo ${i + 1}`}
               />
@@ -604,7 +604,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); goPrev(); }}
-                className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-[115] w-10 h-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 transition-all"
+                className="hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 z-[115] w-10 h-10 items-center justify-center rounded-full bg-glass/10 text-white backdrop-blur-sm hover:bg-glass/20 transition-all"
                 aria-label="Previous image"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -614,7 +614,7 @@ export default function ImageGallery({ images, title, carId, isLoggedIn = null, 
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); goNext(); }}
-                className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-[115] w-10 h-10 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm hover:bg-white/20 transition-all"
+                className="hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 z-[115] w-10 h-10 items-center justify-center rounded-full bg-glass/10 text-white backdrop-blur-sm hover:bg-glass/20 transition-all"
                 aria-label="Next image"
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">

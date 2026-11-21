@@ -93,7 +93,7 @@ export default async function CompareSeoPage({ params }) {
   const faqSchema = buildFaqSchema(faqItems);
 
   return (
-    <article className="min-h-screen bg-white pt-20 pb-24">
+    <article className="min-h-screen bg-surface pt-20 pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
@@ -108,14 +108,14 @@ export default async function CompareSeoPage({ params }) {
       />
       <div className="home-shell max-w-5xl mx-auto space-y-8">
         <div>
-          <Link href="/guides" className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-800">
+          <Link href="/guides" className="text-[10px] font-bold uppercase tracking-widest text-muted hover:text-text">
             ← Guides
           </Link>
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mt-4 mb-3">
+          <h1 className="text-3xl sm:text-4xl font-bold text-text mt-4 mb-3">
             {page.title}
           </h1>
           {page.description ? (
-            <p className="text-lg text-slate-600 max-w-3xl">{page.description}</p>
+            <p className="text-lg text-muted max-w-3xl">{page.description}</p>
           ) : null}
           <Link
             href={compareHref}
@@ -137,14 +137,14 @@ export default async function CompareSeoPage({ params }) {
 
         {faqItems.length ? (
           <section className="max-w-3xl">
-            <h2 className="text-2xl font-bold text-slate-900 mt-10 mb-4">
+            <h2 className="text-2xl font-bold text-text mt-10 mb-4">
               Frequently asked questions
             </h2>
             <div className="space-y-4">
               {faqItems.map((item, i) => (
-                <div key={i} className="border border-slate-200 rounded-lg p-5">
-                  <h3 className="font-semibold text-slate-900 mb-2">{item.q}</h3>
-                  <p className="text-slate-500 leading-relaxed">{item.a}</p>
+                <div key={i} className="border border-border rounded-lg p-5">
+                  <h3 className="font-semibold text-text mb-2">{item.q}</h3>
+                  <p className="text-muted leading-relaxed">{item.a}</p>
                 </div>
               ))}
             </div>
@@ -153,7 +153,7 @@ export default async function CompareSeoPage({ params }) {
 
         {related.length ? (
           <section className="max-w-3xl">
-            <h2 className="text-2xl font-bold text-slate-900 mt-12 mb-4">
+            <h2 className="text-2xl font-bold text-text mt-12 mb-4">
               Related comparisons
             </h2>
             <div className="grid sm:grid-cols-2 gap-4">
@@ -161,10 +161,10 @@ export default async function CompareSeoPage({ params }) {
                 <Link
                   key={r.slug}
                   href={r.path}
-                  className="block border border-slate-200 rounded-lg p-4 hover:border-emerald-600 hover:shadow-sm transition"
+                  className="block border border-border rounded-lg p-4 hover:border-emerald-600 hover:shadow-sm transition"
                   style={{ borderRadius: "var(--radius)" }}
                 >
-                  <span className="font-medium text-slate-800">{r.title}</span>
+                  <span className="font-medium text-text">{r.title}</span>
                 </Link>
               ))}
             </div>

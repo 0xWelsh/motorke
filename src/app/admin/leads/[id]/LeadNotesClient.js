@@ -8,7 +8,7 @@ const STATUS_COLORS = {
   INTERESTED: "bg-violet-500",
   NEGOTIATING: "bg-amber-500",
   SOLD: "bg-green-500",
-  DEAD: "bg-slate-400",
+  DEAD: "bg-surface-overlay",
 };
 
 const STATUS_LABELS = {
@@ -26,7 +26,7 @@ const STATUS_STYLES = {
   INTERESTED: "bg-violet-950/40 text-violet-300",
   NEGOTIATING: "bg-amber-950/40 text-amber-300",
   SOLD: "bg-green-950/40 text-green-300",
-  DEAD: "bg-slate-100 text-slate-500",
+  DEAD: "bg-surface-overlay text-muted",
 };
 
 export default function LeadNotesClient({ leadId, initialNotes, currentStatus }) {
@@ -85,7 +85,7 @@ export default function LeadNotesClient({ leadId, initialNotes, currentStatus })
     <div className="space-y-4">
       {/* Status change inline */}
       <div className="flex flex-wrap items-center gap-2">
-        <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+        <span className="text-[11px] font-semibold text-dim uppercase tracking-wider">
           Status:
         </span>
         <div className="flex flex-wrap gap-1.5">
@@ -96,8 +96,8 @@ export default function LeadNotesClient({ leadId, initialNotes, currentStatus })
               disabled={changingStatus || s === status}
               className={`rounded-md px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider transition-all ${
                 s === status
-                  ? `${STATUS_STYLES[s] || "bg-slate-100 text-slate-700"} ring-1 ring-white/10`
-                  : "bg-slate-100/50 text-slate-400 hover:bg-slate-200 hover:text-slate-700"
+                  ? `${STATUS_STYLES[s] || "bg-surface-overlay text-secondary"} ring-1 ring-white/10`
+                  : "bg-surface-overlay text-dim hover:bg-surface-overlay hover:text-secondary"
               } disabled:opacity-50`}
             >
               {STATUS_LABELS[s] || s}
@@ -114,7 +114,7 @@ export default function LeadNotesClient({ leadId, initialNotes, currentStatus })
           onChange={(e) => setNoteText(e.target.value)}
           placeholder="Add a note..."
           maxLength={500}
-          className="flex-1 rounded-lg border border-slate-200 bg-[var(--bg)]/60 px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 outline-none transition focus:border-emerald-500/50 focus:bg-[var(--bg)]"
+          className="flex-1 rounded-lg border border-border bg-[var(--bg)]/60 px-3 py-2 text-sm text-text placeholder:text-dim outline-none transition focus:border-emerald-500/50 focus:bg-[var(--bg)]"
         />
         <button
           type="submit"
@@ -128,7 +128,7 @@ export default function LeadNotesClient({ leadId, initialNotes, currentStatus })
       {/* Timeline */}
       <div className="space-y-0">
         {notes.length === 0 ? (
-          <p className="text-xs text-slate-500 text-center py-6">No activity yet</p>
+          <p className="text-xs text-muted text-center py-6">No activity yet</p>
         ) : (
           notes.map((note, i) => (
             <div key={note.id} className="flex gap-3 pb-4 relative">
@@ -138,28 +138,28 @@ export default function LeadNotesClient({ leadId, initialNotes, currentStatus })
                   STATUS_COLORS[note.status] || "bg-slate-500"
                 } ${i === 0 ? "ring-2 ring-offset-2 ring-offset-white ring-emerald-500/60" : ""}`} />
                 {i < notes.length - 1 && (
-                  <div className="w-px flex-1 bg-slate-100 mt-1" />
+                  <div className="w-px flex-1 bg-surface-overlay mt-1" />
                 )}
               </div>
               {/* Content */}
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
                   <span className={`inline-block rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider ${
-                    STATUS_STYLES[note.status] || "bg-slate-100 text-slate-500"
+                    STATUS_STYLES[note.status] || "bg-surface-overlay text-muted"
                   }`}>
                     {STATUS_LABELS[note.status] || note.status}
                   </span>
-                  <span className="text-[10px] text-slate-500">
+                  <span className="text-[10px] text-muted">
                     {new Date(note.createdAt).toLocaleDateString("en-KE", {
                       day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
                     })}
                   </span>
                 </div>
                 {note.note && (
-                  <p className="mt-1 text-sm text-slate-700 leading-relaxed">{note.note}</p>
+                  <p className="mt-1 text-sm text-secondary leading-relaxed">{note.note}</p>
                 )}
                 {!note.note && (
-                  <p className="mt-1 text-xs text-slate-500 italic">Status changed to {STATUS_LABELS[note.status] || note.status}</p>
+                  <p className="mt-1 text-xs text-muted italic">Status changed to {STATUS_LABELS[note.status] || note.status}</p>
                 )}
               </div>
             </div>

@@ -11,7 +11,7 @@ import { Loader2 } from "lucide-react";
 const SearchMapLeaflet = dynamic(() => import("./SearchMapLeaflet"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[460px] bg-slate-50 animate-pulse flex items-center justify-center">
+    <div className="w-full h-[460px] bg-surface-hover animate-pulse flex items-center justify-center">
       <Loader2 className="w-5 h-5 animate-spin text-[var(--accent)]" />
     </div>
   ),
@@ -50,22 +50,22 @@ export default function SearchMapView({ cars }) {
 
   if (dealers.length === 0) {
     return (
-      <div className="w-full h-[320px] bg-white border border-[#ddd4c8] flex flex-col items-center justify-center gap-3">
-        <p className="text-sm font-bold text-slate-500 uppercase tracking-widest">
+      <div className="w-full h-[320px] bg-surface border border-[#ddd4c8] flex flex-col items-center justify-center gap-3">
+        <p className="text-sm font-bold text-muted uppercase tracking-widest">
           No dealer locations available for these results
         </p>
-        <p className="text-xs text-slate-400 font-medium">Add latitude/longitude to dealers in the admin panel.</p>
+        <p className="text-xs text-dim font-medium">Add latitude/longitude to dealers in the admin panel.</p>
       </div>
     );
   }
 
   return (
     <div className="border border-[#ddd4c8] overflow-hidden">
-      <div className="px-4 py-3 bg-white border-b border-[#e8e2d9] flex items-center justify-between">
-        <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-600">
+      <div className="px-4 py-3 bg-surface border-b border-[#e8e2d9] flex items-center justify-between">
+        <p className="text-[11px] font-black uppercase tracking-[0.18em] text-muted">
           {dealers.length} dealer location{dealers.length !== 1 ? "s" : ""} on this page
         </p>
-        <p className="text-[10px] text-slate-400 font-semibold">Click a pin to see cars</p>
+        <p className="text-[10px] text-dim font-semibold">Click a pin to see cars</p>
       </div>
       <SearchMapLeaflet dealers={dealers} />
     </div>

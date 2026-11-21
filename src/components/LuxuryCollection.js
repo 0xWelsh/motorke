@@ -46,7 +46,7 @@ export default function LuxuryCollection({ cars }) {
               onClick={() => setActive(f.value)}
               className={`shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-300 border ${
                 isActive
-                  ? "bg-white text-black border-white"
+                  ? "bg-surface text-black border-white"
                   : "bg-transparent text-zinc-400 border-zinc-700/60 hover:border-zinc-500 hover:text-white"
               }`}
             >

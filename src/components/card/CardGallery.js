@@ -82,7 +82,7 @@ export default function CardGallery({ urls, alt, sizes, priority = false }) {
           <span
             key={i}
             className={`h-1 rounded-full transition-all duration-300 ${
-              i === index ? "w-4 bg-white" : "w-1 bg-white/50"
+              i === index ? "w-4 bg-surface" : "w-1 bg-glass/50"
             }`}
           />
         ))}

@@ -113,22 +113,22 @@ export default function PushOptIn({ variant = "banner" }) {
   // Banner variant — inline in footer or page
   if (variant === "banner") {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white p-4">
+      <div className="rounded-xl border border-border bg-surface p-4">
         <div className="flex items-center gap-3">
           {subscribed ? (
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50">
               <BellRing className="h-5 w-5 text-emerald-600" />
             </div>
           ) : (
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100">
-              <Bell className="h-5 w-5 text-slate-500" />
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-overlay">
+              <Bell className="h-5 w-5 text-muted" />
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <p className="text-[13px] font-bold text-slate-900">
+            <p className="text-[13px] font-bold text-text">
               {subscribed ? "Notifications enabled" : "Get notified about new cars"}
             </p>
-            <p className="text-[11px] text-slate-500">
+            <p className="text-[11px] text-muted">
               {subscribed
                 ? "You'll get alerts for price drops and new listings"
                 : "Be the first to know when matching cars are listed"}
@@ -139,7 +139,7 @@ export default function PushOptIn({ variant = "banner" }) {
             disabled={loading}
             className={`shrink-0 rounded-lg px-3 py-2 text-[11px] font-bold transition-colors ${
               subscribed
-                ? "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                ? "bg-surface-overlay text-muted hover:bg-surface-overlay"
                 : "bg-accent text-white hover:bg-accent-hover"
             } disabled:opacity-50`}
           >
@@ -161,7 +161,7 @@ export default function PushOptIn({ variant = "banner" }) {
       className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-[11px] font-bold transition-colors ${
         subscribed
           ? "bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
-          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+          : "bg-surface-overlay text-muted hover:bg-surface-overlay"
       } disabled:opacity-50`}
       title={subscribed ? "Disable notifications" : "Enable notifications"}
     >

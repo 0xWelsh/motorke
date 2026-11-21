@@ -333,10 +333,10 @@ export default async function AdminDashboard({ searchParams }) {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-900">Dashboard</h1>
-          <p className="mt-0.5 text-xs text-slate-400">Business overview at a glance.</p>
+          <h1 className="text-xl font-bold tracking-tight text-text">Dashboard</h1>
+          <p className="mt-0.5 text-xs text-dim">Business overview at a glance.</p>
         </div>
-        <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-100 p-1">
+        <div className="flex items-center gap-1 rounded-xl border border-border bg-surface-overlay p-1">
           {[
             { v: "7", l: "7d" },
             { v: "30", l: "30d" },
@@ -348,7 +348,7 @@ export default async function AdminDashboard({ searchParams }) {
               className={`rounded-lg px-3.5 py-1.5 text-xs font-bold transition ${
                 range === o.v
                   ? "bg-emerald-600 text-white shadow-[0_2px_10px_rgba(16,185,129,0.35)]"
-                  : "text-slate-400 hover:text-slate-800"
+                  : "text-dim hover:text-text"
               }`}
             >
               {o.l}
@@ -365,10 +365,10 @@ export default async function AdminDashboard({ searchParams }) {
           return (
             <div
               key={s.key}
-              className="rounded-2xl border border-slate-200 bg-white p-4 transition-colors hover:border-slate-300"
+              className="rounded-2xl border border-border bg-surface p-4 transition-colors hover:border-border"
             >
               <div className="flex items-start justify-between">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
                   {s.label}
                 </p>
                 <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${cfg.tile}`}>
@@ -376,7 +376,7 @@ export default async function AdminDashboard({ searchParams }) {
                 </span>
               </div>
               <div className="mt-2 flex items-baseline gap-2">
-                <span className="text-2xl font-bold tracking-tight text-slate-900 tabular-nums">
+                <span className="text-2xl font-bold tracking-tight text-text tabular-nums">
                   {typeof s.value === "number" ? s.value.toLocaleString() : s.value}
                 </span>
                 {s.trend != null && (
@@ -400,19 +400,19 @@ export default async function AdminDashboard({ searchParams }) {
         <div className="space-y-4 lg:col-span-3">
 
           {/* Chart */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-4">
+          <div className="rounded-2xl border border-border bg-surface p-4">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <div className="flex items-center gap-2">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
                   <Activity size={14} />
                 </span>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
                   All Metrics &middot; 30d
                 </span>
               </div>
               <div className="flex items-center gap-3">
                 {legend.map((l) => (
-                  <span key={l.key} className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
+                  <span key={l.key} className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted">
                     <span className={`h-2 w-2 rounded-full ${l.dot}`} />
                     {l.label}
                   </span>
@@ -423,9 +423,9 @@ export default async function AdminDashboard({ searchParams }) {
           </div>
 
           {/* Activity */}
-          <div className="rounded-2xl border border-slate-200 bg-white">
-            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3.5">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+          <div className="rounded-2xl border border-border bg-surface">
+            <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
                 Recent Activity
               </span>
               <Link href="/admin/cars" className="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 transition-colors">
@@ -433,25 +433,25 @@ export default async function AdminDashboard({ searchParams }) {
               </Link>
             </div>
             {activity.length > 0 ? (
-              <div className="divide-y divide-slate-200/70">
+              <div className="divide-y divide-border">
                 {activity.map((e) => (
                   <Link
                     key={e.id}
                     href={e.href}
-                    className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-100/40"
+                    className="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-surface-overlay"
                   >
                     <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
                       e.type === "car" ? "bg-blue-500/10 text-blue-400" : "bg-emerald-50 text-emerald-600"
                     }`}>
                       {e.type === "car" ? <Car size={14} /> : <MessageSquare size={14} />}
                     </div>
-                    <span className="flex-1 truncate text-sm font-medium text-slate-900">{e.label}</span>
-                    <span className="text-[11px] font-semibold text-slate-400 tabular-nums">{ago(e.time)}</span>
+                    <span className="flex-1 truncate text-sm font-medium text-text">{e.label}</span>
+                    <span className="text-[11px] font-semibold text-dim tabular-nums">{ago(e.time)}</span>
                   </Link>
                 ))}
               </div>
             ) : (
-              <p className="py-10 text-center text-sm text-slate-400">No recent activity</p>
+              <p className="py-10 text-center text-sm text-dim">No recent activity</p>
             )}
           </div>
         </div>
@@ -460,9 +460,9 @@ export default async function AdminDashboard({ searchParams }) {
         <div className="space-y-4">
 
           {/* Attention Queue */}
-          <div className="rounded-2xl border border-slate-200 bg-white">
-            <div className="flex items-center justify-between border-b border-slate-200 px-5 py-3.5">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+          <div className="rounded-2xl border border-border bg-surface">
+            <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
                 Queue
               </span>
               <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-500/15 px-1.5 text-[10px] font-bold text-emerald-600">
@@ -473,23 +473,23 @@ export default async function AdminDashboard({ searchParams }) {
           </div>
 
           {/* Inventory value */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">Inventory Value</p>
-            <p className="mt-1 text-2xl font-bold tracking-tight text-slate-900 tabular-nums">{fmt(totalValue)}</p>
-            <div className="mt-4 space-y-2.5 border-t border-slate-200 pt-4">
+          <div className="rounded-2xl border border-border bg-surface p-5">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">Inventory Value</p>
+            <p className="mt-1 text-2xl font-bold tracking-tight text-text tabular-nums">{fmt(totalValue)}</p>
+            <div className="mt-4 space-y-2.5 border-t border-border pt-4">
               {[
                 { l: "Live Listings", v: totalCars, Icon: Car, cls: "bg-blue-500/10 text-blue-400" },
                 { l: "Users", v: totalUsers, Icon: Users, cls: "bg-violet-500/10 text-violet-400" },
                 { l: "Leads", v: totalLeads, Icon: MessageSquare, cls: "bg-emerald-50 text-emerald-600" },
               ].map((s) => (
                 <div key={s.l} className="flex items-center justify-between">
-                  <span className="flex items-center gap-2 text-xs text-slate-400">
+                  <span className="flex items-center gap-2 text-xs text-dim">
                     <span className={`flex h-6 w-6 items-center justify-center rounded-md ${s.cls}`}>
                       <s.Icon size={12} />
                     </span>
                     {s.l}
                   </span>
-                  <span className="text-xs font-bold text-slate-900 tabular-nums">{s.v.toLocaleString()}</span>
+                  <span className="text-xs font-bold text-text tabular-nums">{s.v.toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -497,12 +497,12 @@ export default async function AdminDashboard({ searchParams }) {
 
           {/* Salesman Performance */}
           {salesmanPerformance.length > 0 && (
-            <div className="rounded-2xl border border-slate-200 bg-white p-5">
+            <div className="rounded-2xl border border-border bg-surface p-5">
               <div className="mb-4 flex items-center gap-2">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600">
                   <TrendingUp size={14} />
                 </span>
-                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">
                   Salesman Performance
                 </span>
               </div>
@@ -510,21 +510,21 @@ export default async function AdminDashboard({ searchParams }) {
                 {salesmanPerformance.map((s) => (
                   <div key={s.id} className="space-y-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-slate-800">{s.name}</span>
-                      <span className="text-xs font-bold text-slate-900 tabular-nums">{s.total} leads</span>
+                      <span className="text-xs font-semibold text-text">{s.name}</span>
+                      <span className="text-xs font-bold text-text tabular-nums">{s.total} leads</span>
                     </div>
                     <div className="flex items-center gap-2 text-[11px] font-semibold">
                       <span className="text-emerald-600 tabular-nums">{s.sold} sold</span>
-                      <span className={`tabular-nums ${s.rate >= 30 ? "text-emerald-600" : s.rate >= 10 ? "text-amber-600" : "text-slate-400"}`}>
+                      <span className={`tabular-nums ${s.rate >= 30 ? "text-emerald-600" : s.rate >= 10 ? "text-amber-600" : "text-dim"}`}>
                         {s.rate}% conv.
                       </span>
                       {s.avgResp !== null && (
-                        <span className="text-slate-400 tabular-nums">
+                        <span className="text-dim tabular-nums">
                           {s.avgResp < 1 ? `${Math.round(s.avgResp * 60)}m` : `${s.avgResp}h`} avg resp.
                         </span>
                       )}
                     </div>
-                    <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+                    <div className="h-1.5 overflow-hidden rounded-full bg-surface-overlay">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-emerald-600 to-emerald-400 transition-all"
                         style={{ width: `${Math.min(s.rate, 100)}%` }}
@@ -537,18 +537,18 @@ export default async function AdminDashboard({ searchParams }) {
           )}
 
           {/* Quick */}
-          <div className="rounded-2xl border border-slate-200 bg-white p-5">
-            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">Quick</span>
+          <div className="rounded-2xl border border-border bg-surface p-5">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-dim">Quick</span>
             <div className="mt-3 grid grid-cols-2 gap-2">
               <Link
                 href="/admin/cars/new"
-                className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-[var(--bg)]/60 px-3 py-2.5 text-xs font-bold text-slate-700 transition-colors hover:border-emerald-500/40 hover:text-emerald-600"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-border bg-[var(--bg)]/60 px-3 py-2.5 text-xs font-bold text-secondary transition-colors hover:border-emerald-500/40 hover:text-emerald-600"
               >
                 <Plus size={14} /> Car
               </Link>
               <Link
                 href="/admin/users"
-                className="flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-[var(--bg)]/60 px-3 py-2.5 text-xs font-bold text-slate-700 transition-colors hover:border-emerald-500/40 hover:text-emerald-600"
+                className="flex items-center justify-center gap-1.5 rounded-xl border border-border bg-[var(--bg)]/60 px-3 py-2.5 text-xs font-bold text-secondary transition-colors hover:border-emerald-500/40 hover:text-emerald-600"
               >
                 <Users size={14} /> Users
               </Link>
@@ -567,9 +567,9 @@ export default async function AdminDashboard({ searchParams }) {
           <Link
             key={link.href}
             href={link.href}
-            className="flex items-center gap-2.5 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-xs font-semibold text-slate-500 transition-colors hover:border-slate-300 hover:text-slate-900"
+            className="flex items-center gap-2.5 rounded-2xl border border-border bg-surface px-4 py-3 text-xs font-semibold text-muted transition-colors hover:border-border hover:text-text"
           >
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100/80 text-slate-500">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-surface-overlay text-muted">
               <link.Icon size={14} />
             </span>
             {link.label}

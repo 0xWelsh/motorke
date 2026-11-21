@@ -217,7 +217,7 @@ export default function CarActionButtons({
                     className={`text-[11px] font-bold px-2.5 py-1.5 rounded-full border transition-all ${
                       active
                         ? "bg-zinc-900 text-white border-zinc-900"
-                        : "bg-white text-zinc-500 border-zinc-200 hover:border-zinc-400"
+                        : "bg-surface text-zinc-500 border-zinc-200 hover:border-zinc-400"
                     }`}
                   >
                     {concern}
@@ -288,16 +288,16 @@ export default function CarActionButtons({
             <span>Chat on WhatsApp</span>
           </a>
           {prettyPhone && (
-            <p className="text-center text-[11px] font-medium text-slate-400">
+            <p className="text-center text-[11px] font-medium text-dim">
               Instant reply on {prettyPhone}
             </p>
           )}
           <div className="flex items-center gap-2 py-0.5">
-            <span className="h-px flex-1 bg-slate-200" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+            <span className="h-px flex-1 bg-surface-overlay" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-dim">
               or use a form
             </span>
-            <span className="h-px flex-1 bg-slate-200" />
+            <span className="h-px flex-1 bg-surface-overlay" />
           </div>
         </div>
       )}
@@ -318,7 +318,7 @@ export default function CarActionButtons({
 
       {active && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={close}>
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 relative" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-surface rounded-2xl shadow-2xl w-full max-w-sm p-6 relative" onClick={(e) => e.stopPropagation()}>
             <button onClick={close} className="absolute top-4 right-4 text-zinc-300 hover:text-zinc-700 transition-colors">
               <X className="w-5 h-5" />
             </button>

@@ -164,8 +164,8 @@ export default async function AdminGrowthPage() {
 
       {/* Header */}
       <div>
-        <h1 className="text-lg font-bold text-slate-900 tracking-tight">Growth</h1>
-        <p className="mt-1 text-[11px] text-slate-400">Company-wide trends and performance metrics.</p>
+        <h1 className="text-lg font-bold text-text tracking-tight">Growth</h1>
+        <p className="mt-1 text-[11px] text-dim">Company-wide trends and performance metrics.</p>
       </div>
 
       {/* KPI Row */}
@@ -174,13 +174,13 @@ export default async function AdminGrowthPage() {
           <Link
             key={kpi.label}
             href={kpi.href}
-            className="rounded-lg border border-slate-200 bg-white/60 p-3 hover:bg-slate-50 transition-colors"
+            className="rounded-lg border border-border bg-glass/60 p-3 hover:bg-surface-hover transition-colors"
           >
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">{kpi.label}</span>
-              <kpi.icon size={14} className={kpi.accent ? "text-emerald-500" : "text-slate-500"} />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-dim">{kpi.label}</span>
+              <kpi.icon size={14} className={kpi.accent ? "text-emerald-500" : "text-muted"} />
             </div>
-            <p className="text-xl font-black text-slate-900">{kpi.value}</p>
+            <p className="text-xl font-black text-text">{kpi.value}</p>
           </Link>
         ))}
       </div>
@@ -191,35 +191,35 @@ export default async function AdminGrowthPage() {
       {/* Bottom row: top makes + recent activity */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Top makes by leads */}
-        <div className="rounded-lg border border-slate-200 bg-white/60 p-3">
-          <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Top Makes by Leads</h3>
+        <div className="rounded-lg border border-border bg-glass/60 p-3">
+          <h3 className="text-[11px] font-bold uppercase tracking-wider text-dim mb-2">Top Makes by Leads</h3>
           <div className="space-y-1">
             {topMakes.slice(0, 5).map((m, i) => {
               const maxCount = Math.max(...topMakes.slice(0, 5).map((t) => t.count));
               const pct = maxCount > 0 ? (m.count / maxCount) * 100 : 0;
               return (
                 <div key={i} className="flex items-center gap-2">
-                  <span className="w-5 text-[11px] font-bold text-slate-400">{i + 1}.</span>
-                  <span className="flex-1 text-xs font-semibold text-slate-900 truncate">{m.make}</span>
-                  <span className="text-[11px] font-bold text-slate-500 tabular-nums">{m.count}</span>
-                  <div className="h-1.5 w-16 rounded-full bg-slate-100 overflow-hidden">
+                  <span className="w-5 text-[11px] font-bold text-dim">{i + 1}.</span>
+                  <span className="flex-1 text-xs font-semibold text-text truncate">{m.make}</span>
+                  <span className="text-[11px] font-bold text-muted tabular-nums">{m.count}</span>
+                  <div className="h-1.5 w-16 rounded-full bg-surface-overlay overflow-hidden">
                     <div className="h-full rounded-full bg-emerald-500/60" style={{ width: `${pct}%` }} />
                   </div>
                 </div>
               );
             })}
             {topMakes.length === 0 && (
-              <p className="text-xs text-slate-500 py-4 text-center">No lead data yet.</p>
+              <p className="text-xs text-muted py-4 text-center">No lead data yet.</p>
             )}
           </div>
         </div>
 
         {/* Conversion rate + channel summary */}
-        <div className="rounded-lg border border-slate-200 bg-white/60 p-3">
-          <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Conversion & Channels</h3>
+        <div className="rounded-lg border border-border bg-glass/60 p-3">
+          <h3 className="text-[11px] font-bold uppercase tracking-wider text-dim mb-2">Conversion & Channels</h3>
           <div className="flex items-baseline gap-2 mb-3">
-            <span className="text-2xl font-black text-slate-900">{conversionRate}%</span>
-            <span className="text-[11px] text-slate-400">lead-to-sale</span>
+            <span className="text-2xl font-black text-text">{conversionRate}%</span>
+            <span className="text-[11px] text-dim">lead-to-sale</span>
           </div>
           <div className="space-y-1.5">
             {channelBreakdown.map((c) => {
@@ -227,37 +227,37 @@ export default async function AdminGrowthPage() {
               const pct = maxChannel > 0 ? (c.count / maxChannel) * 100 : 0;
               return (
                 <div key={c.channel} className="flex items-center gap-2">
-                  <span className="w-16 text-[10px] font-bold uppercase text-slate-400 truncate">{c.channel}</span>
-                  <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
+                  <span className="w-16 text-[10px] font-bold uppercase text-dim truncate">{c.channel}</span>
+                  <div className="flex-1 h-1.5 rounded-full bg-surface-overlay overflow-hidden">
                     <div className="h-full rounded-full bg-blue-500/60" style={{ width: `${pct}%` }} />
                   </div>
-                  <span className="text-[11px] font-bold text-slate-500 tabular-nums">{c.count}</span>
+                  <span className="text-[11px] font-bold text-muted tabular-nums">{c.count}</span>
                 </div>
               );
             })}
             {channelBreakdown.length === 0 && (
-              <p className="text-xs text-slate-500 py-4 text-center">No channel data yet.</p>
+              <p className="text-xs text-muted py-4 text-center">No channel data yet.</p>
             )}
           </div>
         </div>
 
         {/* Recent activity */}
-        <div className="rounded-lg border border-slate-200 bg-white/60 p-3">
-          <h3 className="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Recent Activity</h3>
+        <div className="rounded-lg border border-border bg-glass/60 p-3">
+          <h3 className="text-[11px] font-bold uppercase tracking-wider text-dim mb-2">Recent Activity</h3>
           <div className="space-y-1.5 max-h-[280px] overflow-y-auto">
             {recentActivity.map((evt) => {
               const timeAgo = Math.floor((Date.now() - evt.time.getTime()) / 1000 / 60);
               const ago = timeAgo < 1 ? "now" : timeAgo < 60 ? `${timeAgo}m` : `${Math.floor(timeAgo / 60)}h`;
-              const dotColor = evt.type === "lead" ? "bg-emerald-500" : evt.type === "car" ? "bg-blue-500" : "bg-slate-400";
+              const dotColor = evt.type === "lead" ? "bg-emerald-500" : evt.type === "car" ? "bg-blue-500" : "bg-surface-overlay";
               return (
                 <Link
                   key={`${evt.type}-${evt.id}`}
                   href={evt.href}
-                  className="flex items-center gap-2 py-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors group"
+                  className="flex items-center gap-2 py-1.5 text-xs text-muted hover:text-text transition-colors group"
                 >
                   <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${dotColor}`} />
                   <span className="flex-1 truncate">{evt.label}</span>
-                  <span className="shrink-0 text-[10px] font-semibold text-slate-500">{ago}</span>
+                  <span className="shrink-0 text-[10px] font-semibold text-muted">{ago}</span>
                 </Link>
               );
             })}

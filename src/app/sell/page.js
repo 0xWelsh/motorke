@@ -99,11 +99,11 @@ export default function SellPage() {
         {/* Hero */}
         <section className="text-center mb-16 sm:mb-20">
           <p className="meta-label text-[var(--accent)] mb-4">For sellers</p>
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-slate-900 tracking-tight mb-6 max-w-3xl mx-auto leading-[1.1]">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold text-text tracking-tight mb-6 max-w-3xl mx-auto leading-[1.1]">
             Sell your car.{" "}
             <span className="text-[var(--accent)]">We handle the rest.</span>
           </h1>
-          <p className="text-base sm:text-lg text-slate-500 leading-relaxed max-w-2xl mx-auto font-medium mb-8">
+          <p className="text-base sm:text-lg text-muted leading-relaxed max-w-2xl mx-auto font-medium mb-8">
             Free to list, fairly valued, and handled by the BIDGARI team. Tell us about your car and we&apos;ll do the rest.
           </p>
           <div className="flex flex-wrap justify-center gap-3">
@@ -121,7 +121,7 @@ export default function SellPage() {
         <section className="mb-16 sm:mb-20">
           <div className="text-center mb-10 sm:mb-14">
             <p className="meta-label text-[var(--accent)] mb-3">Getting started</p>
-            <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-bold text-text tracking-tight">
               4 steps to selling your car
             </h2>
           </div>
@@ -130,13 +130,13 @@ export default function SellPage() {
             {STEPS.map((step, i) => (
               <div key={i} className="relative">
                 {i < STEPS.length - 1 && (
-                  <div className="hidden lg:block absolute top-8 left-[60%] w-[calc(100%-20%)] h-px bg-gradient-to-r from-slate-200 to-transparent" aria-hidden />
+                  <div className="hidden lg:block absolute top-8 left-[60%] w-[calc(100%-20%)] h-px bg-gradient-to-r 5080-surface-overlay to-transparent" aria-hidden />
                 )}
-                <div className="relative mx-auto w-16 h-16 rounded-2xl bg-white border border-slate-200 flex items-center justify-center mb-5">
+                <div className="relative mx-auto w-16 h-16 rounded-2xl bg-surface border border-border flex items-center justify-center mb-5">
                   <span className="text-xl font-black text-[var(--accent)]">{step.num}</span>
                 </div>
-                <h3 className="text-base font-bold text-slate-900 mb-2 text-center">{step.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed text-center font-medium">
+                <h3 className="text-base font-bold text-text mb-2 text-center">{step.title}</h3>
+                <p className="text-sm text-muted leading-relaxed text-center font-medium">
                   {step.desc}
                 </p>
               </div>
@@ -148,7 +148,7 @@ export default function SellPage() {
         <section className="mb-16 sm:mb-20">
           <div className="text-center mb-10 sm:mb-14">
             <p className="meta-label text-[var(--accent)] mb-3">Why BIDGARI</p>
-            <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-4xl font-bold text-text tracking-tight">
               Everything you get for free
             </h2>
           </div>
@@ -157,13 +157,13 @@ export default function SellPage() {
             {PERKS.map((perk, i) => (
               <div
                 key={i}
-                className="rounded-xl border border-slate-200 bg-white p-6 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300"
+                className="rounded-xl border border-border bg-surface p-6 hover:bg-surface-hover hover:border-border transition-all duration-300"
               >
                 <div className="w-10 h-10 rounded-xl bg-accent-wash border border-accent-dim flex items-center justify-center mb-4">
                   <perk.icon className="w-5 h-5 text-[var(--accent)]" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-base font-bold text-slate-900 mb-2">{perk.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed font-medium">{perk.desc}</p>
+                <h3 className="text-base font-bold text-text mb-2">{perk.title}</h3>
+                <p className="text-sm text-muted leading-relaxed font-medium">{perk.desc}</p>
               </div>
             ))}
           </div>
@@ -171,11 +171,11 @@ export default function SellPage() {
 
         {/* Comparison table */}
         <section className="mb-16 sm:mb-20">
-          <div className="rounded-xl border border-slate-200 overflow-hidden">
-            <div className="bg-slate-50 border-b border-slate-200 px-6 py-4">
-              <h2 className="text-lg font-bold text-slate-900">BIDGARI vs selling the hard way</h2>
+          <div className="rounded-xl border border-border overflow-hidden">
+            <div className="bg-surface-hover border-b border-border px-6 py-4">
+              <h2 className="text-lg font-bold text-text">BIDGARI vs selling the hard way</h2>
             </div>
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-border">
               {[
                 { feature: "Listing cost", bidgari: "Free", other: "Varies" },
                 { feature: "Commission on sale", bidgari: "Zero", other: "5–15%" },
@@ -185,9 +185,9 @@ export default function SellPage() {
                 { feature: "Market reach", bidgari: "Nationwide online", other: "Local walk-ins" },
               ].map((row, i) => (
                 <div key={i} className="grid grid-cols-3 px-6 py-4 text-sm">
-                  <span className="text-slate-500 font-medium">{row.feature}</span>
+                  <span className="text-muted font-medium">{row.feature}</span>
                   <span className="text-[var(--accent)] font-bold text-center">{row.bidgari}</span>
-                  <span className="text-slate-400 text-center">{row.other}</span>
+                  <span className="text-dim text-center">{row.other}</span>
                 </div>
               ))}
             </div>
@@ -197,13 +197,13 @@ export default function SellPage() {
         {/* FAQ */}
         <section className="mb-16 sm:mb-20">
           <div className="text-center mb-10">
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-900">Frequently asked questions</h2>
+            <h2 className="text-xl sm:text-2xl font-bold text-text">Frequently asked questions</h2>
           </div>
-          <div className="max-w-2xl mx-auto space-y-0 divide-y divide-slate-100 border-t border-slate-200">
+          <div className="max-w-2xl mx-auto space-y-0 divide-y divide-border border-t border-border">
             {FAQS.map((faq, i) => (
               <div key={i} className="py-5">
-                <h3 className="text-sm font-bold text-slate-900 mb-2">{faq.q}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed font-medium">{faq.a}</p>
+                <h3 className="text-sm font-bold text-text mb-2">{faq.q}</h3>
+                <p className="text-sm text-muted leading-relaxed font-medium">{faq.a}</p>
               </div>
             ))}
           </div>
@@ -212,10 +212,10 @@ export default function SellPage() {
         {/* Final CTA */}
         <section className="text-center">
           <div className="rounded-xl border border-accent-dim bg-accent-wash p-8 sm:p-12">
-            <h2 className="text-xl sm:text-3xl font-bold text-slate-900 mb-4">
+            <h2 className="text-xl sm:text-3xl font-bold text-text mb-4">
               Ready to sell your car?
             </h2>
-            <p className="text-sm text-slate-500 mb-8 max-w-lg mx-auto font-medium">
+            <p className="text-sm text-muted mb-8 max-w-lg mx-auto font-medium">
               Tell us about it and we&apos;ll come back with a valuation within 48 hours.
             </p>
             <Link href={sellHref} className="btn btn-primary btn-lg">

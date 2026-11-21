@@ -40,7 +40,7 @@ export default function ListingTitleBar({
           one row so the price never gets squeezed to a truncated column on a
           narrow phone, and so "which car / how much" still reads top-down in
           two short lines. */}
-      <h1 className="text-[20px] font-bold leading-tight tracking-tight text-slate-900 sm:text-[26px] lg:text-[32px]">
+      <h1 className="text-[20px] font-bold leading-tight tracking-tight text-text sm:text-[26px] lg:text-[32px]">
         {carName}
       </h1>
 
@@ -49,7 +49,7 @@ export default function ListingTitleBar({
           {priceLabel}
         </p>
         {car.negotiable ? (
-          <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          <p className="mt-1.5 text-[10px] font-bold uppercase tracking-wider text-dim">
             Negotiable
           </p>
         ) : null}
@@ -57,25 +57,25 @@ export default function ListingTitleBar({
 
       {/* Meta strip — single source of truth for year / transmission / fuel /
           mileage / location / freshness. */}
-      <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[12px] text-slate-500">
+      <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[12px] text-muted">
         {quickFacts.map((fact, i) => {
           const Icon = ICONS[fact.icon];
           if (!fact.value) return null;
           return (
             <span key={i} className="inline-flex items-center gap-1.5">
-              {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden /> : null}
+              {Icon ? <Icon className="h-3.5 w-3.5 shrink-0 text-dim" aria-hidden /> : null}
               <span className="font-medium capitalize">{fact.value}</span>
             </span>
           );
         })}
 
         <span className="inline-flex items-center gap-1.5">
-          <MapPin className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
+          <MapPin className="h-3.5 w-3.5 shrink-0 text-dim" aria-hidden />
           <span className="font-medium">{locationLabel}</span>
         </span>
 
         <span className="inline-flex items-center gap-1.5">
-          <Clock className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />
+          <Clock className="h-3.5 w-3.5 shrink-0 text-dim" aria-hidden />
           <span>{freshLabel}</span>
         </span>
       </div>
@@ -89,7 +89,7 @@ export default function ListingTitleBar({
         >
           {soldGrace ? "Sold" : "Available"}
         </span>
-        <span className="rounded bg-slate-100 px-2 py-1 text-[9px] font-black uppercase tracking-widest text-slate-600">
+        <span className="rounded bg-surface-overlay px-2 py-1 text-[9px] font-black uppercase tracking-widest text-muted">
           {originLabel}
         </span>
         {car.carStatus && (
@@ -98,7 +98,7 @@ export default function ListingTitleBar({
           </span>
         )}
         {positiveNum(car.mileage) ? (
-          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-dim">
             {car.mileage.toLocaleString("en-KE")} km
           </span>
         ) : null}

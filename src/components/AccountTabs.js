@@ -81,8 +81,8 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
     setSaved(prev => prev.filter(c => c.id !== carId));
   }
 
-  const inputCls = "w-full bg-slate-50 border border-slate-300 focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow rounded-2xl py-2.5 px-4 text-sm font-medium text-slate-900 outline-none transition-colors placeholder:text-slate-400";
-  const labelCls = "text-xs font-bold uppercase tracking-wider text-slate-500 mb-1.5 block";
+  const inputCls = "w-full bg-surface-hover border border-border focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow rounded-2xl py-2.5 px-4 text-sm font-medium text-text outline-none transition-colors placeholder:text-dim";
+  const labelCls = "text-xs font-bold uppercase tracking-wider text-muted mb-1.5 block";
   const buyerProfileItems = [
     { label: "Profile photo", done: Boolean(user.avatarUrl) },
     { label: "Full name", done: Boolean(name?.trim()) },
@@ -95,9 +95,9 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
   if (!(Number.isFinite(user.lat) && Number.isFinite(user.lng))) buyerMissingFieldIds.push("buyer-location-settings");
 
   return (
-    <div className="flex flex-col h-full bg-white">
+    <div className="flex flex-col h-full bg-surface">
       {/* Tab bar */}
-      <div className="border-b border-slate-200 bg-white px-6 pt-0 overflow-x-auto">
+      <div className="border-b border-border bg-surface px-6 pt-0 overflow-x-auto">
         <div className="flex items-center gap-6 min-w-max">
           {tabs.map(({ id, label, icon }) => (
             <button
@@ -106,8 +106,8 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
               className={clsx(
                 "flex items-center gap-2 py-4 text-xs font-bold uppercase tracking-widest transition-all border-b-2",
                 tab === id
-                  ? "text-slate-900 border-b-2 border-[var(--accent)]"
-                  : "text-slate-500 hover:text-slate-700 border-b-2 border-transparent"
+                  ? "text-text border-b-2 border-[var(--accent)]"
+                  : "text-muted hover:text-secondary border-b-2 border-transparent"
               )}
             >
               {icon} {label}
@@ -122,10 +122,10 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+                <h2 className="text-xl font-black text-text tracking-tight flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-2xl bg-[var(--accent)]" /> General Details
                 </h2>
-                <p className="text-sm font-medium text-slate-500 mt-1 mb-8">Ensure your contact details are accurate so sellers can reach you.</p>
+                <p className="text-sm font-medium text-muted mt-1 mb-8">Ensure your contact details are accurate so sellers can reach you.</p>
               </div>
               <ProfileCompletenessPanel
                 title="Buyer profile completeness"
@@ -133,7 +133,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                 missingFieldIds={buyerMissingFieldIds}
               />
               {!user.avatarUrl && (
-                <p className="text-[11px] font-semibold text-slate-500 -mt-2">
+                <p className="text-[11px] font-semibold text-muted -mt-2">
                   Add your photo from the account header for a complete profile.
                 </p>
               )}
@@ -155,7 +155,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                 </div>
                 <div className="mt-3">
                   <label className={labelCls}>Primary Email</label>
-                  <input value={email} onChange={e => setEmail(e.target.value)} type="email" required className={clsx(inputCls, "bg-slate-100 text-slate-400 cursor-not-allowed")} disabled />
+                  <input value={email} onChange={e => setEmail(e.target.value)} type="email" required className={clsx(inputCls, "bg-surface-overlay text-dim cursor-not-allowed")} disabled />
                 </div>
                 <div>
                   <label className={labelCls}>Contact phone</label>
@@ -168,7 +168,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                     placeholder={PHONE_PLACEHOLDER_INTERNATIONAL}
                     className={inputCls}
                   />
-                  <p className="mt-1.5 text-[10px] font-medium text-slate-500">{PHONE_COUNTRY_CODE_HELPER}</p>
+                  <p className="mt-1.5 text-[10px] font-medium text-muted">{PHONE_COUNTRY_CODE_HELPER}</p>
                   {PHONE_VERIFICATION_ENABLED ? (
                     <div className="mt-2">
                       <PhoneVerificationControl phone={phone} />
@@ -183,10 +183,10 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
 
             <div className="space-y-6">
               <div>
-                <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2">
+                <h2 className="text-xl font-black text-text tracking-tight flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-2xl bg-rose-500" /> Security Access
                 </h2>
-                <p className="text-sm font-medium text-slate-500 mt-1 mb-8">Maintain healthy security hygiene by rotating passwords periodically.</p>
+                <p className="text-sm font-medium text-muted mt-1 mb-8">Maintain healthy security hygiene by rotating passwords periodically.</p>
               </div>
 
               {pwMsg === "success" && <Alert type="success">Security vault updated.</Alert>}
@@ -197,7 +197,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                   <label className={labelCls}>Current Password</label>
                   <div className="relative group">
                     <input name="current" type={showCurrent ? "text" : "password"} required className={inputCls} placeholder="••••••••" />
-                    <button type="button" onClick={() => setShowCurrent(!showCurrent)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                    <button type="button" onClick={() => setShowCurrent(!showCurrent)} className="absolute right-4 top-1/2 -translate-y-1/2 text-dim hover:text-muted transition-colors">
                       {showCurrent ? <EyeOff size={16} /> : <Eye size={16} />}
                     </button>
                   </div>
@@ -207,7 +207,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                     <label className={labelCls}>New Password</label>
                     <div className="relative group">
                       <input name="new" type={showNew ? "text" : "password"} required minLength={8} className={inputCls} placeholder="••••••••" />
-                      <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors">
+                      <button type="button" onClick={() => setShowNew(!showNew)} className="absolute right-4 top-1/2 -translate-y-1/2 text-dim hover:text-muted transition-colors">
                         {showNew ? <EyeOff size={16} /> : <Eye size={16} />}
                       </button>
                     </div>
@@ -224,7 +224,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
             </div>
 
             {/* Location Settings */}
-            <div id="buyer-location-settings" className="lg:col-span-2 border-t border-slate-200 pt-8">
+            <div id="buyer-location-settings" className="lg:col-span-2 border-t border-border pt-8">
               <BuyerLocationSettings initialLat={user.lat} initialLng={user.lng} />
             </div>
           </div>
@@ -243,7 +243,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                       onRemove={unsave}
                     />
                     <div className="mt-4 px-2">
-                       <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">Tracked {fmtDate(car.savedAt)}</span>
+                       <span className="text-[11px] font-black uppercase tracking-widest text-dim">Tracked {fmtDate(car.savedAt)}</span>
                     </div>
                   </div>
                 ))}
@@ -258,14 +258,14 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
             : (
               <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {enquiries.map(e => (
-                  <div key={e.id} className="bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-[var(--accent-dim)] transition-colors">
+                  <div key={e.id} className="bg-surface border border-border rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row gap-6 shadow-sm group hover:border-[var(--accent-dim)] transition-colors">
                     <div className="w-14 h-14 rounded-2xl bg-accent-wash border border-[var(--accent-dim)] flex items-center justify-center font-black text-xl text-[var(--accent)] shrink-0">
                       {e.dealer.name[0]}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                         <div>
-                          <h3 className="font-black text-slate-900 text-lg tracking-tight leading-tight">{e.dealer.name}</h3>
+                          <h3 className="font-black text-text text-lg tracking-tight leading-tight">{e.dealer.name}</h3>
                           <Link href={carListingPath(e.car)} className="text-xs font-bold text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors line-clamp-1 block mt-1">
                             Regarding:{" "}
                             <span className="font-sans font-semibold text-[var(--accent)]">
@@ -277,17 +277,17 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                         <div className="flex items-center gap-3">
                           <span className={clsx(
                             "px-3 py-1 rounded-2xl text-[11px] font-black uppercase tracking-widest border",
-                            e.channel === "whatsapp" ? "bg-emerald-50 text-[var(--accent)] border-emerald-100" : "bg-slate-50 text-slate-600 border-slate-200"
+                            e.channel === "whatsapp" ? "bg-emerald-50 text-[var(--accent)] border-emerald-100" : "bg-surface-hover text-muted border-border"
                           )}>
                             {e.channel === "whatsapp" ? "WhatsApp Sent" : "Form Sent"}
                           </span>
-                          <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 flex items-center gap-1.5"><Clock size={12}/> {fmtDate(e.createdAt)}</span>
+                          <span className="text-[11px] font-black uppercase tracking-widest text-dim flex items-center gap-1.5"><Clock size={12}/> {fmtDate(e.createdAt)}</span>
                         </div>
                       </div>
                       
                       {e.message && (
-                        <div className="bg-slate-50 rounded-2xl p-5 mb-5 border border-slate-200">
-                          <p className="text-sm font-medium text-slate-600">"{e.message}"</p>
+                        <div className="bg-surface-hover rounded-2xl p-5 mb-5 border border-border">
+                          <p className="text-sm font-medium text-muted">"{e.message}"</p>
                         </div>
                       )}
                       
@@ -358,12 +358,12 @@ function Alert({ type, children }) {
 
 function Empty({ icon, title, desc, href, cta }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 px-6 text-center max-w-lg mx-auto bg-white border border-slate-200 rounded-3xl animate-in zoom-in-95 duration-500">
-      <div className="w-20 h-20 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-center mb-6">
+    <div className="flex flex-col items-center justify-center py-20 px-6 text-center max-w-lg mx-auto bg-surface border border-border rounded-3xl animate-in zoom-in-95 duration-500">
+      <div className="w-20 h-20 bg-surface-hover rounded-2xl border border-border shadow-sm flex items-center justify-center mb-6">
         {icon}
       </div>
-      <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-2">{title}</h3>
-      <p className="text-sm font-medium text-slate-500 mb-8">{desc}</p>
+      <h3 className="text-2xl font-black text-text tracking-tight mb-2">{title}</h3>
+      <p className="text-sm font-medium text-muted mb-8">{desc}</p>
       <Link href={href} className="btn btn-dark btn-lg">
         {cta}
       </Link>

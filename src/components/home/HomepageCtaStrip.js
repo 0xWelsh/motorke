@@ -59,7 +59,7 @@ const CTAS = [
     subtitle: "300+ verified vehicles in stock",
     href: "/cars",
     icon: Car,
-    iconBg: "bg-slate-100 text-slate-600",
+    iconBg: "bg-surface-overlay text-muted",
   },
 ];
 
@@ -74,16 +74,16 @@ export default function HomepageCtaStrip() {
               <Link
                 key={cta.href + cta.title}
                 href={cta.href}
-                className="group flex shrink-0 items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 transition-all hover:border-slate-300 hover:shadow-md sm:flex-1 sm:min-w-[200px] sm:max-w-[260px]"
+                className="group flex shrink-0 items-center gap-3 rounded-xl border border-border bg-surface px-4 py-3 transition-all hover:border-border hover:shadow-md sm:flex-1 sm:min-w-[200px] sm:max-w-[260px]"
               >
                 <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${cta.iconBg}`}>
                   <Icon className="h-5 w-5" />
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-sm font-bold text-slate-900 group-hover:text-[var(--accent)] transition-colors">
+                  <span className="block text-sm font-bold text-text group-hover:text-[var(--accent)] transition-colors">
                     {cta.title}
                   </span>
-                  <span className="block text-[11px] text-slate-500 leading-tight mt-0.5">
+                  <span className="block text-[11px] text-muted leading-tight mt-0.5">
                     {cta.subtitle}
                   </span>
                 </span>

@@ -80,7 +80,7 @@ export default function SearchAlertButton({ filters = {} }) {
       {isOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
           <div 
-            className="w-full max-w-md bg-white shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300" 
+            className="w-full max-w-md bg-surface shadow-2xl overflow-hidden animate-in zoom-in-95 duration-300" 
             style={{ borderRadius: "24px" }}
           >
             {/* Header */}
@@ -102,9 +102,9 @@ export default function SearchAlertButton({ filters = {} }) {
                   <div className="w-16 h-16 bg-accent-wash rounded-md flex items-center justify-center mx-auto mb-4">
                     <CheckCircle className="w-8 h-8 text-[var(--accent)]" />
                   </div>
-                  <h4 className="text-lg font-bold text-slate-900 mb-2">You're all set!</h4>
-                  <p className="text-slate-500 text-sm leading-relaxed mb-6">
-                    We will send a WhatsApp message to <span className="font-bold text-slate-900">{phone}</span> as soon as we find a car matching your criteria.
+                  <h4 className="text-lg font-bold text-text mb-2">You're all set!</h4>
+                  <p className="text-muted text-sm leading-relaxed mb-6">
+                    We will send a WhatsApp message to <span className="font-bold text-text">{phone}</span> as soon as we find a car matching your criteria.
                   </p>
                   <button 
                     onClick={() => setIsOpen(false)}
@@ -117,28 +117,28 @@ export default function SearchAlertButton({ filters = {} }) {
                 <form onSubmit={handleSubscribe} className="space-y-6">
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-widest text-[var(--accent)] mb-3">Watching for</p>
-                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                      <p className="text-sm font-bold text-slate-900">{activeFilters}</p>
+                    <div className="p-3 bg-surface-hover border border-border rounded-xl">
+                      <p className="text-sm font-bold text-text">{activeFilters}</p>
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">WhatsApp Number</label>
+                    <label className="text-[10px] font-black uppercase tracking-widest text-muted">WhatsApp Number</label>
                     <div className="relative">
-                      <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                      <Smartphone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
                       <input 
                         required
                         type="tel"
                         placeholder="e.g. 0712 345 678"
                         value={phone}
                         onChange={(e) => { setPhone(e.target.value); setStatus("idle"); }}
-                        className="w-full h-14 pl-11 pr-4 bg-slate-50 border border-slate-300 text-lg font-bold text-slate-900 outline-none focus:border-[var(--accent)] transition-colors rounded-xl"
+                        className="w-full h-14 pl-11 pr-4 bg-surface-hover border border-border text-lg font-bold text-text outline-none focus:border-[var(--accent)] transition-colors rounded-xl"
                       />
                     </div>
                     {errorMessage && <p className="text-xs font-bold text-red-500 mt-2">{errorMessage}</p>}
                   </div>
 
-                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                  <p className="text-[11px] text-muted leading-relaxed">
                     No spam. We only send alerts for your specific search. No account or password required.
                   </p>
 

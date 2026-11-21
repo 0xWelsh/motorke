@@ -20,10 +20,10 @@ export default async function ContentCreatorPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
+    <div className="min-h-screen bg-surface-hover p-6">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-2xl font-black text-slate-900 mb-1">Content Creator</h1>
-        <p className="text-sm text-slate-500 mb-6">
+        <h1 className="text-2xl font-black text-text mb-1">Content Creator</h1>
+        <p className="text-sm text-muted mb-6">
           Generate IG Reels / TikTok videos from your inventory. Pick a car, choose a style, preview, and download.
         </p>
         <ContentCreatorClient cars={JSON.parse(JSON.stringify(cars))} />

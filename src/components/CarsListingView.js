@@ -204,11 +204,11 @@ export default function CarsListingView({ query, initialCars, initialTotal, allC
             <Link
               key={`${chip.label}-${index}`}
               href={chip.href}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-slate-100 text-slate-700 hover:line-through transition-all"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider bg-surface-overlay text-secondary hover:line-through transition-all"
               style={{ borderRadius: "6px" }}
             >
               {chip.label}
-              <span className="text-slate-400">&times;</span>
+              <span className="text-dim">&times;</span>
             </Link>
           ))}
         </div>

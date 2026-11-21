@@ -28,9 +28,9 @@ export default async function GuidesIndexPage() {
     <div className="min-h-screen bg-[var(--bg)] pt-20 pb-24">
       <div className="home-shell max-w-5xl mx-auto space-y-10">
         <header>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-2">Content</p>
-          <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mb-3">Buyer guides</h1>
-          <p className="text-slate-500 max-w-2xl">
+          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted mb-2">Content</p>
+          <h1 className="text-3xl sm:text-4xl font-bold text-text mb-3">Buyer guides</h1>
+          <p className="text-muted max-w-2xl">
             Curated pages for SEO and discovery, compare popular models, read buying advice, and jump straight into inventory.
           </p>
         </header>
@@ -39,17 +39,17 @@ export default async function GuidesIndexPage() {
 
         {landings.length > 0 && (
           <section>
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-4">Featured guides</h2>
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted mb-4">Featured guides</h2>
             <ul className="grid sm:grid-cols-2 gap-3">
               {landings.map((page) => (
                 <li key={page.id}>
                   <Link
                     href={guidePagePath(page.slug)}
-                    className="block h-full rounded-xl border border-slate-200 px-4 py-4 hover:border-slate-300 transition-colors"
+                    className="block h-full rounded-xl border border-border px-4 py-4 hover:border-border transition-colors"
                   >
-                    <h3 className="font-bold text-slate-900">{page.title}</h3>
+                    <h3 className="font-bold text-text">{page.title}</h3>
                     {page.description ? (
-                      <p className="text-sm text-slate-500 mt-2 line-clamp-2">
+                      <p className="text-sm text-muted mt-2 line-clamp-2">
                         {page.description}
                       </p>
                     ) : null}
@@ -62,13 +62,13 @@ export default async function GuidesIndexPage() {
 
         {comparisons.length > 0 && (
           <section>
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-4">Model comparisons</h2>
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted mb-4">Model comparisons</h2>
             <ul className="flex flex-wrap gap-2">
               {comparisons.map((page) => (
                 <li key={page.id}>
                   <Link
                     href={comparisonPagePath(page.slug)}
-                    className="inline-block px-3 py-2 text-xs font-semibold border border-slate-200 hover:border-slate-400 transition-colors rounded-xl"
+                    className="inline-block px-3 py-2 text-xs font-semibold border border-border hover:border-strong transition-colors rounded-xl"
                   >
                     {page.title.replace(/: which to buy in Kenya\?$/i, "")}
                   </Link>
@@ -80,7 +80,7 @@ export default async function GuidesIndexPage() {
 
         {blogPosts.length > 0 && (
           <section>
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 mb-4">From the blog</h2>
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted mb-4">From the blog</h2>
             <ul className="space-y-3">
               {blogPosts.map((post) => (
                 <li key={post.id}>
@@ -90,7 +90,7 @@ export default async function GuidesIndexPage() {
                 </li>
               ))}
             </ul>
-            <Link href="/blog" className="inline-block mt-3 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-slate-900">
+            <Link href="/blog" className="inline-block mt-3 text-xs font-bold uppercase tracking-widest text-muted hover:text-text">
               All articles →
             </Link>
           </section>

@@ -28,9 +28,9 @@ export default function CompareSearchModal({
         setSearchQuery("");
       }}
     >
-      <div className="absolute inset-x-0 bottom-0 max-h-[82vh] bg-white border-t border-slate-200 p-4" style={{ borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
+      <div className="absolute inset-x-0 bottom-0 max-h-[82vh] bg-surface border-t border-border p-4" style={{ borderTopLeftRadius: "16px", borderTopRightRadius: "16px" }}>
         <div className="flex items-center justify-between mb-3">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Add a car to compare</p>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted">Add a car to compare</p>
           <button
             type="button"
             onClick={() => {
@@ -38,7 +38,7 @@ export default function CompareSearchModal({
               setSearchSlotError("");
               setSearchQuery("");
             }}
-            className="h-8 w-8 border border-slate-200 flex items-center justify-center text-slate-500"
+            className="h-8 w-8 border border-border flex items-center justify-center text-muted"
             style={{ borderRadius: "var(--radius)" }}
           >
             <X className="w-4 h-4" />
@@ -53,7 +53,7 @@ export default function CompareSearchModal({
             setSearchSlotError("");
             setSearchQuery(e.target.value);
           }}
-          className="w-full bg-slate-50 border border-slate-300 px-4 py-3 text-sm font-semibold text-slate-900 outline-none focus:border-[var(--accent)]"
+          className="w-full bg-surface-hover border border-border px-4 py-3 text-sm font-semibold text-text outline-none focus:border-[var(--accent)]"
           style={{ borderRadius: "var(--radius)" }}
         />
         {searchSlotError && (
@@ -65,23 +65,23 @@ export default function CompareSearchModal({
               key={res.id}
               type="button"
               onClick={() => onAddCarSearch(res)}
-              className="w-full flex items-center gap-3 p-3 border border-slate-200 hover:border-accent-glow text-left"
+              className="w-full flex items-center gap-3 p-3 border border-border hover:border-accent-glow text-left"
               style={{ borderRadius: "var(--radius)" }}
             >
-              <div className="relative w-12 h-12 bg-slate-50 overflow-hidden border border-slate-200 shrink-0" style={{ borderRadius: "var(--radius)" }}>
+              <div className="relative w-12 h-12 bg-surface-hover overflow-hidden border border-border shrink-0" style={{ borderRadius: "var(--radius)" }}>
                 {res.image ? <Image src={getThumbnailUrl(res.image)} alt={res.model} fill className="object-cover" /> : null}
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-bold text-slate-900 truncate">{res.year} {res.make} {res.model}</p>
-                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{formatCarPrice(res)}</p>
+                <p className="text-xs font-bold text-text truncate">{res.year} {res.make} {res.model}</p>
+                <p className="text-[10px] font-bold text-muted uppercase tracking-widest">{formatCarPrice(res)}</p>
               </div>
             </button>
           ))}
           {loadingSearch && (
-            <div className="p-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest text-center">Loading results...</div>
+            <div className="p-4 text-[10px] font-bold text-muted uppercase tracking-widest text-center">Loading results...</div>
           )}
           {!loadingSearch && searchQuery.length >= 2 && searchResults.length === 0 && (
-            <div className="p-4 text-[11px] font-semibold text-slate-500 text-center">No matches yet. Try another make or model.</div>
+            <div className="p-4 text-[11px] font-semibold text-muted text-center">No matches yet. Try another make or model.</div>
           )}
         </div>
       </div>

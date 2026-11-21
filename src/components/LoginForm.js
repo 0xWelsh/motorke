@@ -30,7 +30,7 @@ export default function LoginForm({ error }) {
   return (
     <AuthLayout>
       <div className="w-full">
-        <h2 className="text-xl font-black text-slate-900 tracking-tight mb-5">
+        <h2 className="text-xl font-black text-text tracking-tight mb-5">
           Welcome back
         </h2>
 
@@ -61,7 +61,7 @@ export default function LoginForm({ error }) {
           <input type="text" name="website" value={website} onChange={(e) => setWebsite(e.target.value)} tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
 
           <div>
-            <label htmlFor="emailAddress" className="block text-xs font-semibold text-slate-500 mb-1">
+            <label htmlFor="emailAddress" className="block text-xs font-semibold text-muted mb-1">
               Email
             </label>
             <input
@@ -72,12 +72,12 @@ export default function LoginForm({ error }) {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="you@email.com"
-              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
+              className="w-full bg-surface-overlay border border-border rounded-lg px-3 py-2 text-sm text-text outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
           </div>
 
           <div className="relative">
-            <label htmlFor="securePassword" className="block text-xs font-semibold text-slate-500 mb-1">
+            <label htmlFor="securePassword" className="block text-xs font-semibold text-muted mb-1">
               Password
             </label>
             <input
@@ -88,12 +88,12 @@ export default function LoginForm({ error }) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-slate-100 border border-slate-300 rounded-lg px-3 py-2 pr-9 text-sm text-slate-900 outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
+              className="w-full bg-surface-overlay border border-border rounded-lg px-3 py-2 pr-9 text-sm text-text outline-none focus:border-[var(--accent)] focus:ring-1 focus:ring-accent-glow transition-all placeholder:text-zinc-600"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-2.5 bottom-2 text-slate-500 hover:text-slate-500 transition-colors"
+              className="absolute right-2.5 bottom-2 text-muted hover:text-muted transition-colors"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
@@ -102,10 +102,10 @@ export default function LoginForm({ error }) {
 
           <div className="flex items-center justify-between pt-0.5">
             <label className="flex items-center gap-2 cursor-pointer group">
-              <input type="checkbox" name="remember" className="w-3 h-3 rounded border border-slate-300 bg-slate-100 checked:bg-[var(--accent)] checked:border-[var(--accent)] accent-[var(--accent)]" />
-              <span className="text-[10px] font-medium text-slate-500 group-hover:text-slate-500 transition-colors">Remember</span>
+              <input type="checkbox" name="remember" className="w-3 h-3 rounded border border-border bg-surface-overlay checked:bg-[var(--accent)] checked:border-[var(--accent)] accent-[var(--accent)]" />
+              <span className="text-[10px] font-medium text-muted group-hover:text-muted transition-colors">Remember</span>
             </label>
-            <Link href="/forgot-password" className="text-[10px] font-medium text-slate-500 hover:text-[var(--accent)] transition-colors">
+            <Link href="/forgot-password" className="text-[10px] font-medium text-muted hover:text-[var(--accent)] transition-colors">
               Forgot password?
             </Link>
           </div>
@@ -122,7 +122,7 @@ export default function LoginForm({ error }) {
           </button>
         </form>
 
-        <p className="mt-4 text-center text-xs font-medium text-slate-500">
+        <p className="mt-4 text-center text-xs font-medium text-muted">
           New here?{" "}
           <Link href="/signup" className="text-[var(--accent)] hover:underline underline-offset-2 font-semibold">
             Sign Up

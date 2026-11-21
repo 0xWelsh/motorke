@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 const iconBtn =
-  "inline-flex h-8 w-8 items-center justify-center rounded-md border border-slate-200 bg-[var(--bg)]/60 text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-colors";
+  "inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-[var(--bg)]/60 text-muted hover:text-text hover:border-border transition-colors";
 
 export default function AdminCarRowActions({ car }) {
   const router = useRouter();
@@ -132,7 +132,7 @@ export default function AdminCarRowActions({ car }) {
       type="button"
       onClick={() => { setMenuOpen(false); onClick(); }}
       disabled={busy}
-      className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-[12px] font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 disabled:opacity-50 transition-colors"
+      className="flex w-full items-center gap-2.5 px-3.5 py-2.5 text-left text-[12px] font-semibold text-secondary hover:bg-surface-overlay hover:text-text disabled:opacity-50 transition-colors"
     >
       {icon}
       {label}
@@ -174,21 +174,21 @@ export default function AdminCarRowActions({ car }) {
       )}
 
       {/* Overflow menu */}
-      <button ref={menuBtnRef} type="button" onClick={toggleMenu} aria-expanded={menuOpen} className={`${iconBtn} ${menuOpen ? "text-slate-900 border-slate-300" : ""}`} title="More actions">
+      <button ref={menuBtnRef} type="button" onClick={toggleMenu} aria-expanded={menuOpen} className={`${iconBtn} ${menuOpen ? "text-text border-border" : ""}`} title="More actions">
         <MoreHorizontal size={15} />
       </button>
 
       {menuOpen && menuPos && (
-        <div className="fixed z-[200] w-60 overflow-hidden rounded-xl border border-slate-200 bg-white py-1.5 shadow-2xl" style={{ top: menuPos.top, left: menuPos.left }}>
-          {menuItem(() => run("setFeatured", { featured: !car.featured }), <Star size={14} className={car.featured ? "text-amber-600" : "text-slate-400"} />, car.featured ? "Unfeature" : "Feature")}
-          {menuItem(() => setModal("boost"), <TrendingUp size={14} className="text-slate-400" />, "Boost score…")}
-          {menuItem(() => setModal("price"), <PencilLine size={14} className="text-slate-400" />, "Change price…")}
-          {menuItem(() => setModal("share"), <Share2 size={14} className="text-slate-400" />, "Share listing…")}
-          {menuItem(() => postForm(`/api/admin/cars/${car.id}/duplicate`, ""), <Copy size={14} className="text-slate-400" />, "Duplicate listing")}
+        <div className="fixed z-[200] w-60 overflow-hidden rounded-xl border border-border bg-surface py-1.5 shadow-2xl" style={{ top: menuPos.top, left: menuPos.left }}>
+          {menuItem(() => run("setFeatured", { featured: !car.featured }), <Star size={14} className={car.featured ? "text-amber-600" : "text-dim"} />, car.featured ? "Unfeature" : "Feature")}
+          {menuItem(() => setModal("boost"), <TrendingUp size={14} className="text-dim" />, "Boost score…")}
+          {menuItem(() => setModal("price"), <PencilLine size={14} className="text-dim" />, "Change price…")}
+          {menuItem(() => setModal("share"), <Share2 size={14} className="text-dim" />, "Share listing…")}
+          {menuItem(() => postForm(`/api/admin/cars/${car.id}/duplicate`, ""), <Copy size={14} className="text-dim" />, "Duplicate listing")}
           {menuItem(() => postForm("/api/whatsapp-channel/post", `carId=${encodeURIComponent(car.id)}`), <MessageSquare size={14} className="text-emerald-500" />, "Post to WhatsApp channel")}
           {menuItem(
             () => { window.open(`/admin/leads?search=${encodeURIComponent(`${car.year} ${car.make} ${car.model}`)}`, "_blank"); },
-            <List size={14} className="text-slate-400" />,
+            <List size={14} className="text-dim" />,
             "View leads",
           )}
         </div>
@@ -196,12 +196,12 @@ export default function AdminCarRowActions({ car }) {
 
       {modal && (
         <div className="fixed inset-0 z-[210] flex items-center justify-center bg-black/60 p-4" onClick={() => setModal(null)}>
-          <div className="w-full max-w-sm rounded-xl border border-slate-200 bg-white p-4 text-left shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full max-w-sm rounded-xl border border-border bg-surface p-4 text-left shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <p className="text-xs font-bold uppercase tracking-wider text-muted">
                 {modal === "boost" ? "Boost score" : modal === "price" ? "Edit price (KES)" : "Share listing"}
               </p>
-              <button type="button" onClick={() => setModal(null)} className="rounded-md p-1 text-slate-400 hover:text-slate-900">
+              <button type="button" onClick={() => setModal(null)} className="rounded-md p-1 text-dim hover:text-text">
                 <X size={16} />
               </button>
             </div>
@@ -211,7 +211,7 @@ export default function AdminCarRowActions({ car }) {
                 <input
                   type="number" min={0} max={100} value={boost}
                   onChange={(e) => setBoost(Number(e.target.value))}
-                  className="w-full rounded-md border border-slate-200 bg-[var(--bg)]/60 px-3 py-2 text-sm text-slate-900 outline-none focus:border-emerald-500/50"
+                  className="w-full rounded-md border border-border bg-[var(--bg)]/60 px-3 py-2 text-sm text-text outline-none focus:border-emerald-500/50"
                 />
                 <button type="button" onClick={() => run("setBoost", { boost })} disabled={busy} className="w-full rounded-md bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-500 disabled:opacity-50">
                   {busy ? "Saving…" : "Save boost"}
@@ -225,7 +225,7 @@ export default function AdminCarRowActions({ car }) {
                   type="number" min={0} value={price}
                   onChange={(e) => setPrice(e.target.value)}
                   placeholder="e.g. 2600000"
-                  className="w-full rounded-md border border-slate-200 bg-[var(--bg)]/60 px-3 py-2 text-sm text-slate-900 outline-none focus:border-emerald-500/50"
+                  className="w-full rounded-md border border-border bg-[var(--bg)]/60 px-3 py-2 text-sm text-text outline-none focus:border-emerald-500/50"
                 />
                 <button type="button" onClick={() => run("setPrice", { price })} disabled={busy} className="w-full rounded-md bg-emerald-600 px-3 py-2 text-xs font-bold text-white hover:bg-emerald-500 disabled:opacity-50">
                   {busy ? "Saving…" : "Save price"}
@@ -241,10 +241,10 @@ export default function AdminCarRowActions({ car }) {
                 <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(listUrl)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center rounded-md bg-blue-700 px-3 py-2 text-xs font-bold text-white hover:bg-blue-600">
                   Share on Facebook
                 </a>
-                <button type="button" onClick={shareInstagram} className="flex items-center justify-center gap-1.5 rounded-md bg-pink-600 px-3 py-2 text-xs font-bold text-slate-900 hover:bg-pink-500">
+                <button type="button" onClick={shareInstagram} className="flex items-center justify-center gap-1.5 rounded-md bg-pink-600 px-3 py-2 text-xs font-bold text-text hover:bg-pink-500">
                   <Copy size={14} /> {copied ? "Link copied — paste in Instagram" : "Instagram (copy / share)"}
                 </button>
-                <button type="button" onClick={async () => { try { await navigator.clipboard.writeText(listUrl); } catch {} setCopied(true); setTimeout(() => setCopied(false), 2000); }} className="flex items-center justify-center gap-1.5 rounded-md border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:border-slate-300 hover:text-slate-900">
+                <button type="button" onClick={async () => { try { await navigator.clipboard.writeText(listUrl); } catch {} setCopied(true); setTimeout(() => setCopied(false), 2000); }} className="flex items-center justify-center gap-1.5 rounded-md border border-border px-3 py-2 text-xs font-bold text-secondary hover:border-border hover:text-text">
                   <Check size={14} /> {copied ? "Copied!" : "Copy link"}
                 </button>
               </div>

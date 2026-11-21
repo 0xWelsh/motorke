@@ -38,17 +38,17 @@ export default function LeadReassign({ leadId, currentAssignedTo, adminTeam }) {
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+      <div className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-dim">
         <UserCheck size={12} />
         <span>Assigned to</span>
       </div>
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
-          <User size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <User size={14} className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-dim" />
           <select
             value={selectedId}
             onChange={(e) => setSelectedId(e.target.value)}
-            className="w-full rounded-md border border-slate-200 bg-[var(--bg)]/60 py-2 pl-8 pr-3 text-xs font-medium text-slate-700 outline-none transition focus:border-emerald-500/50 appearance-none cursor-pointer"
+            className="w-full rounded-md border border-border bg-[var(--bg)]/60 py-2 pl-8 pr-3 text-xs font-medium text-secondary outline-none transition focus:border-emerald-500/50 appearance-none cursor-pointer"
           >
             <option value="">Unassigned</option>
             {adminTeam.map((admin) => (

@@ -115,7 +115,7 @@ export default async function LuxuryPage() {
             </p>
             <a
               href="#collection"
-              className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white border border-white/20 rounded-full px-6 py-3 hover:bg-white hover:text-black transition-all duration-300"
+              className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white border border-white/20 rounded-full px-6 py-3 hover:bg-surface hover:text-black transition-all duration-300"
             >
               Explore Collection
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -221,7 +221,7 @@ export default async function LuxuryPage() {
           </p>
           <Link
             href="/request-car"
-            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white border border-white/20 rounded-full px-6 py-3 hover:bg-white hover:text-black transition-all duration-300"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-white border border-white/20 rounded-full px-6 py-3 hover:bg-surface hover:text-black transition-all duration-300"
           >
             Request a Car <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>

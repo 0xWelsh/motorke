@@ -19,7 +19,7 @@ function formatDate(dateStr) {
 export default function AnalyticsBarChart({ data }) {
   if (!data?.length) {
     return (
-      <div className="flex items-center justify-center h-48 sm:h-64 text-sm font-semibold text-slate-400">
+      <div className="flex items-center justify-center h-48 sm:h-64 text-sm font-semibold text-dim">
         No data yet
       </div>
     );

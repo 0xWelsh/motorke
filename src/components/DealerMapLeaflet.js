@@ -41,7 +41,7 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
       })
         .bindPopup(
           L.popup({ autoClose: false }).setContent(
-            '<div class="text-center"><p class="font-bold text-slate-900">📍 Your Location</p></div>'
+            '<div class="text-center"><p class="font-bold text-text">📍 Your Location</p></div>'
           )
         )
         .addTo(leafletMap);
@@ -63,8 +63,8 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
 
       const popupContent = `
         <div class="space-y-2 min-w-[220px]">
-          <h3 class="font-bold text-slate-900 text-sm">${escapeMapHtml(dealer.name)}</h3>
-          <p class="text-xs text-slate-500">${escapeMapHtml(dealer.location || "")}</p>
+          <h3 class="font-bold text-text text-sm">${escapeMapHtml(dealer.name)}</h3>
+          <p class="text-xs text-muted">${escapeMapHtml(dealer.location || "")}</p>
           ${
             dealer.distance
               ? `<div class="flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] bg-accent-wash px-2 py-1 rounded">
@@ -74,7 +74,7 @@ export default function DealerMapLeaflet({ dealers, userLocation }) {
           }
           ${
             dealer._count?.cars > 0
-              ? `<p class="text-xs text-slate-500"><strong>${dealer._count.cars}</strong> car${dealer._count.cars !== 1 ? 's' : ''} available</p>`
+              ? `<p class="text-xs text-muted"><strong>${dealer._count.cars}</strong> car${dealer._count.cars !== 1 ? 's' : ''} available</p>`
               : ''
           }
           ${dealer.verified ? '<p class="text-xs text-[var(--accent)] font-semibold">✓ Verified Dealer</p>' : ''}

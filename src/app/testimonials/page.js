@@ -32,7 +32,7 @@ function Stars({ rating }) {
   return (
     <span className="inline-flex gap-0.5" aria-label={`${rating} out of 5 stars`}>
       {[1, 2, 3, 4, 5].map((index) => (
-        <span key={index} className={index <= rating ? "text-amber-500" : "text-slate-200"}>
+        <span key={index} className={index <= rating ? "text-amber-500" : "text-ghost"}>
           ★
         </span>
       ))}
@@ -126,18 +126,18 @@ export default async function TestimonialsPage() {
         />
       )}
       {/* Header */}
-      <section className="border-b border-slate-200 bg-[var(--bg)] px-6 pt-32 pb-20 sm:pt-40">
+      <section className="border-b border-border bg-[var(--bg)] px-6 pt-32 pb-20 sm:pt-40">
         <div className="mx-auto max-w-7xl">
-          <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-8">
+          <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-muted mb-8">
             <span>Community</span>
             <span>/</span>
-            <span className="text-slate-900">Testimonials</span>
+            <span className="text-text">Testimonials</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-bold text-slate-900 tracking-tight leading-[1.05] mb-6">
+          <h1 className="text-4xl sm:text-6xl font-bold text-text tracking-tight leading-[1.05] mb-6">
             Real buyers. <br />
-            <span className="text-slate-500">Real experiences.</span>
+            <span className="text-muted">Real experiences.</span>
           </h1>
-          <p className="text-lg text-slate-500 font-medium max-w-2xl leading-relaxed">
+          <p className="text-lg text-muted font-medium max-w-2xl leading-relaxed">
             Verified reviews from BIDGARI customers across Kenya — on the vehicles
             they bought and the teams that served them.
           </p>
@@ -149,13 +149,13 @@ export default async function TestimonialsPage() {
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             {stats.map((s) => (
-              <div key={s.label} className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5">
+              <div key={s.label} className="flex items-center gap-4 rounded-2xl border border-border bg-surface p-5">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-wash text-[var(--accent)]">
                   <s.icon className="h-5 w-5" strokeWidth={2} />
                 </div>
                 <div>
-                  <p className="text-2xl font-black text-slate-900">{s.value}</p>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-slate-400">{s.label}</p>
+                  <p className="text-2xl font-black text-text">{s.value}</p>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-dim">{s.label}</p>
                 </div>
               </div>
             ))}
@@ -167,34 +167,34 @@ export default async function TestimonialsPage() {
       <section className="px-6 pb-24">
         <div className="mx-auto max-w-7xl">
           {total === 0 ? (
-            <div className="rounded-2xl border border-slate-200 bg-white p-16 text-center">
-              <Quote className="mx-auto h-8 w-8 text-slate-300" />
-              <p className="mt-6 text-lg font-bold text-slate-900">No reviews yet</p>
-              <p className="mt-2 text-sm text-slate-500">
+            <div className="rounded-2xl border border-border bg-surface p-16 text-center">
+              <Quote className="mx-auto h-8 w-8 text-ghost" />
+              <p className="mt-6 text-lg font-bold text-text">No reviews yet</p>
+              <p className="mt-2 text-sm text-muted">
                 Reviews from BIDGARI customers will appear here as they come in.
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
               {all.map((r) => (
-                <article key={r.id} className="flex flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <article key={r.id} className="flex flex-col rounded-2xl border border-border bg-surface p-6 shadow-sm">
                   <div className="flex items-center justify-between gap-3">
                     <Stars rating={r.rating} />
-                    <span className="text-[11px] font-semibold text-slate-400">{formatDate(r.createdAt)}</span>
+                    <span className="text-[11px] font-semibold text-dim">{formatDate(r.createdAt)}</span>
                   </div>
                   <div className="relative mt-4 flex-1">
-                    <Quote className="absolute -left-1 -top-1 h-6 w-6 text-slate-100" />
-                    <p className="relative pl-5 text-sm leading-relaxed text-slate-600">
+                    <Quote className="absolute -left-1 -top-1 h-6 w-6 text-ghost" />
+                    <p className="relative pl-5 text-sm leading-relaxed text-muted">
                       {r.comment || "No written comment."}
                     </p>
                   </div>
-                  <div className="mt-6 flex items-center gap-3 border-t border-slate-100 pt-4">
+                  <div className="mt-6 flex items-center gap-3 border-t border-subtle pt-4">
                     <Avatar name={r.author} />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-sm font-bold text-slate-900">{r.author}</p>
+                      <p className="truncate text-sm font-bold text-text">{r.author}</p>
                       <div className="flex items-center gap-1.5">
-                        <ShoppingBag className="h-3 w-3 shrink-0 text-slate-300" />
-                        <span className="truncate text-xs font-medium text-slate-500">
+                        <ShoppingBag className="h-3 w-3 shrink-0 text-ghost" />
+                        <span className="truncate text-xs font-medium text-muted">
                           <Link href={r.href || "#"} className="text-[var(--accent)] hover:underline">
                             {r.targetLabel}
                           </Link>
@@ -210,9 +210,9 @@ export default async function TestimonialsPage() {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-slate-200 bg-white px-6 py-16">
+      <section className="border-t border-border bg-surface px-6 py-16">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-6 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900">
+          <h2 className="text-2xl sm:text-3xl font-bold text-text">
             Ready to find your next car?
           </h2>
           <div className="flex flex-wrap items-center justify-center gap-3">

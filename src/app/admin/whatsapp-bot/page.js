@@ -43,7 +43,7 @@ function QrPage() {
         ? "text-yellow-400"
         : session?.status === "FAILED"
           ? "text-red-600"
-          : "text-slate-500";
+          : "text-muted";
 
   const statusLabel =
     session?.status === "CONNECTED"
@@ -55,19 +55,19 @@ function QrPage() {
           : session?.status || "Starting...";
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-slate-900 p-6">
+    <div className="min-h-screen bg-[var(--bg)] text-text p-6">
       <h1 className="text-xl font-bold mb-6">WhatsApp Bot</h1>
 
       {/* Status */}
-      <div className="bg-white border border-slate-200 rounded-lg p-4 mb-6">
+      <div className="bg-surface border border-border rounded-lg p-4 mb-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-slate-500">Connection</span>
+          <span className="text-muted">Connection</span>
           <span className={`font-mono ${statusColor}`}>{statusLabel}</span>
         </div>
         {session?.me?.id && (
           <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-400">Phone</span>
-            <span className="text-slate-700">+{session.me.id}</span>
+            <span className="text-dim">Phone</span>
+            <span className="text-secondary">+{session.me.id}</span>
           </div>
         )}
       </div>
@@ -80,11 +80,11 @@ function QrPage() {
 
       {/* QR Code */}
       {session?.status === "QR" && (
-        <div className="bg-white border border-slate-200 rounded-lg p-6 mb-6 text-center">
-          <h2 className="text-sm font-semibold text-slate-700 mb-4">
+        <div className="bg-surface border border-border rounded-lg p-6 mb-6 text-center">
+          <h2 className="text-sm font-semibold text-secondary mb-4">
             Scan QR Code with WhatsApp
           </h2>
-          <div className="bg-white rounded-lg inline-block p-2 mb-4">
+          <div className="bg-surface rounded-lg inline-block p-2 mb-4">
             <img
               src={`/api/whatsapp-bot/qr?t=${qrKey}`}
               alt="WhatsApp QR"
@@ -94,7 +94,7 @@ function QrPage() {
               }}
             />
           </div>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-dim">
             Open WhatsApp → 3 dots → Linked Devices → Link a Device
           </p>
         </div>
@@ -104,13 +104,13 @@ function QrPage() {
       <div className="flex gap-3">
         <button
           onClick={restartSession}
-          className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded px-4 py-2 text-sm transition-colors"
+          className="flex-1 bg-surface-overlay hover:bg-surface-overlay text-secondary rounded px-4 py-2 text-sm transition-colors"
         >
           Restart Session
         </button>
         <button
           onClick={fetchSession}
-          className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded px-4 py-2 text-sm transition-colors"
+          className="flex-1 bg-surface-overlay hover:bg-surface-overlay text-secondary rounded px-4 py-2 text-sm transition-colors"
         >
           Refresh
         </button>

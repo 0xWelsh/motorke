@@ -59,13 +59,13 @@ function writeCache(key, data) {
 function BidgariLoader() {
   return (
     <div className="flex items-center gap-1.5">
-      <span className="text-[11px] font-black tracking-[0.15em] text-slate-500">
+      <span className="text-[11px] font-black tracking-[0.15em] text-muted">
         BIDGARI
       </span>
       <span className="flex gap-0.5">
-        <span className="w-1 h-1 rounded-full bg-slate-400 animate-pulse" style={{ animationDelay: "0ms" }} />
-        <span className="w-1 h-1 rounded-full bg-slate-400 animate-pulse" style={{ animationDelay: "150ms" }} />
-        <span className="w-1 h-1 rounded-full bg-slate-400 animate-pulse" style={{ animationDelay: "300ms" }} />
+        <span className="w-1 h-1 rounded-full bg-surface-overlay animate-pulse" style={{ animationDelay: "0ms" }} />
+        <span className="w-1 h-1 rounded-full bg-surface-overlay animate-pulse" style={{ animationDelay: "150ms" }} />
+        <span className="w-1 h-1 rounded-full bg-surface-overlay animate-pulse" style={{ animationDelay: "300ms" }} />
       </span>
     </div>
   );
@@ -312,7 +312,7 @@ export default function CarsInfiniteGrid({
     <div>
       {/* Result count + view toggle */}
       <div className="mb-2.5 flex items-center justify-between gap-3">
-        <p className="text-[11px] font-bold text-slate-400">
+        <p className="text-[11px] font-bold text-dim">
           {loading && total === 0
             ? "Loading vehicles…"
             : `${total} ${total === 1 ? "vehicle" : "vehicles"} found`}
@@ -327,7 +327,7 @@ export default function CarsInfiniteGrid({
             className={
               view === "grid"
                 ? "flex h-7 w-7 items-center justify-center rounded-md bg-[var(--accent)] text-white transition-colors"
-                : "flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300"
+                : "flex h-7 w-7 items-center justify-center rounded-md border border-border bg-surface text-muted transition-colors hover:border-border"
             }
           >
             <LayoutGrid className="h-3.5 w-3.5" />
@@ -340,7 +340,7 @@ export default function CarsInfiniteGrid({
             className={
               view === "list"
                 ? "flex h-7 w-7 items-center justify-center rounded-md bg-[var(--accent)] text-white transition-colors"
-                : "flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300"
+                : "flex h-7 w-7 items-center justify-center rounded-md border border-border bg-surface text-muted transition-colors hover:border-border"
             }
           >
             <List className="h-3.5 w-3.5" />
@@ -353,7 +353,7 @@ export default function CarsInfiniteGrid({
             className={
               view === "compact"
                 ? "flex h-7 w-7 items-center justify-center rounded-md bg-[var(--accent)] text-white transition-colors"
-                : "flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-500 transition-colors hover:border-slate-300"
+                : "flex h-7 w-7 items-center justify-center rounded-md border border-border bg-surface text-muted transition-colors hover:border-border"
             }
           >
             <Rows3 className="h-3.5 w-3.5" />
@@ -367,14 +367,14 @@ export default function CarsInfiniteGrid({
           <BidgariLoader />
         </div>
       ) : cars.length === 0 ? (
-        <div className="py-20 text-center bg-white border border-slate-200 rounded-xl">
+        <div className="py-20 text-center bg-surface border border-border rounded-xl">
           <div className="mx-auto mb-4 w-12 h-12 flex items-center justify-center">
-            <span className="text-lg font-black tracking-[0.2em] text-slate-300">B</span>
+            <span className="text-lg font-black tracking-[0.2em] text-ghost">B</span>
           </div>
-          <h2 className="text-xl font-black text-slate-900 tracking-tight mb-2">
+          <h2 className="text-xl font-black text-text tracking-tight mb-2">
             {noFiltersActive ? "New stock lands here" : "No matches found"}
           </h2>
-          <p className="text-slate-500 font-medium mb-6">
+          <p className="text-muted font-medium mb-6">
             {noFiltersActive
               ? "We are sourcing new stock now. Tell us the car you want and we'll find it for you."
               : "Try adjusting your filters or resetting your search."}
@@ -433,7 +433,7 @@ export default function CarsInfiniteGrid({
           )}
 
           {!hasMore && cars.length > 0 && (
-            <p className="text-center text-[10px] font-bold text-slate-400 mt-6 uppercase tracking-wider">
+            <p className="text-center text-[10px] font-bold text-dim mt-6 uppercase tracking-wider">
               You've reached the end
             </p>
           )}

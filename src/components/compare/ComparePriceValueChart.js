@@ -20,11 +20,11 @@ export default function ComparePriceValueChart({ fullComparedCars, initialCarsBy
   }));
 
   return (
-    <div className="order-6 lg:order-6 scroll-mt-24 bg-white border border-slate-200 p-5 sm:p-6 lg:p-8"
+    <div className="order-6 lg:order-6 scroll-mt-24 bg-surface border border-border p-5 sm:p-6 lg:p-8"
       style={{ borderRadius: "var(--radius)" }}>
       <div className="flex items-center gap-3 mb-6">
-        <h3 className="text-xl font-bold text-slate-900">Price vs Value</h3>
-        <span className="px-2 py-0.5 bg-slate-50 text-[9px] font-bold text-slate-500 uppercase tracking-widest rounded-xl">
+        <h3 className="text-xl font-bold text-text">Price vs Value</h3>
+        <span className="px-2 py-0.5 bg-surface-hover text-[9px] font-bold text-muted uppercase tracking-widest rounded-xl">
           Score / M KES
         </span>
       </div>
@@ -70,10 +70,10 @@ export default function ComparePriceValueChart({ fullComparedCars, initialCarsBy
       )}
       <div className="mt-4 grid grid-cols-{fullComparedCars.length} gap-3">
         {scatterData.map((d, idx) => (
-          <div key={d.name} className="text-center p-2 bg-slate-50 rounded-xl">
-            <p className="text-[9px] font-bold uppercase tracking-wider text-slate-500 truncate">{d.name}</p>
-            <p className="text-sm font-black text-slate-900">{d.score}/100</p>
-            <p className="text-[8px] text-slate-500">at {formatPrice(d.priceRaw)}</p>
+          <div key={d.name} className="text-center p-2 bg-surface-hover rounded-xl">
+            <p className="text-[9px] font-bold uppercase tracking-wider text-muted truncate">{d.name}</p>
+            <p className="text-sm font-black text-text">{d.score}/100</p>
+            <p className="text-[8px] text-muted">at {formatPrice(d.priceRaw)}</p>
           </div>
         ))}
       </div>

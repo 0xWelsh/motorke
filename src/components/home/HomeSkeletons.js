@@ -12,13 +12,13 @@ export function HomeHeroSkeleton() {
         <Block className="mb-2 h-2.5 w-16" />
         <Block className="h-7 w-32 sm:h-9 sm:w-40" />
       </div>
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
         <div className="aspect-[16/9] sm:aspect-[16/8] lg:aspect-[16/7]">
           <Block className="h-full w-full rounded-none" />
         </div>
-        <div className="grid grid-cols-3 gap-px bg-slate-200">
+        <div className="grid grid-cols-3 gap-px bg-surface-overlay">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="aspect-[4/3] bg-white">
+            <div key={i} className="aspect-[4/3] bg-surface">
               <Block className="h-full w-full rounded-none" />
             </div>
           ))}
@@ -43,7 +43,7 @@ export function HomeGridsSkeleton({ count = 8, columns = "grid-cols-2 sm:grid-co
     <div className="space-y-6 sm:space-y-8">
       {[0, 1].map((section) => (
         <div key={section}>
-          <div className="mb-2 flex items-baseline justify-between gap-3 border-b-2 border-slate-100 pb-1.5">
+          <div className="mb-2 flex items-baseline justify-between gap-3 border-b-2 border-subtle pb-1.5">
             <Block className="h-3.5 w-40" />
             <Block className="h-6 w-12" />
           </div>

@@ -12,7 +12,7 @@ export default function HomepageSafetyStrip() {
             </div>
             <div>
               <h3 className="text-sm font-bold text-white">Don't get scammed buying a car</h3>
-              <p className="text-xs text-slate-400 font-medium leading-relaxed">
+              <p className="text-xs text-dim font-medium leading-relaxed">
                 Never pay a deposit to a private number. We only take money at handover, through BIDGARI.
               </p>
             </div>

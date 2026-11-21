@@ -44,8 +44,8 @@ const LOGO_BY_MAKE = new Map([
 
 function SidebarSection({ title, children }) {
   return (
-    <div className="border-b border-slate-100 last:border-b-0">
-      <h3 className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+    <div className="border-b border-subtle last:border-b-0">
+      <h3 className="px-3 pt-3 pb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-dim">
         {title}
       </h3>
       <div className="px-3 pb-3">{children}</div>
@@ -57,9 +57,9 @@ function SideLink({ href, children }) {
   return (
     <Link
       href={href}
-      className="flex w-full items-center gap-1.5 rounded py-1 text-[12px] font-semibold text-slate-600 transition-colors hover:text-slate-900"
+      className="flex w-full items-center gap-1.5 rounded py-1 text-[12px] font-semibold text-muted transition-colors hover:text-text"
     >
-      <ChevronRight className="h-3 w-3 shrink-0 text-slate-300" aria-hidden />
+      <ChevronRight className="h-3 w-3 shrink-0 text-ghost" aria-hidden />
       <span className="min-w-0 truncate">{children}</span>
     </Link>
   );
@@ -70,23 +70,23 @@ function RecentViewRow({ car }) {
   return (
     <Link
       href={carListingPath(car)}
-      className="flex items-center gap-2.5 rounded py-1.5 transition-colors hover:bg-slate-50"
+      className="flex items-center gap-2.5 rounded py-1.5 transition-colors hover:bg-surface-hover"
     >
-      <span className="relative h-10 w-14 shrink-0 overflow-hidden rounded bg-slate-100">
+      <span className="relative h-10 w-14 shrink-0 overflow-hidden rounded bg-surface-overlay">
         {img ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={img} alt="" className="h-full w-full object-cover" loading="lazy" />
         ) : (
-          <span className="flex h-full w-full items-center justify-center text-slate-300">
+          <span className="flex h-full w-full items-center justify-center text-ghost">
             <ImageOff className="h-3.5 w-3.5" />
           </span>
         )}
       </span>
       <span className="min-w-0">
-        <span className="block truncate text-[12px] font-bold text-slate-800">
+        <span className="block truncate text-[12px] font-bold text-text">
           {car.make} {car.model}
         </span>
-        <span className="block text-[10px] font-semibold text-slate-400">
+        <span className="block text-[10px] font-semibold text-dim">
           {car.year}
           {stockCode(car) ? ` · ${stockCode(car)}` : ""}
         </span>
@@ -134,7 +134,7 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
   }, []);
 
   return (
-    <aside className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+    <aside className="overflow-hidden rounded-xl border border-border bg-surface shadow-sm">
       <SidebarSection title="All inventory">
         <div className="space-y-0.5">
           <SideLink href="/cars">
@@ -152,7 +152,7 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
             </span>
           </SideLink>
         </div>
-        <p className="mt-2 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.15em] text-slate-400">
+        <p className="mt-2 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.15em] text-dim">
           <Clock className="h-3 w-3" aria-hidden /> Recently Viewed
         </p>
         {recent.length ? (
@@ -162,7 +162,7 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
             ))}
           </div>
         ) : (
-          <p className="mt-1 text-[11px] font-medium text-slate-400">
+          <p className="mt-1 text-[11px] font-medium text-dim">
             Cars you view will appear here.
           </p>
         )}
@@ -185,7 +185,7 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
               <Link
                 key={m.make}
                 href={withQuery({ make: m.make })}
-                className="flex w-full items-center gap-2 rounded py-1 text-[12px] font-semibold text-slate-600 transition-colors hover:text-slate-900"
+                className="flex w-full items-center gap-2 rounded py-1 text-[12px] font-semibold text-muted transition-colors hover:text-text"
               >
                 {m.img ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -196,19 +196,19 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
                     className="h-5 w-7 shrink-0 object-contain"
                   />
                 ) : (
-                  <span className="flex h-5 w-7 shrink-0 items-center text-[10px] font-black uppercase text-slate-300">
+                  <span className="flex h-5 w-7 shrink-0 items-center text-[10px] font-black uppercase text-ghost">
                     {m.make[0]}
                   </span>
                 )}
                 <span className="min-w-0 flex-1 truncate">{m.make}</span>
-                <span className="text-[11px] font-semibold tabular-nums text-slate-400">
+                <span className="text-[11px] font-semibold tabular-nums text-dim">
                   {m.count}
                 </span>
               </Link>
             ))}
           </div>
         ) : (
-          <p className="text-[11px] font-medium text-slate-400">No brands in stock right now.</p>
+          <p className="text-[11px] font-medium text-dim">No brands in stock right now.</p>
         )}
       </SidebarSection>
 
@@ -219,17 +219,17 @@ export default function NikkyoSidebar({ inventoryCounts = {} }) {
               <Link
                 key={bt.value}
                 href={withQuery({ bodyType: bt.value })}
-                className="flex items-center gap-1.5 rounded px-1.5 py-1 text-[11px] font-semibold text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+                className="flex items-center gap-1.5 rounded px-1.5 py-1 text-[11px] font-semibold text-muted transition-colors hover:bg-surface-hover hover:text-text"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={bt.img} alt="" loading="lazy" className="h-4 w-4 shrink-0 object-contain" />
                 <span className="min-w-0 flex-1 truncate">{bt.label}</span>
-                <span className="text-[10px] font-semibold tabular-nums text-slate-400">{bt.count}</span>
+                <span className="text-[10px] font-semibold tabular-nums text-dim">{bt.count}</span>
               </Link>
             ))}
           </div>
         ) : (
-          <p className="text-[11px] font-medium text-slate-400">No body styles in stock right now.</p>
+          <p className="text-[11px] font-medium text-dim">No body styles in stock right now.</p>
         )}
       </SidebarSection>
 

@@ -60,8 +60,8 @@ function AdvancedInner({ colors = [] }) {
   };
 
   const selectCls =
-    "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-[13px] font-semibold text-slate-800 outline-none transition focus:border-[var(--accent)]";
-  const labelCls = "mb-1 block text-[10px] font-black uppercase tracking-widest text-slate-400";
+    "w-full rounded-xl border border-border bg-surface px-3 py-2 text-[13px] font-semibold text-text outline-none transition focus:border-[var(--accent)]";
+  const labelCls = "mb-1 block text-[10px] font-black uppercase tracking-widest text-dim";
 
   return (
     <div className="mb-4">
@@ -69,10 +69,10 @@ function AdvancedInner({ colors = [] }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className="flex w-full items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5"
+        className="flex w-full items-center justify-between gap-2 rounded-xl border border-border bg-surface px-3 py-2.5"
       >
-        <span className="flex items-center gap-2 text-[12px] font-black uppercase tracking-widest text-slate-700">
-          <SlidersHorizontal className="h-4 w-4 text-slate-400" />
+        <span className="flex items-center gap-2 text-[12px] font-black uppercase tracking-widest text-secondary">
+          <SlidersHorizontal className="h-4 w-4 text-dim" />
           Advanced filters
           {activeCount > 0 && (
             <span className="inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-[var(--accent)] px-1.5 py-0.5 text-[10px] font-bold text-white">
@@ -80,11 +80,11 @@ function AdvancedInner({ colors = [] }) {
             </span>
           )}
         </span>
-        <ChevronDown className={`h-4 w-4 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`h-4 w-4 text-dim transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
-        <div className="mt-2 rounded-xl border border-slate-200 bg-white p-4">
+        <div className="mt-2 rounded-xl border border-border bg-surface p-4">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             <div>
               <label htmlFor="adv-make" className={labelCls}>Make</label>
@@ -170,7 +170,7 @@ function AdvancedInner({ colors = [] }) {
                   onBlur={() => navigate({ minYOM: minYVal })}
                   className={`${selectCls} w-full`}
                 />
-                <span className="text-slate-300">–</span>
+                <span className="text-ghost">–</span>
                 <input
                   id="adv-year-max"
                   type="number"
@@ -195,14 +195,14 @@ function AdvancedInner({ colors = [] }) {
               </select>
             </div>
 
-            <label className="flex items-center gap-2 self-end rounded-xl border border-slate-200 bg-white px-3 py-2">
+            <label className="flex items-center gap-2 self-end rounded-xl border border-border bg-surface px-3 py-2">
               <input
                 type="checkbox"
                 checked={val("sunroof") === "1"}
                 onChange={(e) => navigate({ sunroof: e.target.checked ? "1" : "" })}
                 className="h-4 w-4 accent-[var(--accent)]"
               />
-              <span className="text-[13px] font-semibold text-slate-700">Has sunroof</span>
+              <span className="text-[13px] font-semibold text-secondary">Has sunroof</span>
             </label>
           </div>
 
@@ -211,7 +211,7 @@ function AdvancedInner({ colors = [] }) {
               <button
                 type="button"
                 onClick={() => navigate(Object.fromEntries(FIELD_KEYS.map((k) => [k, ""])))}
-                className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-slate-500 hover:text-[var(--accent)]"
+                className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-muted hover:text-[var(--accent)]"
               >
                 <X className="h-3.5 w-3.5" /> Clear all advanced
               </button>

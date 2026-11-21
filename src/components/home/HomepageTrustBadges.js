@@ -20,7 +20,7 @@ const BADGES = [
 
 export default function HomepageTrustBadges() {
   return (
-    <section className="py-8 sm:py-10 bg-white border-y border-slate-200">
+    <section className="py-8 sm:py-10 bg-surface border-y border-border">
       <div className="home-shell">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-6">
           {BADGES.map((badge, i) => (
@@ -29,8 +29,8 @@ export default function HomepageTrustBadges() {
                 <badge.icon className="w-5 h-5 text-[var(--accent)]" strokeWidth={1.5} />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-slate-900 mb-1">{badge.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed font-medium">{badge.desc}</p>
+                <h3 className="text-sm font-bold text-text mb-1">{badge.title}</h3>
+                <p className="text-xs text-muted leading-relaxed font-medium">{badge.desc}</p>
               </div>
             </div>
           ))}

@@ -88,10 +88,10 @@ export default function BulkActionsWrapper({
   const StatusDot = ({ car: c }) => {
     if (c.available)
       return <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-500"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />Live</span>;
-    return <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-slate-400"><span className="h-1.5 w-1.5 rounded-full bg-slate-400" />Hidden</span>;
+    return <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-dim"><span className="h-1.5 w-1.5 rounded-full bg-surface-overlay" />Hidden</span>;
   };
 
-  const rowBg = (i) => i % 2 === 0 ? "bg-white/20" : "bg-transparent";
+  const rowBg = (i) => i % 2 === 0 ? "bg-glass/20" : "bg-transparent";
 
   return (
     <div className="space-y-2">
@@ -100,27 +100,27 @@ export default function BulkActionsWrapper({
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-emerald-800/50 bg-emerald-950/30 px-4 py-2.5 text-sm">
           <span className="flex items-center gap-1.5">
             <span className="font-bold text-emerald-700 tabular-nums">{selected.size}</span>
-            <span className="text-slate-500">selected</span>
+            <span className="text-muted">selected</span>
           </span>
           <div className="flex flex-wrap items-center gap-1.5 w-full sm:w-auto sm:ml-auto sm:justify-end">
             <button
               onClick={() => doAction("makeLive")}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-[var(--bg)]/60 px-3 py-1.5 text-[11px] font-bold text-emerald-600 hover:bg-emerald-600 hover:text-white transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-[var(--bg)]/60 px-3 py-1.5 text-[11px] font-bold text-emerald-600 hover:bg-emerald-600 hover:text-white transition-colors disabled:opacity-50"
             >
               <ToggleLeft size={14} /> Live
             </button>
             <button
               onClick={() => doAction("hide")}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-[var(--bg)]/60 px-3 py-1.5 text-[11px] font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-[var(--bg)]/60 px-3 py-1.5 text-[11px] font-bold text-secondary hover:bg-surface-overlay hover:text-text transition-colors disabled:opacity-50"
             >
               <ToggleRight size={14} /> Hide
             </button>
             <button
               onClick={() => doAction("toggle")}
               disabled={busy}
-              className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-[var(--bg)]/60 px-3 py-1.5 text-[11px] font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 rounded-md border border-border bg-[var(--bg)]/60 px-3 py-1.5 text-[11px] font-bold text-secondary hover:bg-surface-overlay hover:text-text transition-colors disabled:opacity-50"
             >
               <ToggleLeft size={14} />
               {busy ? "..." : "Toggle"}
@@ -149,7 +149,7 @@ export default function BulkActionsWrapper({
             </button>
             <button
               onClick={() => setSelected(new Set())}
-              className="rounded-md p-1.5 text-slate-400 hover:text-slate-700 transition-colors"
+              className="rounded-md p-1.5 text-dim hover:text-secondary transition-colors"
             >
               <X size={14} />
             </button>
@@ -163,15 +163,15 @@ export default function BulkActionsWrapper({
           <EmptyState
             title="No listings found"
             message={search ? "Try different keywords or clear the filter." : "Add a vehicle to populate inventory."}
-            icon={<Car size={28} className="text-slate-400" />}
+            icon={<Car size={28} className="text-dim" />}
           />
         ) : (
-          <div className="text-[11px] text-slate-400 px-1">{total === 0 ? "No listings" : `Showing ${from}–${to} of ${total}`}</div>
+          <div className="text-[11px] text-dim px-1">{total === 0 ? "No listings" : `Showing ${from}–${to} of ${total}`}</div>
         )}
         {cars.map((car) => {
           const thumb = car.images[0]?.url || null;
           return (
-            <div key={car.id} className="rounded-lg border border-slate-200 bg-white/60">
+            <div key={car.id} className="rounded-lg border border-border bg-glass/60">
               <div className="flex gap-3 p-3">
                 <div className="flex flex-col items-center gap-2">
                   <input
@@ -180,11 +180,11 @@ export default function BulkActionsWrapper({
                     onChange={() => toggleOne(car.id)}
                     className="cursor-pointer accent-emerald-500 mt-1"
                   />
-                  <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-md border border-slate-200 bg-[var(--bg)]">
+                  <div className="relative h-12 w-20 shrink-0 overflow-hidden rounded-md border border-border bg-[var(--bg)]">
                     {thumb ? (
                       <img src={thumb} alt="" className="h-full w-full object-cover" loading="lazy" />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-slate-500">
+                      <div className="flex h-full w-full items-center justify-center text-muted">
                         <Car size={18} />
                       </div>
                     )}
@@ -194,7 +194,7 @@ export default function BulkActionsWrapper({
                   <div className="flex items-start justify-between gap-2">
                     <Link
                       href={`/admin/cars/${car.id}/edit`}
-                      className="text-sm font-bold text-slate-900 truncate"
+                      className="text-sm font-bold text-text truncate"
                     >
                       {car.year} {car.make} {car.model}
                     </Link>
@@ -203,18 +203,18 @@ export default function BulkActionsWrapper({
                     )}
                     <StatusDot car={car} />
                   </div>
-                  <p className="mt-0.5 text-xs text-slate-400 truncate">{car.variant || "\u2014"}</p>
-                  <div className="mt-1.5 flex items-center gap-3 text-xs text-slate-500">
-                    <span className="font-bold text-slate-900 tabular-nums">{fmtPrice(car.price)}</span>
+                  <p className="mt-0.5 text-xs text-dim truncate">{car.variant || "\u2014"}</p>
+                  <div className="mt-1.5 flex items-center gap-3 text-xs text-muted">
+                    <span className="font-bold text-text tabular-nums">{fmtPrice(car.price)}</span>
                     <span className="flex items-center gap-1">
                       <MessageSquare size={12} />
                       {car._count.leads}
                     </span>
-                    <span className="ml-auto text-slate-400">{formatListedAge(car.createdAt)}</span>
+                    <span className="ml-auto text-dim">{formatListedAge(car.createdAt)}</span>
                   </div>
                 </div>
               </div>
-              <div className="flex flex-wrap items-center gap-1.5 border-t border-slate-200 px-3 py-2">
+              <div className="flex flex-wrap items-center gap-1.5 border-t border-border px-3 py-2">
                 <AdminCarRowActions car={car} />
               </div>
             </div>
@@ -225,16 +225,16 @@ export default function BulkActionsWrapper({
       {/* Desktop table */}
       <div className="hidden lg:block">
         <DataTableShell>
-          <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-2.5">
-            <p className="text-[11px] font-semibold text-slate-400">
+          <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-2.5">
+            <p className="text-[11px] font-semibold text-dim">
               {total === 0 ? "No listings" : (
-                <>Showing <span className="text-slate-900">{from}–{to}</span> of <span className="text-slate-900">{total}</span></>
+                <>Showing <span className="text-text">{from}–{to}</span> of <span className="text-text">{total}</span></>
               )}
             </p>
             {pages > 1 && (
               <div className="flex items-center gap-1">
                 <PageLink href={page > 1 ? `/admin/cars?page=${page - 1}${search ? `&search=${search}` : ""}${statusFilter ? `&status=${statusFilter}` : ""}${orderQS}` : null} label="Prev" />
-                <span className="px-2 text-[11px] font-medium text-slate-400 tabular-nums">{page} / {pages}</span>
+                <span className="px-2 text-[11px] font-medium text-dim tabular-nums">{page} / {pages}</span>
                 <PageLink href={page < pages ? `/admin/cars?page=${page + 1}${search ? `&search=${search}` : ""}${statusFilter ? `&status=${statusFilter}` : ""}${orderQS}` : null} label="Next" />
               </div>
             )}
@@ -243,7 +243,7 @@ export default function BulkActionsWrapper({
           <div className="overflow-x-auto">
             <table className="w-full min-w-[850px] text-left">
               <thead>
-                <tr className="border-b border-slate-200 bg-white/40">
+                <tr className="border-b border-border bg-glass/40">
                   <th className="w-9 px-3 py-3">
                     <input
                       type="checkbox"
@@ -254,15 +254,15 @@ export default function BulkActionsWrapper({
                     />
                   </th>
                   {["Listing", "Listed", "Leads", "Price", "Status", ""].map((h) => (
-                    <th key={h} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">{h}</th>
+                    <th key={h} className="whitespace-nowrap px-4 py-3 text-[10px] font-bold uppercase tracking-wider text-dim">{h}</th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200/60">
+              <tbody className="divide-y divide-border">
                 {cars.map((car, i) => {
                   const thumb = car.images[0]?.url || null;
                   return (
-                    <tr key={car.id} className={`transition-colors hover:bg-slate-100/30 ${rowBg(i)}`}>
+                    <tr key={car.id} className={`transition-colors hover:bg-surface-overlay ${rowBg(i)}`}>
                       <td className="px-3 py-3">
                         <input
                           type="checkbox"
@@ -273,11 +273,11 @@ export default function BulkActionsWrapper({
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
-                          <div className="relative h-10 w-[4.25rem] shrink-0 overflow-hidden rounded-md border border-slate-200 bg-[var(--bg)]">
+                          <div className="relative h-10 w-[4.25rem] shrink-0 overflow-hidden rounded-md border border-border bg-[var(--bg)]">
                             {thumb ? (
                               <img src={thumb} alt="" className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
                             ) : (
-                              <div className="flex h-full w-full items-center justify-center text-slate-500">
+                              <div className="flex h-full w-full items-center justify-center text-muted">
                                 <Car size={16} />
                               </div>
                             )}
@@ -286,7 +286,7 @@ export default function BulkActionsWrapper({
                             <div className="flex items-center gap-2">
                               <Link
                                 href={`/admin/cars/${car.id}/edit`}
-                                className="text-sm font-bold text-slate-900 hover:text-emerald-600 transition-colors truncate"
+                                className="text-sm font-bold text-text hover:text-emerald-600 transition-colors truncate"
                               >
                                 {car.year} {car.make} {car.model}
                               </Link>
@@ -294,21 +294,21 @@ export default function BulkActionsWrapper({
                                 <span className="shrink-0 rounded bg-amber-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-amber-600">Luxury</span>
                               )}
                             </div>
-                            <p className="text-[11px] text-slate-400 truncate">{car.variant?.trim() || "\u2014"}</p>
+                            <p className="text-[11px] text-dim truncate">{car.variant?.trim() || "\u2014"}</p>
                           </div>
                         </div>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
-                        <span className="text-[11px] font-medium text-slate-400">{formatListedAge(car.createdAt)}</span>
+                        <span className="text-[11px] font-medium text-dim">{formatListedAge(car.createdAt)}</span>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
-                        <span className="inline-flex items-center gap-1.5 text-xs text-slate-500">
+                        <span className="inline-flex items-center gap-1.5 text-xs text-muted">
                           <MessageSquare size={13} />
-                          <span className="font-bold text-slate-900 tabular-nums">{car._count.leads}</span>
+                          <span className="font-bold text-text tabular-nums">{car._count.leads}</span>
                         </span>
                       </td>
                       <td className="whitespace-nowrap px-4 py-3">
-                        <span className="text-sm font-bold text-slate-900 tabular-nums">{fmtPrice(car.price)}</span>
+                        <span className="text-sm font-bold text-text tabular-nums">{fmtPrice(car.price)}</span>
                       </td>
                       <td className="px-4 py-3">
                         <StatusDot car={car} />
@@ -329,7 +329,7 @@ export default function BulkActionsWrapper({
             <EmptyState
               title="No listings found"
               message={search || statusFilter ? "Try clearing your filters." : "Add a vehicle to populate inventory."}
-              icon={<Car size={28} className="text-slate-400" />}
+              icon={<Car size={28} className="text-dim" />}
             />
           )}
         </DataTableShell>
@@ -340,10 +340,10 @@ export default function BulkActionsWrapper({
 
 function PageLink({ href, label }) {
   if (!href) {
-    return <span className="rounded-md px-3 py-1.5 text-xs font-bold text-slate-500 opacity-40">{label}</span>;
+    return <span className="rounded-md px-3 py-1.5 text-xs font-bold text-muted opacity-40">{label}</span>;
   }
   return (
-    <Link href={href} className="rounded-md border border-slate-200 bg-white/60 px-3 py-1.5 text-xs font-bold text-slate-500 hover:text-slate-900 hover:border-slate-300 transition-colors">
+    <Link href={href} className="rounded-md border border-border bg-glass/60 px-3 py-1.5 text-xs font-bold text-muted hover:text-text hover:border-border transition-colors">
       {label}
     </Link>
   );

@@ -11,7 +11,7 @@ export default function BuyerRequestAdminRowActions({ requestId, publicCode, sta
   const [error, setError] = useState("");
 
   if (status === "CLOSED") {
-    return <span className="text-[10px] font-bold uppercase text-slate-500">Removed</span>;
+    return <span className="text-[10px] font-bold uppercase text-muted">Removed</span>;
   }
 
   async function removeRequest() {

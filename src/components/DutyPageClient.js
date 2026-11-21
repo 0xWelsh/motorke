@@ -49,7 +49,7 @@ export default function DutyPageClient({
               className="lg:col-span-8 min-w-0 scroll-mt-24"
             >
               <div
-                className="rounded-[var(--radius)] border border-slate-200 bg-white shadow-lg p-4 sm:p-5"
+                className="rounded-[var(--radius)] border border-border bg-surface shadow-lg p-4 sm:p-5"
               >
                 <DutyCalculator
                   initialVehicle={initialVehicle}

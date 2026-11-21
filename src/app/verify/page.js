@@ -95,7 +95,7 @@ function VerifyForm() {
         <div className="w-14 h-14 bg-red-500/10 rounded-xl flex items-center justify-center mx-auto mb-4 border border-red-500/20">
           <AlertCircle className="w-7 h-7 text-red-500" />
         </div>
-        <p className="text-slate-500 mb-6 font-medium">Invalid verification request. Missing credentials.</p>
+        <p className="text-muted mb-6 font-medium">Invalid verification request. Missing credentials.</p>
         <Link href="/signup" className="btn btn-primary btn-sm">
           Return to Signup
         </Link>
@@ -103,45 +103,45 @@ function VerifyForm() {
     );
   }
 
-  const inputCls = "w-full bg-slate-50 border-b-2 border-slate-300 rounded-none px-5 py-4 text-2xl sm:text-3xl tracking-[0.3em] font-black text-center text-slate-900 outline-none focus:border-[var(--accent)] transition-all placeholder:text-slate-400";
+  const inputCls = "w-full bg-surface-hover border-b-2 border-border rounded-none px-5 py-4 text-2xl sm:text-3xl tracking-[0.3em] font-black text-center text-text outline-none focus:border-[var(--accent)] transition-all placeholder:text-dim";
 
   return (
     <>
       {/* Progress */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-xs font-bold uppercase tracking-wide text-slate-500">Setup Progress</p>
-          <p className="text-xs font-bold text-slate-500">Step 2 of 2</p>
+          <p className="text-xs font-bold uppercase tracking-wide text-muted">Setup Progress</p>
+          <p className="text-xs font-bold text-muted">Step 2 of 2</p>
         </div>
-        <div className="w-full bg-slate-200 rounded-none h-1.5 overflow-hidden">
+        <div className="w-full bg-surface-overlay rounded-none h-1.5 overflow-hidden">
           <div className="h-full bg-[var(--accent)] w-1/2 transition-all"></div>
         </div>
       </div>
 
       {/* Header */}
       <div className="text-center mb-8 sm:mb-10">
-        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-slate-50 rounded-xl flex items-center justify-center mx-auto mb-5 sm:mb-6">
+        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-surface-hover rounded-xl flex items-center justify-center mx-auto mb-5 sm:mb-6">
           <ShieldCheck size={32} className="text-[var(--accent)]" />
         </div>
-        <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mb-2 uppercase">Verify Your Email</h1>
-        <p className="text-sm text-slate-500 font-bold uppercase tracking-widest">We sent a 6-digit code to your email address</p>
+        <h1 className="text-2xl sm:text-3xl font-black text-text tracking-tight mb-2 uppercase">Verify Your Email</h1>
+        <p className="text-sm text-muted font-bold uppercase tracking-widest">We sent a 6-digit code to your email address</p>
       </div>
 
       {/* Email Display */}
-      <div className="mb-8 p-4 bg-slate-50 shadow-sm rounded-xl">
-        <p className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Verification Email</p>
+      <div className="mb-8 p-4 bg-surface-hover shadow-sm rounded-xl">
+        <p className="text-xs font-bold text-muted uppercase tracking-widest mb-2">Verification Email</p>
         <div className="flex items-center justify-between">
-          <p className="text-sm font-black tracking-wide text-slate-900 break-all">{email}</p>
+          <p className="text-sm font-black tracking-wide text-text break-all">{email}</p>
           <button
             type="button"
             onClick={copyEmailToClipboard}
-            className="ml-2 p-2 hover:bg-slate-100 rounded-xl transition-colors"
+            className="ml-2 p-2 hover:bg-surface-overlay rounded-xl transition-colors"
             title="Copy email"
           >
             {copied ? (
               <Check size={18} className="text-[var(--accent)]" />
             ) : (
-              <Copy size={18} className="text-slate-500 hover:text-slate-900" />
+              <Copy size={18} className="text-muted hover:text-text" />
             )}
           </button>
         </div>
@@ -207,8 +207,8 @@ function VerifyForm() {
       </form>
 
       {/* Resend Section */}
-      <div className="mt-8 pt-6 border-t border-slate-200">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-slate-500 text-center mb-4">Didn't receive the code?</p>
+      <div className="mt-8 pt-6 border-t border-border">
+        <p className="text-[11px] font-bold uppercase tracking-widest text-muted text-center mb-4">Didn't receive the code?</p>
         <button
           type="button"
           onClick={handleResendCode}
@@ -226,9 +226,9 @@ function VerifyForm() {
       </div>
 
       {/* Help Section */}
-      <div className="mt-6 pt-6 border-t border-slate-200 space-y-3 pb-8">
-        <p className="text-[10px] font-black tracking-widest uppercase text-slate-500">Having issues?</p>
-        <div className="space-y-2 text-xs font-medium text-slate-500">
+      <div className="mt-6 pt-6 border-t border-border space-y-3 pb-8">
+        <p className="text-[10px] font-black tracking-widest uppercase text-muted">Having issues?</p>
+        <div className="space-y-2 text-xs font-medium text-muted">
           <p>• Check your spam/junk folder for the verification email</p>
           <p>• Enter only the 6-digit code (no spaces or dashes)</p>
           <p>• Code expires in 30 minutes</p>
@@ -247,11 +247,11 @@ function VerifyForm() {
 export default function VerifyPage() {
   return (
     <div className="min-h-screen w-full bg-[var(--bg)] flex items-start sm:items-center justify-center p-0 sm:p-6 relative overflow-hidden">
-      <div className="w-full max-w-md bg-white sm:border border-slate-200 rounded-xl p-6 sm:p-10 shadow-sm relative z-10 animate-in slide-in-from-bottom-8 fade-in duration-500 min-h-screen sm:min-h-0">
+      <div className="w-full max-w-md bg-surface sm:border border-border rounded-xl p-6 sm:p-10 shadow-sm relative z-10 animate-in slide-in-from-bottom-8 fade-in duration-500 min-h-screen sm:min-h-0">
         <Suspense fallback={
           <div className="flex flex-col items-center justify-center py-12">
             <Loader2 className="animate-spin text-[var(--accent)] mb-4" size={40} />
-            <p className="text-slate-500 font-medium">Loading verification...</p>
+            <p className="text-muted font-medium">Loading verification...</p>
           </div>
         }>
           <VerifyForm />

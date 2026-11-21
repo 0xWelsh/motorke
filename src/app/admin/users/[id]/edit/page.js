@@ -43,32 +43,32 @@ export default async function AdminEditUserPage(props) {
   const saved = searchParams?.saved;
   const error = searchParams?.error;
 
-  const inputCls  = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-slate-900 placeholder:text-slate-400 outline-none focus:border-slate-800 transition-all font-bold";
-  const selectCls = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-slate-900 text-slate-900 outline-none focus:border-slate-800 transition-all font-bold appearance-none";
-  const labelCls  = "block text-[11px] font-black uppercase tracking-[0.15em] text-slate-500 mb-2";
+  const inputCls  = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-text text-text placeholder:text-dim outline-none focus:border-slate-800 transition-all font-bold";
+  const selectCls = "w-full bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-2xl px-4 py-3.5 text-sm text-text text-text outline-none focus:border-slate-800 transition-all font-bold appearance-none";
+  const labelCls  = "block text-[11px] font-black uppercase tracking-[0.15em] text-muted mb-2";
 
   return (
     <div className="max-w-4xl mx-auto animate-in fade-in duration-500">
       <div className="mb-10">
-        <Link href="/admin/users" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] text-slate-400 hover:text-slate-900 text-slate-900 transition-colors mb-8">
+        <Link href="/admin/users" className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.15em] text-dim hover:text-text text-text transition-colors mb-8">
           <ChevronLeft size={14} /> Back to Directory
         </Link>
         
-        <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-white p-8 rounded-xl border border-[#ddd4c8] border-slate-800 shadow-none">
-          <div className="shrink-0 flex items-center justify-center bg-[#f7f6f3] border border-dashed border-[#ddd4c8] border-slate-800 rounded-3xl p-2 h-28 w-28">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-6 bg-surface p-8 rounded-xl border border-[#ddd4c8] border-slate-800 shadow-none">
+          <div className="shrink-0 flex items-center justify-center bg-background border border-dashed border-[#ddd4c8] border-slate-800 rounded-3xl p-2 h-28 w-28">
              <AdminAvatarUpload currentUrl={user.avatarUrl} targetId={user.id} targetType="user" name={user.name} size="lg" />
           </div>
           <div>
-            <h1 className="text-3xl font-black text-slate-900 text-slate-900 tracking-tight">{user.name}</h1>
-            <p className="text-slate-500 text-[11px] font-bold uppercase tracking-widest mt-1 mb-3">{user.email}</p>
+            <h1 className="text-3xl font-black text-text text-text tracking-tight">{user.name}</h1>
+            <p className="text-muted text-[11px] font-bold uppercase tracking-widest mt-1 mb-3">{user.email}</p>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex px-3 py-1 rounded-2xl bg-slate-100 text-slate-600 text-[11px] font-black uppercase tracking-widest">
+              <span className="inline-flex px-3 py-1 rounded-2xl bg-surface-overlay text-muted text-[11px] font-black uppercase tracking-widest">
                 ID: {user.id.slice(-8)}
               </span>
               <span className={`inline-flex px-3 py-1 rounded-2xl text-[11px] font-black uppercase tracking-widest ${user.active ? 'bg-emerald-50 text-emerald-800 bg-emerald-950/40 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
                 {user.active ? 'Active' : 'Locked'}
               </span>
-              <span className="inline-flex px-3 py-1 rounded-2xl bg-slate-100 text-slate-700 text-[11px] font-black uppercase tracking-widest">
+              <span className="inline-flex px-3 py-1 rounded-2xl bg-surface-overlay text-secondary text-[11px] font-black uppercase tracking-widest">
                 {user.role}
               </span>
             </div>
@@ -80,13 +80,13 @@ export default async function AdminEditUserPage(props) {
         <div className="lg:col-span-2 space-y-8">
           {/* PROFILE EDIT FORM */}
           <div className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-xl p-8 shadow-none">
-            <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
-               <div className="w-10 h-10 rounded-2xl bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
+            <div className="flex items-center gap-3 mb-8 pb-6 border-b border-subtle">
+               <div className="w-10 h-10 rounded-2xl bg-background border border-subtle flex items-center justify-center text-muted">
                   <User size={18} />
                </div>
                <div>
-                  <h2 className="text-lg font-black text-slate-900 text-slate-900">Profile Information</h2>
-                  <p className="text-xs font-medium text-slate-500">Update general account details</p>
+                  <h2 className="text-lg font-black text-text text-text">Profile Information</h2>
+                  <p className="text-xs font-medium text-muted">Update general account details</p>
                </div>
             </div>
 
@@ -114,27 +114,27 @@ export default async function AdminEditUserPage(props) {
                 <div>
                   <label className={labelCls}>Full Name</label>
                   <div className="relative">
-                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><User size={16} /></span>
+                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-dim"><User size={16} /></span>
                      <input name="name" required defaultValue={user.name} className={`${inputCls} pl-11`} placeholder="e.g. John Doe" />
                   </div>
                 </div>
                 <div>
                   <label className={labelCls}>Email Address</label>
                   <div className="relative">
-                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Mail size={16} /></span>
+                     <span className="absolute left-4 top-1/2 -translate-y-1/2 text-dim"><Mail size={16} /></span>
                      <input name="email" type="email" required defaultValue={user.email} className={`${inputCls} pl-11`} placeholder="john@example.com" />
                   </div>
                 </div>
                 <div>
                   <label className={labelCls}>System Role</label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Shield size={16} /></span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-dim"><Shield size={16} /></span>
                     <select name="role" defaultValue={user.role} disabled={!canChangeRole} className={`${selectCls} pl-11 disabled:cursor-not-allowed disabled:opacity-60`}>
                       <option value="DEALER">Dealer</option>
                       <option value="ADMIN">Admin</option>
                     </select>
                     {!canChangeRole && (
-                      <p className="text-xs font-medium text-slate-500 mt-2">
+                      <p className="text-xs font-medium text-muted mt-2">
                         {isSelf ? "Your own admin privileges cannot be revoked." : "Only the Super Admin can change an admin's role."}
                       </p>
                     )}
@@ -143,7 +143,7 @@ export default async function AdminEditUserPage(props) {
                 <div>
                   <label className={labelCls}>Linked Dealership</label>
                   <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Building2 size={16} /></span>
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-dim"><Building2 size={16} /></span>
                     <select name="dealerId" defaultValue={user.dealerId || ""} className={`${selectCls} pl-11`}>
                       <option value="">Unassigned</option>
                       {dealers.map((d) => (
@@ -153,8 +153,8 @@ export default async function AdminEditUserPage(props) {
                   </div>
                 </div>
               </div>
-              <div className="pt-4 border-t border-slate-100 flex justify-end">
-                <button type="submit" className="bg-[#2F855A] border border-[#2F855A] text-slate-900 px-8 h-12 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-[#38A169] hover:border-[#38A169] transition-all shadow-none">
+              <div className="pt-4 border-t border-subtle flex justify-end">
+                <button type="submit" className="bg-accent border border-[#2F855A] text-text px-8 h-12 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:bg-accent hover:border-[#38A169] transition-all shadow-none">
                   Save Details
                 </button>
               </div>
@@ -163,13 +163,13 @@ export default async function AdminEditUserPage(props) {
 
           {/* RESET PASSWORD */}
           <div id="security" className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 rounded-xl p-8 shadow-none">
-            <div className="flex items-center gap-3 mb-8 pb-6 border-b border-slate-100">
-               <div className="w-10 h-10 rounded-2xl bg-[#f7f6f3] border border-slate-100 flex items-center justify-center text-slate-500">
+            <div className="flex items-center gap-3 mb-8 pb-6 border-b border-subtle">
+               <div className="w-10 h-10 rounded-2xl bg-background border border-subtle flex items-center justify-center text-muted">
                   <Lock size={18} />
                </div>
                <div>
-                  <h2 className="text-lg font-black text-slate-900 text-slate-900">Force Password Reset</h2>
-                  <p className="text-xs font-medium text-slate-500">Generate a new temporary password</p>
+                  <h2 className="text-lg font-black text-text text-text">Force Password Reset</h2>
+                  <p className="text-xs font-medium text-muted">Generate a new temporary password</p>
                </div>
             </div>
 
@@ -183,15 +183,15 @@ export default async function AdminEditUserPage(props) {
               <div>
                 <label className={labelCls}>New Password</label>
                 <div className="relative">
-                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Key size={16} /></span>
+                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-dim"><Key size={16} /></span>
                    <input name="password" type="password" required minLength={8} className={`${inputCls} pl-11`} placeholder="Requires at least 8 characters..." />
                 </div>
-                <p className="text-xs text-slate-500 font-medium mt-3">
+                <p className="text-xs text-muted font-medium mt-3">
                   Upon saving, the user's active sessions will be terminated and they will need to sign in with this new password.
                 </p>
               </div>
               <div className="pt-4 flex justify-end">
-                <button type="submit" className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 text-slate-700 px-8 h-12 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:border-slate-800 hover:text-slate-900 text-white transition-all shadow-none">
+                <button type="submit" className="bg-[#1e1e1e] border border-[#ddd4c8] border-slate-800 text-secondary px-8 h-12 rounded-2xl text-[11px] font-black uppercase tracking-widest hover:border-slate-800 hover:text-text text-white transition-all shadow-none">
                   Update Password
                 </button>
               </div>

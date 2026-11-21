@@ -38,18 +38,18 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] p-5">
-        <p className="text-sm font-semibold text-slate-900">Catalog size</p>
+      <div className="rounded-xl border border-white/[0.06] bg-glass/[0.03] p-5">
+        <p className="text-sm font-semibold text-text">Catalog size</p>
         <p className="text-2xl font-bold tabular-nums text-[var(--accent)] mt-1">
           {result?.activeCatalogCount ?? initialCount}
         </p>
-        <p className="text-xs text-slate-500 mt-1">Active duty vehicles in database</p>
+        <p className="text-xs text-muted mt-1">Active duty vehicles in database</p>
       </div>
 
       <div className="flex flex-wrap gap-3">
         <a
           href="/api/admin/duty-vehicles/template"
-          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#1c1c1c] px-4 py-2.5 text-sm font-semibold text-slate-900 hover:bg-white/[0.03]"
+          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#1c1c1c] px-4 py-2.5 text-sm font-semibold text-text hover:bg-glass/[0.03]"
         >
           <Download className="w-4 h-4" aria-hidden />
           Download CSV template
@@ -58,7 +58,7 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
           href="/duty"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#1c1c1c] px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-white/[0.03]"
+          className="inline-flex items-center gap-2 rounded-lg border border-white/[0.06] bg-[#1c1c1c] px-4 py-2.5 text-sm font-semibold text-secondary hover:bg-glass/[0.03]"
         >
           Open duty calculator
         </a>
@@ -68,10 +68,10 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
         <div className="flex items-start gap-3 mb-5">
           <FileSpreadsheet className="w-5 h-5 text-[var(--accent)] shrink-0 mt-0.5" aria-hidden />
           <div>
-            <h2 className="text-sm font-bold text-slate-900">Upload CRSP catalog CSV</h2>
-            <p className="text-xs text-slate-500 mt-1 leading-relaxed max-w-xl">
+            <h2 className="text-sm font-bold text-text">Upload CRSP catalog CSV</h2>
+            <p className="text-xs text-muted mt-1 leading-relaxed max-w-xl">
               No KRA Excel required. Edit{" "}
-              <code className="text-[11px] bg-white/[0.03] px-1 rounded">
+              <code className="text-[11px] bg-glass/[0.03] px-1 rounded">
                 data/duty-crsp/starter-catalog.csv
               </code>{" "}
               in Google Sheets, export as CSV, and upload here. Rows upsert by slug (safe to re-import).
@@ -80,7 +80,7 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
         </div>
 
         <label className="flex flex-col gap-2">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">CSV file</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-muted">CSV file</span>
           <input
             type="file"
             accept=".csv,text/csv"
@@ -89,11 +89,11 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
               setResult(null);
               setError("");
             }}
-            className="text-sm text-slate-700 file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--accent)] file:px-3 file:py-2 file:text-xs file:font-bold file:uppercase file:tracking-wider file:text-slate-900"
+            className="text-sm text-secondary file:mr-3 file:rounded-lg file:border-0 file:bg-[var(--accent)] file:px-3 file:py-2 file:text-xs file:font-bold file:uppercase file:tracking-wider file:text-text"
           />
         </label>
 
-        <label className="mt-4 flex items-center gap-2 text-sm text-slate-500">
+        <label className="mt-4 flex items-center gap-2 text-sm text-muted">
           <input
             type="checkbox"
             checked={dryRun}
@@ -107,7 +107,7 @@ export default function AdminDutyCrspImport({ initialCount = 0 }) {
           type="button"
           onClick={runImport}
           disabled={loading || !file}
-          className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-slate-900 hover:bg-[var(--accent)]/80 disabled:opacity-50"
+          className="mt-5 inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-text hover:bg-[var(--accent)]/80 disabled:opacity-50"
         >
           <Upload className="w-4 h-4" aria-hidden />
           {loading ? "Importing…" : dryRun ? "Validate CSV" : "Import to database"}

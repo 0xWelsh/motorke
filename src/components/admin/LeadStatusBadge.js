@@ -7,7 +7,7 @@ const STATUS_STYLES = {
   INTERESTED: { badge: "border-violet-500/25 bg-violet-500/10 text-violet-300", dot: "bg-violet-400" },
   NEGOTIATING: { badge: "border-amber-500/25 bg-amber-50 text-amber-300", dot: "bg-amber-400" },
   SOLD: { badge: "border-green-500/25 bg-green-500/10 text-green-300", dot: "bg-green-400" },
-  DEAD: { badge: "border-slate-200 bg-slate-100/60 text-slate-500", dot: "bg-slate-400" },
+  DEAD: { badge: "border-border bg-surface-overlay text-muted", dot: "bg-surface-overlay" },
 };
 
 const STATUS_OPTIONS = ["NEW", "CONTACTED", "INTERESTED", "NEGOTIATING", "SOLD", "DEAD"];

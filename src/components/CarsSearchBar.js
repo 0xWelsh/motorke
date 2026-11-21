@@ -8,14 +8,14 @@ function SearchForm({ value, setValue, onSubmit, disabled = false }) {
   return (
     <form onSubmit={onSubmit} className="flex items-stretch gap-2">
       <div className="relative flex-1">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-dim" />
         <input
           type="text"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           disabled={disabled}
           placeholder="Search makes, models, keywords..."
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-3 text-[13px] font-semibold text-slate-900 shadow-sm placeholder:font-normal placeholder:text-slate-400 transition-colors focus:border-[var(--accent)] focus:bg-white focus:outline-none focus:ring-1 focus:ring-accent-glow"
+          className="h-11 w-full rounded-xl border border-border bg-surface pl-10 pr-3 text-[13px] font-semibold text-text shadow-sm placeholder:font-normal placeholder:text-dim transition-colors focus:border-[var(--accent)] focus:bg-surface focus:outline-none focus:ring-1 focus:ring-accent-glow"
         />
       </div>
       <button type="submit" className="btn btn-primary" disabled={disabled}>

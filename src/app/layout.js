@@ -226,9 +226,9 @@ export default async function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessLd) }}
         />
       </head>
-      <body className={`${lato.variable} ${montserrat.variable} bg-background text-slate-800 min-h-screen antialiased flex flex-col font-sans`}>
+      <body className={`${lato.variable} ${montserrat.variable} bg-background text-text min-h-screen antialiased flex flex-col font-sans`}>
         <PWARegister />
-        <ThemeProvider attribute="class" defaultTheme="light" forcedTheme="light" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
           <SaveDataProvider>
           <SavedCarsProvider>
             {/* useSearchParams inside a statically-prerendered page needs a

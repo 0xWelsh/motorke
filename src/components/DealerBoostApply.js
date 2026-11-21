@@ -72,8 +72,8 @@ export default function DealerBoostApply({
       </button>
 
       {open ? (
-        <div className="mt-2 p-2.5 border border-[#ddd4c8] border-slate-800 rounded-xl bg-[#fbfcfe] bg-[#1a1a1a] space-y-2">
-          <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-600 text-slate-400 truncate">
+        <div className="mt-2 p-2.5 border border-[#ddd4c8] border-slate-800 rounded-xl bg-surface bg-[#1a1a1a] space-y-2">
+          <p className="text-[10px] font-black uppercase tracking-[0.12em] text-muted text-dim truncate">
             {carLabel}
           </p>
           {BOOST_OPTIONS.map((opt) => (
@@ -82,9 +82,9 @@ export default function DealerBoostApply({
               type="button"
               disabled={Boolean(loading)}
               onClick={() => apply(opt.type)}
-              className="w-full text-left px-2.5 py-2 rounded-lg border border-[#ddd4c8] border-slate-700 bg-white bg-[#1e1e1e] hover:border-[var(--accent)] disabled:opacity-50"
+              className="w-full text-left px-2.5 py-2 rounded-lg border border-[#ddd4c8] border-slate-700 bg-surface bg-[#1e1e1e] hover:border-[var(--accent)] disabled:opacity-50"
             >
-              <span className="block text-[10px] font-black uppercase tracking-[0.1em] text-slate-900 text-white">
+              <span className="block text-[10px] font-black uppercase tracking-[0.1em] text-text text-white">
                 {loading === opt.type ? (
                   <span className="inline-flex items-center gap-1">
                     <Loader2 size={12} className="animate-spin" /> Applying…
@@ -93,10 +93,10 @@ export default function DealerBoostApply({
                   opt.label
                 )}
               </span>
-              <span className="text-[9px] text-slate-500">{opt.hint}</span>
+              <span className="text-[9px] text-muted">{opt.hint}</span>
             </button>
           ))}
-          <p className="text-[9px] text-slate-500 leading-snug">
+          <p className="text-[9px] text-muted leading-snug">
             Early access: no charge yet. Credits track usage for when billing goes live.
           </p>
         </div>

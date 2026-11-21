@@ -19,15 +19,15 @@ export default function DetailsGrid({ car, title = "Details" }) {
   if (visible.length === 0) return null;
 
   return (
-    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <section className="overflow-hidden rounded-xl border border-border bg-surface">
       <div className="flex items-center justify-between gap-3 px-4 pt-4 sm:px-5 sm:pt-5">
-        <h2 className="text-[15px] font-bold text-slate-800">{title}</h2>
+        <h2 className="text-[15px] font-bold text-text">{title}</h2>
       </div>
 
       <div className="grid grid-cols-2 gap-x-4 gap-y-4 px-4 pb-5 pt-4 sm:grid-cols-3 sm:px-5 lg:grid-cols-4 xl:grid-cols-5">
         {visible.map((row, i) => (
           <div key={`${row.label}-${i}`} className="min-w-0">
-            <p className="text-[9px] font-bold uppercase leading-tight tracking-[0.08em] text-slate-400">
+            <p className="text-[9px] font-bold uppercase leading-tight tracking-[0.08em] text-dim">
               {row.label}
             </p>
             <p className="mt-0.5 break-words text-[13px] font-bold leading-snug text-[var(--accent)]">
@@ -42,7 +42,7 @@ export default function DetailsGrid({ car, title = "Details" }) {
           type="button"
           onClick={() => setShowAll((s) => !s)}
           aria-expanded={showAll}
-          className="flex w-full items-center justify-center gap-1.5 border-t border-slate-100 py-2.5 text-[11px] font-bold uppercase tracking-wider text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-800"
+          className="flex w-full items-center justify-center gap-1.5 border-t border-subtle py-2.5 text-[11px] font-bold uppercase tracking-wider text-muted transition-colors hover:bg-surface-hover hover:text-text"
         >
           {showAll ? "Show less" : `Show all ${primary.length + hiddenCount} details`}
           <svg

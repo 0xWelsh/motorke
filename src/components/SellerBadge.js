@@ -28,7 +28,7 @@ export default function SellerBadge({ dealer, className = "", tooltip = true }) 
     blue: "bg-blue-50 text-blue-700 border-blue-200",
     yellow: "bg-yellow-50 text-yellow-700 border-yellow-200",
     red: "bg-red-50 text-red-700 border-red-200",
-    gray: "bg-white text-slate-500 border-slate-200",
+    gray: "bg-surface text-muted border-border",
   };
 
   const tooltipText = {

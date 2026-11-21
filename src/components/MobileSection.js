@@ -21,7 +21,7 @@ export default function MobileSection({ summary = "More about this car", childre
   if (!collapsed) return <>{children}</>;
 
   return (
-    <details className="group overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <details className="group overflow-hidden rounded-xl border border-border bg-surface">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-3 bg-[var(--sidebar-bar)] px-4 py-3 text-[12px] font-black uppercase tracking-widest text-white">
         <span>{summary}</span>
         <ChevronDown className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" aria-hidden />

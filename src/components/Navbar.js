@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef, useTransition } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import {
   Search, User, X, Menu, ChevronDown, LogOut, Heart,
   LayoutDashboard, Compass, GitCompare, Calculator, Mail, ChevronRight, Home, Bell, Phone,
@@ -13,7 +12,7 @@ import SearchSuggestions from "@/components/SearchSuggestions";
 import NotificationsBell from "@/components/NotificationsBell";
 
 import { trackUiEvent } from "@/lib/analytics";
-import { BRAND_HEADER_LOGO } from "@/lib/site-url";
+import BrandLogo from "@/components/BrandLogo";
 import { BODY_TYPE_LABELS } from "@/lib/constants";
 import { loadRecentSearches, saveRecentSearch, toRecentSuggestionItems } from "@/lib/recent-searches";
 
@@ -225,8 +224,8 @@ export default function Navbar({ user, navCounts }) {
   return (
     <>
       {/* ─── DESKTOP: utility row (logo · search · Kenya time · auth) ─── */}
-      <header className="hidden md:block sticky top-0 z-[100] bg-white shadow-[0_1px_0_rgba(0,0,0,0.06)]">
-        <div className="border-b border-slate-200 bg-white">
+      <header className="hidden md:block sticky top-0 z-[100] bg-surface shadow-[0_1px_0_rgba(0,0,0,0.06)]">
+        <div className="border-b border-border bg-surface">
           <div className="home-shell">
             <div className="flex h-[88px] items-center justify-between gap-6 lg:h-[96px]">
               <Link
@@ -235,26 +234,19 @@ export default function Navbar({ user, navCounts }) {
                 className="flex shrink-0 items-center transition-transform active:scale-95"
               >
                 <div className="flex h-7 min-w-0 shrink-0 items-center lg:h-9">
-                  <Image
-                    src={BRAND_HEADER_LOGO}
-                    alt="BIDGARI"
-                    priority
-                    width={1000}
-                    height={333}
-                    className="h-full w-auto object-contain object-left"
-                  />
+                  <BrandLogo priority />
                 </div>
               </Link>
 
             <div ref={searchRef} className="hidden md:flex min-w-0 flex-1 max-w-[360px]">
               <form onSubmit={handleSearch} aria-busy={isPending} className="relative w-full">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-dim" />
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   onFocus={() => debouncedTerm.length >= 2 && setShowSuggestions(true)}
                   placeholder="Search vehicles..."
-                  className="h-9 w-full rounded-[4px] border border-slate-300 bg-white pl-8 pr-3 text-sm font-medium text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-[var(--accent)]"
+                  className="h-9 w-full rounded-[4px] border border-border bg-surface pl-8 pr-3 text-sm font-medium text-text outline-none transition-colors placeholder:text-dim focus:border-[var(--accent)]"
                 />
               </form>
               {showSuggestions && (
@@ -272,7 +264,7 @@ export default function Navbar({ user, navCounts }) {
               <Link
                 href="/contact"
                 onClick={(e) => navigateTo("/contact", e)}
-                className="hidden lg:inline text-[12px] font-semibold text-slate-500 transition-colors hover:text-[var(--accent)]"
+                className="hidden lg:inline text-[12px] font-semibold text-muted transition-colors hover:text-[var(--accent)]"
               >
                 Contact
               </Link>
@@ -283,30 +275,30 @@ export default function Navbar({ user, navCounts }) {
                     <button
                       type="button"
                       onClick={() => setUserMenu(!userMenu)}
-                      className="flex h-[32px] items-center gap-2 border border-slate-200 bg-slate-50 px-2.5 transition-colors hover:bg-slate-100"
+                      className="flex h-[32px] items-center gap-2 border border-border bg-surface-hover px-2.5 transition-colors hover:bg-surface-overlay"
                     >
                       {user.avatarUrl ? (
-                        <img src={user.avatarUrl} alt="" className="h-5 w-5 rounded-full object-cover ring-2 ring-slate-200" />
+                        <img src={user.avatarUrl} alt="" className="h-5 w-5 rounded-full object-cover ring-2 ring-border" />
                       ) : (
                         <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--accent)] text-[9px] font-bold uppercase text-white">
                           {user.name?.[0]}
                         </div>
                       )}
-                      <span className="hidden xl:inline text-[13px] font-semibold text-slate-700">{user.name}</span>
-                      <ChevronDown className={clsx("h-3 w-3 text-slate-400 transition-transform duration-300", userMenu && "rotate-180")} />
+                      <span className="hidden xl:inline text-[13px] font-semibold text-secondary">{user.name}</span>
+                      <ChevronDown className={clsx("h-3 w-3 text-dim transition-transform duration-300", userMenu && "rotate-180")} />
                     </button>
 
                     {userMenu && (
-                      <div className="absolute right-0 top-full mt-2 w-64 bg-white border border-slate-200 shadow-glass-lg overflow-hidden rounded-xl">
-                        <div className="px-5 py-4 bg-slate-50 border-b border-slate-100">
-                          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Signed in as</p>
-                          <p className="text-sm font-bold text-slate-900 truncate">{user.name}</p>
+                      <div className="absolute right-0 top-full mt-2 w-64 bg-surface border border-border shadow-glass-lg overflow-hidden rounded-xl">
+                        <div className="px-5 py-4 bg-surface-hover border-b border-subtle">
+                          <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-dim">Signed in as</p>
+                          <p className="text-sm font-bold text-text truncate">{user.name}</p>
                         </div>
                         <div className="py-1.5">
                           {user.role === "ADMIN" && <MenuDropdownItem href="/admin" label="Dashboard" icon={<LayoutDashboard size={16} />} />}
                           <MenuDropdownItem href="/account" label="Account" icon={<User size={16} />} />
                           <MenuDropdownItem href="/account?tab=saved" label="Watchlist" icon={<Heart size={16} />} />
-                          <div className="my-1.5 border-t border-slate-100" />
+                          <div className="my-1.5 border-t border-subtle" />
                           <form action="/api/auth/logout" method="POST">
                             <button type="submit" className="w-full flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors">
                               <LogOut size={16} /> Sign Out
@@ -322,7 +314,7 @@ export default function Navbar({ user, navCounts }) {
                   <Link
                     href="/login"
                     onClick={(e) => navigateTo("/login", e)}
-                    className="text-[13px] font-bold uppercase tracking-wide text-slate-700 transition-colors hover:text-slate-900"
+                    className="text-[13px] font-bold uppercase tracking-wide text-secondary transition-colors hover:text-text"
                   >
                     Login
                   </Link>
@@ -371,9 +363,9 @@ export default function Navbar({ user, navCounts }) {
       </div>
 
       {/* ─── Desktop tagline strip ─── */}
-      <div className="hidden md:block border-b border-slate-200 bg-slate-50">
+      <div className="hidden md:block border-b border-border bg-surface-hover">
         <div className="home-shell">
-          <p className="py-1.5 text-center text-[11px] font-semibold tracking-wide text-slate-500">
+          <p className="py-1.5 text-center text-[11px] font-semibold tracking-wide text-muted">
             Every car verified. Every sale handled.
           </p>
         </div>
@@ -381,7 +373,7 @@ export default function Navbar({ user, navCounts }) {
       </header>
 
       {/* ─── MOBILE header ─── */}
-      <nav className="md:hidden sticky top-0 z-[100] flex flex-col w-full border-b border-slate-200 bg-white shadow-[0_1px_0_rgba(0,0,0,0.06)]">
+      <nav className="md:hidden sticky top-0 z-[100] flex flex-col w-full border-b border-border bg-surface shadow-[0_1px_0_rgba(0,0,0,0.06)]">
         <div className="w-full px-4">
           <div className="flex items-center justify-between gap-4 min-w-0 h-16">
             <Link
@@ -390,14 +382,7 @@ export default function Navbar({ user, navCounts }) {
               className="relative z-20 flex shrink-0 items-center transition-transform active:scale-95"
             >
               <div className="flex h-6 shrink-0 items-center">
-                <Image
-                  src={BRAND_HEADER_LOGO}
-                  alt="BIDGARI"
-                  priority
-                  width={1000}
-                  height={333}
-                  className="h-full w-auto object-contain object-left"
-                />
+                <BrandLogo priority />
               </div>
             </Link>
 
@@ -405,7 +390,7 @@ export default function Navbar({ user, navCounts }) {
               <button
                 type="button"
                 onClick={() => setMobileSearch(true)}
-                className="w-10 h-10 flex items-center justify-center border border-slate-200 bg-white text-slate-500 transition-all hover:bg-slate-100 hover:text-slate-900 active:scale-95 rounded-xl"
+                className="w-10 h-10 flex items-center justify-center border border-border bg-surface text-muted transition-all hover:bg-surface-overlay hover:text-text active:scale-95 rounded-xl"
                 aria-label="Search vehicles"
               >
                 <Search size={20} />
@@ -417,7 +402,7 @@ export default function Navbar({ user, navCounts }) {
                   setOpen(nextOpen);
                   trackUiEvent(nextOpen ? "mobile_menu_open" : "mobile_menu_close", { source: "navbar" });
                 }}
-                className="w-10 h-10 flex items-center justify-center border border-slate-200 bg-white text-slate-500 transition-all hover:bg-slate-100 hover:text-slate-900 active:scale-95 rounded-xl"
+                className="w-10 h-10 flex items-center justify-center border border-border bg-surface text-muted transition-all hover:bg-surface-overlay hover:text-text active:scale-95 rounded-xl"
                 aria-expanded={open}
                 aria-label={open ? "Close menu" : "Open menu"}
               >
@@ -426,18 +411,18 @@ export default function Navbar({ user, navCounts }) {
             </div>
           </div>
         </div>
-        <p className="px-4 pb-1.5 -mt-1 text-center text-[10px] font-semibold tracking-wide text-slate-400">
+        <p className="px-4 pb-1.5 -mt-1 text-center text-[10px] font-semibold tracking-wide text-dim">
           Every car verified. Every sale handled.
         </p>
       </nav>
 
       {/* MOBILE SEARCH OVERLAY */}
       {mobileSearch && (
-        <div className="fixed inset-0 z-[200] bg-white/95 backdrop-blur-xl animate-fade-in duration-200">
+        <div className="fixed inset-0 z-[200] bg-glass/95 backdrop-blur-xl animate-fade-in duration-200">
           <div className="container mx-auto px-6 pt-6">
             <div className="flex items-center justify-between mb-12">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--accent)]">Search Inventory</span>
-              <button onClick={() => setMobileSearch(false)} className="w-10 h-10 flex items-center justify-center bg-slate-50 border border-slate-200 text-slate-400 rounded-xl">
+              <button onClick={() => setMobileSearch(false)} className="w-10 h-10 flex items-center justify-center bg-surface-hover border border-border text-dim rounded-xl">
                 <X size={20} />
               </button>
             </div>
@@ -455,7 +440,7 @@ export default function Navbar({ user, navCounts }) {
                     else if (suggestions.length > 0) setShowSuggestions(true);
                   }}
                   placeholder="Type car make or model..."
-                  className="w-full h-14 pl-14 pr-6 text-lg font-bold outline-none bg-slate-50 border-b-2 border-slate-200 focus:border-[var(--accent)] text-slate-900 placeholder-slate-400 transition-all rounded-xl"
+                  className="w-full h-14 pl-14 pr-6 text-lg font-bold outline-none bg-surface-hover border-b-2 border-border focus:border-[var(--accent)] text-text placeholder-slate-400 transition-all rounded-xl"
                 />
               </form>
               {showSuggestions && (
@@ -474,10 +459,10 @@ export default function Navbar({ user, navCounts }) {
             </div>
 
             <div className="mt-12">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6">Quick Links</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-dim mb-6">Quick Links</p>
               <div className="grid grid-cols-2 gap-3">
                 {links.map(({ href, label }) => (
-                  <Link key={href} href={href} onClick={() => setMobileSearch(false)} className="px-6 py-4 bg-slate-50 border border-slate-200 text-sm font-bold text-slate-700 text-center hover:bg-slate-100 transition-colors rounded-xl">
+                  <Link key={href} href={href} onClick={() => setMobileSearch(false)} className="px-6 py-4 bg-surface-hover border border-border text-sm font-bold text-secondary text-center hover:bg-surface-overlay transition-colors rounded-xl">
                     {label}
                   </Link>
                 ))}
@@ -501,11 +486,11 @@ export default function Navbar({ user, navCounts }) {
             aria-hidden
           />
           <div
-            className="relative z-10 flex max-h-[min(90dvh,38rem)] w-full flex-col overflow-hidden bg-white border-t border-slate-200 shadow-glass-lg animate-slide-up duration-300"
+            className="relative z-10 flex max-h-[min(90dvh,38rem)] w-full flex-col overflow-hidden bg-surface border-t border-border shadow-glass-lg animate-slide-up duration-300"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mx-auto mt-3 h-1 w-10 shrink-0 rounded-full bg-slate-200" aria-hidden />
-            <div className="shrink-0 border-b border-slate-100 px-4 pb-3 pt-3 sm:px-5">
+            <div className="mx-auto mt-3 h-1 w-10 shrink-0 rounded-full bg-surface-overlay" aria-hidden />
+            <div className="shrink-0 border-b border-subtle px-4 pb-3 pt-3 sm:px-5">
               <div className="flex items-center justify-between gap-3">
                 <Link
                   href="/"
@@ -513,31 +498,27 @@ export default function Navbar({ user, navCounts }) {
                   className="flex min-w-0 shrink-0 items-center"
                 >
                   <div className="flex h-5 shrink-0 items-center">
-                    <Image
-                      src={BRAND_HEADER_LOGO}
-                      alt="BIDGARI"
-                      width={1000}
-                      height={333}
-                      className="h-full w-auto object-contain object-left"
-                    />
+                    <BrandLogo />
                   </div>
                 </Link>
-                <button
-                  type="button"
-                  onClick={() => setOpen(false)}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl text-slate-400 transition hover:bg-slate-100 hover:text-slate-900"
-                  aria-label="Close menu"
-                >
-                  <X size={20} />
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    className="flex h-10 w-10 items-center justify-center rounded-xl text-dim transition hover:bg-surface-overlay hover:text-text"
+                    aria-label="Close menu"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
               </div>
               {user ? (
-                <div className="mt-3 flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <div className="mt-3 flex items-center gap-3 rounded-xl border border-border bg-surface-hover p-3">
                   {user.avatarUrl ? (
                     <img
                       src={user.avatarUrl}
                       alt=""
-                      className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-slate-200"
+                      className="h-10 w-10 shrink-0 rounded-full object-cover ring-2 ring-border"
                     />
                   ) : (
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--accent)] text-sm font-bold uppercase text-white">
@@ -545,12 +526,12 @@ export default function Navbar({ user, navCounts }) {
                     </div>
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Signed in</p>
-                    <p className="truncate text-sm font-bold text-slate-900">{user.name}</p>
+                    <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-dim">Signed in</p>
+                    <p className="truncate text-sm font-bold text-text">{user.name}</p>
                   </div>
                 </div>
               ) : (
-                <p className="mt-2 text-sm leading-relaxed text-slate-500">
+                <p className="mt-2 text-sm leading-relaxed text-muted">
                   Verified inventory, transparent costs, and one trusted BIDGARI team.
                 </p>
               )}
@@ -622,12 +603,12 @@ export default function Navbar({ user, navCounts }) {
                         label="Dashboard"
                       />
                     )}
-                    <div className="flex min-h-[3.15rem] items-center justify-between gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-left">
+                    <div className="flex min-h-[3.15rem] items-center justify-between gap-2 rounded-xl border border-border bg-surface px-3 py-2.5 text-left">
                       <span className="flex min-w-0 flex-1 items-center gap-3">
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-surface-overlay text-muted">
                           <Bell className="h-[1.1rem] w-[1.1rem]" strokeWidth={2} />
                         </span>
-                        <span className="truncate text-sm font-bold text-slate-800">Notifications</span>
+                        <span className="truncate text-sm font-bold text-text">Notifications</span>
                       </span>
                       <NotificationsBell variant="navbar" />
                     </div>
@@ -670,7 +651,7 @@ export default function Navbar({ user, navCounts }) {
             </div>
 
             <div
-              className="shrink-0 space-y-3 border-t border-slate-200 bg-slate-50 px-4 py-3 sm:px-5"
+              className="shrink-0 space-y-3 border-t border-border bg-surface-hover px-4 py-3 sm:px-5"
               style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
             >
               {!user ? (
@@ -794,7 +775,7 @@ function SearchMegaMenu({ counts }) {
 function MegaColumn({ title, children }) {
   return (
     <div className="px-4 py-4">
-      <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-slate-500">{title}</p>
+      <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-muted">{title}</p>
       <div className="space-y-0.5">{children}</div>
     </div>
   );
@@ -805,13 +786,13 @@ function MegaLink({ href, label, count, bold }) {
     <Link
       href={href}
       className={clsx(
-        "group flex items-center justify-between gap-2 py-[3px] text-[13px] text-slate-700 transition-colors hover:text-[var(--accent)]",
+        "group flex items-center justify-between gap-2 py-[3px] text-[13px] text-secondary transition-colors hover:text-[var(--accent)]",
         bold && "font-bold"
       )}
     >
       <span className="group-hover:underline">{label}</span>
       {typeof count === "number" && (
-        <span className="text-[11px] font-semibold text-slate-400">({count})</span>
+        <span className="text-[11px] font-semibold text-dim">({count})</span>
       )}
     </Link>
   );
@@ -825,7 +806,7 @@ function MiniDropdown({ items }) {
         <Link
           key={it.href}
           href={it.href}
-          className="block px-4 py-2 text-[13px] font-medium text-slate-700 transition-colors hover:bg-white hover:text-[var(--accent)]"
+          className="block px-4 py-2 text-[13px] font-medium text-secondary transition-colors hover:bg-surface hover:text-[var(--accent)]"
         >
           {it.label}
         </Link>
@@ -838,7 +819,7 @@ function MobileMenuSection({ title, children, className }) {
   return (
     <div className={clsx("mb-5", className)}>
       {title ? (
-        <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">
+        <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.2em] text-dim">
           {title}
         </p>
       ) : null}
@@ -853,21 +834,21 @@ function MobileMenuRow({ icon, label, href, onClick, variant = "default", analyt
     "flex w-full min-h-[3.15rem] items-center justify-between gap-2 rounded-xl border px-3 py-2.5 text-left transition active:scale-[0.99]",
     primary
       ? "border-accent-dim bg-[var(--accent)]/[0.06]"
-      : "border-slate-200 bg-white hover:bg-slate-50"
+      : "border-border bg-surface hover:bg-surface-hover"
   );
   const iconWrap = clsx(
     "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg",
     primary
       ? "bg-[var(--accent)]/[0.1] text-[var(--accent)]"
-      : "bg-slate-100 text-slate-500"
+      : "bg-surface-overlay text-muted"
   );
   const body = (
     <>
       <span className="flex min-w-0 flex-1 items-center gap-3">
         <span className={iconWrap}>{icon}</span>
-        <span className="truncate text-sm font-bold text-slate-800">{label}</span>
+        <span className="truncate text-sm font-bold text-text">{label}</span>
       </span>
-      <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
+      <ChevronRight className="h-4 w-4 shrink-0 text-dim" aria-hidden />
     </>
   );
   if (href) {
@@ -900,8 +881,8 @@ function MobileMenuRow({ icon, label, href, onClick, variant = "default", analyt
 
 function MenuDropdownItem({ href, label, icon }) {
   return (
-    <Link href={href} className="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-50 transition-colors rounded-lg mx-1.5">
-      <span className="text-slate-400">{icon}</span>
+    <Link href={href} className="flex items-center gap-3 px-5 py-2.5 text-sm font-bold text-secondary hover:bg-surface-hover transition-colors rounded-lg mx-1.5">
+      <span className="text-dim">{icon}</span>
       {label}
     </Link>
   );

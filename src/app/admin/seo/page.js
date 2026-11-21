@@ -23,7 +23,7 @@ export default async function AdminSeoPage() {
           <Link
             href="/api/admin/seo/audit"
             target="_blank"
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest border border-white text-slate-900 hover:opacity-80"
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest border border-white text-text hover:opacity-80"
             style={{ borderRadius: "var(--radius)" }}
           >
             JSON <ExternalLink className="w-3.5 h-3.5" />
@@ -43,8 +43,8 @@ export default async function AdminSeoPage() {
             key={s.label}
             className="rounded-xl border border-white/[0.06] bg-[#1c1c1c] px-4 py-3"
           >
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{s.label}</p>
-            <p className="text-2xl font-bold text-slate-900 tabular-nums">{s.value}</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted">{s.label}</p>
+            <p className="text-2xl font-bold text-text tabular-nums">{s.value}</p>
           </div>
         ))}
       </div>
@@ -62,10 +62,10 @@ export default async function AdminSeoPage() {
           <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
         )}
         <div>
-          <p className="text-sm font-bold text-slate-900">
+          <p className="text-sm font-bold text-text">
             {report.ok ? "No critical SEO blockers detected" : "Action recommended"}
           </p>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-muted mt-1">
             Sitemap:{" "}
             <a href={report.sitemapUrl} className="underline" target="_blank" rel="noreferrer">
               {report.sitemapUrl}
@@ -76,9 +76,9 @@ export default async function AdminSeoPage() {
 
       {report.issues.length > 0 && (
         <section className="rounded-xl border border-white/[0.06] overflow-hidden">
-          <div className="px-4 py-3 border-b border-white/[0.06] bg-white/[0.03] flex items-center gap-2">
-            <Search className="w-4 h-4 text-slate-500" />
-            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500">Issues</h2>
+          <div className="px-4 py-3 border-b border-white/[0.06] bg-glass/[0.03] flex items-center gap-2">
+            <Search className="w-4 h-4 text-muted" />
+            <h2 className="text-xs font-bold uppercase tracking-widest text-muted">Issues</h2>
           </div>
           <ul className="divide-y divide-white/[0.06]">
             {report.issues.map((issue, i) => (
@@ -89,12 +89,12 @@ export default async function AdminSeoPage() {
                       ? "bg-red-950 text-red-300"
                       : issue.severity === "warn"
                         ? "bg-amber-950 text-amber-200"
-                        : "bg-white/[0.06] text-slate-700"
+                        : "bg-glass/[0.06] text-secondary"
                   }`}
                 >
                   {issue.severity}
                 </span>
-                <span className="text-slate-700">{issue.message}</span>
+                <span className="text-secondary">{issue.message}</span>
               </li>
             ))}
           </ul>
@@ -103,20 +103,20 @@ export default async function AdminSeoPage() {
 
       <AdminSeoMonitor monitor={monitor} />
 
-      <section className="mt-10 rounded-xl border border-white/[0.06] p-5 text-sm text-slate-500">
-        <h2 className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">Setup</h2>
+      <section className="mt-10 rounded-xl border border-white/[0.06] p-5 text-sm text-muted">
+        <h2 className="text-xs font-bold uppercase tracking-widest text-muted mb-3">Setup</h2>
         <ul className="list-disc pl-5 space-y-2">
-          <li>Run <code className="text-xs bg-white/[0.06] px-1">npm run db:backfill-slugs</code> if slugs are missing.</li>
+          <li>Run <code className="text-xs bg-glass/[0.06] px-1">npm run db:backfill-slugs</code> if slugs are missing.</li>
           <li>
-            Cron: <code className="text-xs bg-white/[0.06] px-1">/api/cron/seo-monitor?secret=CRON_SECRET</code> — Postgres job queue (crawl, GSC, daily trend, PageSpeed, audit).
+            Cron: <code className="text-xs bg-glass/[0.06] px-1">/api/cron/seo-monitor?secret=CRON_SECRET</code> — Postgres job queue (crawl, GSC, daily trend, PageSpeed, audit).
           </li>
           <li>
-            PageSpeed: <code className="text-xs bg-white/[0.06] px-1">GOOGLE_PAGESPEED_API_KEY</code> · Alerts: support email + optional{" "}
-            <code className="text-xs bg-white/[0.06] px-1">SLACK_WEBHOOK_URL</code>
+            PageSpeed: <code className="text-xs bg-glass/[0.06] px-1">GOOGLE_PAGESPEED_API_KEY</code> · Alerts: support email + optional{" "}
+            <code className="text-xs bg-glass/[0.06] px-1">SLACK_WEBHOOK_URL</code>
           </li>
           <li>
-            GSC: <code className="text-xs bg-white/[0.06] px-1">GSC_SYNC_ENABLED=true</code>,{" "}
-            <code className="text-xs bg-white/[0.06] px-1">GSC_SITE_URL</code>, service account with Search Console access.
+            GSC: <code className="text-xs bg-glass/[0.06] px-1">GSC_SYNC_ENABLED=true</code>,{" "}
+            <code className="text-xs bg-glass/[0.06] px-1">GSC_SITE_URL</code>, service account with Search Console access.
           </li>
           <li>
             Optional Go worker: <code className="text-xs">SEO_WORKER_URL</code> + deploy{" "}

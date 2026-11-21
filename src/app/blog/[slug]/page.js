@@ -40,23 +40,23 @@ export default async function BlogArticlePage({ params }) {
   });
 
   return (
-    <article className="min-h-screen bg-white pt-20 pb-24">
+    <article className="min-h-screen bg-surface pt-20 pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="home-shell max-w-3xl mx-auto">
-        <Link href="/blog" className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-800">
+        <Link href="/blog" className="text-[10px] font-bold uppercase tracking-widest text-muted hover:text-text">
           ← Blog
         </Link>
-        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 mt-4 mb-3">
+        <h1 className="text-3xl sm:text-4xl font-bold text-text mt-4 mb-3">
           {page.title}
         </h1>
         {page.description ? (
-          <p className="text-lg text-slate-600 mb-8">{page.description}</p>
+          <p className="text-lg text-muted mb-8">{page.description}</p>
         ) : null}
         <SeoArticleBody body={page.body} />
-        <p className="mt-12 text-sm border-t border-slate-200 pt-6 text-slate-500">
+        <p className="mt-12 text-sm border-t border-border pt-6 text-muted">
           Ready to shop?{" "}
           <Link href="/cars" className="text-[var(--accent)] font-semibold">
             Browse verified listings

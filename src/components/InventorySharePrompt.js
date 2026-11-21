@@ -40,32 +40,32 @@ export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
           <p className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700">
             Car published successfully
           </p>
-          <h3 className="mt-1 text-sm sm:text-base font-black text-slate-900">
+          <h3 className="mt-1 text-sm sm:text-base font-black text-text">
             Share this car on WhatsApp now
           </h3>
         </div>
         <button
           type="button"
           onClick={dismissPrompt}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-emerald-200 bg-white text-slate-500 hover:text-slate-800"
+          className="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-emerald-200 bg-surface text-muted hover:text-text"
           aria-label="Close share prompt"
         >
           <X size={14} />
         </button>
       </div>
 
-      <div className="mt-3 flex items-center gap-3 rounded-xl border border-emerald-100 bg-white p-2.5">
+      <div className="mt-3 flex items-center gap-3 rounded-xl border border-emerald-100 bg-surface p-2.5">
         {car.imageUrl ? (
           <div className="relative h-14 w-20 overflow-hidden rounded-lg">
             <Image src={getThumbnailUrl(car.imageUrl, 320)} alt={car.title} fill className="object-cover" />
           </div>
         ) : (
-          <div className="h-14 w-20 rounded-lg bg-slate-100" />
+          <div className="h-14 w-20 rounded-lg bg-surface-overlay" />
         )}
         <div className="min-w-0">
-          <p className="truncate text-[12px] font-black text-slate-900">{car.title}</p>
-          <p className="truncate text-[11px] font-semibold text-slate-500">{car.priceLabel}</p>
-          <p className="line-clamp-1 text-[11px] text-slate-600">{car.description}</p>
+          <p className="truncate text-[12px] font-black text-text">{car.title}</p>
+          <p className="truncate text-[11px] font-semibold text-muted">{car.priceLabel}</p>
+          <p className="line-clamp-1 text-[11px] text-muted">{car.description}</p>
         </div>
       </div>
 
@@ -78,7 +78,7 @@ export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
             className={`inline-flex items-center rounded-lg border px-2.5 py-1 text-[10px] font-black uppercase tracking-[0.12em] transition-colors ${
               template === item.key
                 ? "border-[var(--accent)] bg-[var(--accent)] text-white"
-                : "border-[#ddd4c8] bg-white text-slate-600 hover:text-slate-900"
+                : "border-[#ddd4c8] bg-surface text-muted hover:text-text"
             }`}
           >
             {item.label}
@@ -99,7 +99,7 @@ export default function InventorySharePrompt({ car, whatsappHrefByTemplate }) {
         <button
           type="button"
           onClick={dismissPrompt}
-          className="inline-flex items-center rounded-xl border border-[#ddd4c8] bg-white px-3.5 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-slate-600 hover:text-slate-900"
+          className="inline-flex items-center rounded-xl border border-[#ddd4c8] bg-surface px-3.5 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-muted hover:text-text"
         >
           Dismiss
         </button>

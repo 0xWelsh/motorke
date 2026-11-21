@@ -46,11 +46,11 @@ export default function AnalyticsDashboard({ realtimeLeads = 0, recentDays = 30 
     <div className="w-full bg-[#1c1c1c] border border-white/[0.06] rounded-xl p-8 shadow-sm hover:shadow-2xl transition-all duration-500 hover:border-[var(--accent)]/20">
       <div className="mb-8">
          <div className="flex items-center gap-3 mb-2">
-            <div className="w-2 h-2 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.15)] animate-pulse" />
-            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-slate-500">Return On Investment (ROI)</span>
+            <div className="w-2 h-2 rounded-full bg-surface shadow-[0_0_8px_rgba(255,255,255,0.15)] animate-pulse" />
+            <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-muted">Return On Investment (ROI)</span>
          </div>
-         <h2 className="text-3xl font-black text-slate-900 tracking-tighter">Yield & Impressions Trend</h2>
-         <p className="text-sm font-medium text-slate-500 mt-1 tracking-wide">30-day trailing tracking of platform engagement.</p>
+         <h2 className="text-3xl font-black text-text tracking-tighter">Yield & Impressions Trend</h2>
+         <p className="text-sm font-medium text-muted mt-1 tracking-wide">30-day trailing tracking of platform engagement.</p>
       </div>
       
       <div className="h-[340px] w-full">

@@ -101,7 +101,7 @@ export default function CarContactActions({ whatsappHref, callHref, carId, deale
           Chat on WhatsApp
         </a>
         {prettyPhone && (
-          <p className="text-center text-[11px] font-medium text-slate-400">
+          <p className="text-center text-[11px] font-medium text-dim">
             Instant reply on {prettyPhone}
           </p>
         )}

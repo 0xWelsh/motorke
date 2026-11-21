@@ -19,10 +19,10 @@ export function ViewCountBadge({ carId }) {
   if (views === null) return null;
 
   return (
-    <div className="flex items-center gap-2 text-xs text-slate-500 bg-white rounded-xl px-4 py-3 border border-slate-200">
-      <Eye className="w-4 h-4 text-slate-500 shrink-0" />
+    <div className="flex items-center gap-2 text-xs text-muted bg-surface rounded-xl px-4 py-3 border border-border">
+      <Eye className="w-4 h-4 text-muted shrink-0" />
       <span>
-        Viewed <strong className="text-slate-700 tabular-nums">{views.toLocaleString()}</strong> times this week
+        Viewed <strong className="text-secondary tabular-nums">{views.toLocaleString()}</strong> times this week
       </span>
     </div>
   );
