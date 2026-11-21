@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { MapPin, ImageOff, X, Heart, Share2, Clock } from "lucide-react";
 import PictureImage from "@/components/PictureImage";
 import CardGallery from "@/components/card/CardGallery";
+import CardMosaic from "@/components/card/CardMosaic";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { FUEL_LABELS } from "@/lib/constants";
 import { useSaveData } from "@/components/SaveDataProvider";
@@ -17,6 +18,7 @@ import { isInSoldGracePeriod } from "@/lib/car-sold-status";
 import { clsx } from "clsx";
 import { CarNavPendingSignal } from "@/components/CarNavPending";
 import AdminCardControls from "@/components/AdminCardControls";
+import { useAuthModal } from "@/components/AuthModalProvider";
 import { useCarFlag } from "@/hooks/use-car-flag";
 
 /**
@@ -317,6 +319,7 @@ function PremiumGridCard({
   router,
 }) {
   const { isSaved, toggle } = useSavedCars();
+  const { openAuthModal } = useAuthModal();
   const saved = isSaved(car.id);
   const [copied, setCopied] = useState(false);
   const [galleryUrls, setGalleryUrls] = useState(null);
@@ -418,7 +421,7 @@ function PremiumGridCard({
     trackUiEvent(saved ? "unsave_car" : "save_car", eventPayload);
     const needsLogin = await toggle(car.id);
     if (needsLogin) {
-      router.push(`/login?next=${encodeURIComponent(carListingPath(car))}`);
+      openAuthModal("login", { next: carListingPath(car) });
     }
   }
 
@@ -450,7 +453,14 @@ function PremiumGridCard({
             sold && "grayscale",
           )}
         >
-          {slides.length > 1 ? (
+          {boost.spotlight && slides.length > 1 ? (
+            <CardMosaic
+              urls={slides}
+              alt={`${car.year} ${car.make} ${car.model}`}
+              sizes={cardSizes}
+              priority={priority}
+            />
+          ) : slides.length > 1 ? (
             <CardGallery
               urls={slides}
               alt={`${car.year} ${car.make} ${car.model}`}

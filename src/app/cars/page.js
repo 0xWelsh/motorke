@@ -1,11 +1,8 @@
 import { db } from "@/lib/db";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import { unstable_cache } from "next/cache";
 import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { buildCarsOrderBy } from "@/lib/cars-inventory-sort";
 import { publicDetailVisibilityClause } from "@/lib/car-sold-status";
-import NikkyoSidebar from "@/components/NikkyoSidebar";
 import CarsListingRoot from "@/components/CarsListingRoot";
 import { getBrowseInventoryCounts } from "@/lib/browse-inventory-counts";
 
@@ -146,7 +143,7 @@ export default async function CarsPage() {
     ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
   };
 
-  const [{ cars: initialCars, total }, browseInventoryCounts, allColors] = await Promise.all([
+  const [{ cars: initialCars, total }, , allColors] = await Promise.all([
     getCachedCarsPage(JSON.stringify(where), "newest"),
     getBrowseInventoryCounts(),
     getAllColors(),
@@ -155,29 +152,12 @@ export default async function CarsPage() {
   return (
     <div className="min-h-screen bg-[var(--surface)] pb-8">
       <div className="w-full px-2.5 sm:px-8 pt-2 sm:pt-3">
-        {/* Breadcrumb strip */}
-        <div className="mb-2 sm:mb-3 flex items-center gap-3 sm:gap-4 pb-2 sm:pb-2.5 min-w-0">
-          <div className="meta-label flex min-w-0 items-center gap-2 sm:gap-3 truncate">
-            <Link href="/" className="hidden sm:inline hover:text-[var(--brand-primary)] transition-colors">
-              Home
-            </Link>
-            <ChevronRight className="hidden sm:block w-3 h-3 shrink-0" />
-            <Link href="/cars" className="hover:text-[var(--brand-primary)] transition-colors truncate">
-              Vehicles
-            </Link>
-            <ChevronRight className="w-3 h-3 shrink-0" />
-            <span className="text-[var(--text-main)] truncate">Available</span>
-          </div>
-        </div>
-
-        <div className="lg:grid lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-8 lg:items-start">
-          <aside className="hidden lg:block lg:sticky lg:top-24 lg:self-start">
-            <NikkyoSidebar inventoryCounts={browseInventoryCounts} />
-          </aside>
-
-          <div className="min-w-0">
-            <CarsListingRoot initialCars={initialCars} initialTotal={total} allColors={allColors} />
-          </div>
+        {/* Cars & Bids layout: the page starts at the very top with the
+            search bar + filter pills; results stream in on scroll and the
+            footer only appears when you scroll hard enough. No sidebar,
+            no breadcrumb strip. */}
+        <div className="min-w-0">
+          <CarsListingRoot initialCars={initialCars} initialTotal={total} allColors={allColors} />
         </div>
       </div>
     </div>

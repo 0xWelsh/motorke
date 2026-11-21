@@ -1,6 +1,7 @@
 // src/app/layout.js
 import "./globals.css";
 import { CompareProvider } from "@/components/CompareContext";
+import { AuthModalProvider } from "@/components/AuthModalProvider";
 import SiteChrome from "@/components/SiteChrome";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -229,6 +230,7 @@ export default async function RootLayout({ children }) {
       <body className={`${lato.variable} ${montserrat.variable} bg-background text-text min-h-screen antialiased flex flex-col font-sans`}>
         <PWARegister />
         <ThemeProvider attribute="class" defaultTheme="dark" forcedTheme="dark" enableSystem={false}>
+          <AuthModalProvider>
           <SaveDataProvider>
           <SavedCarsProvider>
             {/* useSearchParams inside a statically-prerendered page needs a
@@ -252,6 +254,7 @@ export default async function RootLayout({ children }) {
           <ScrollToTop />
           <CookieConsent />
           <MobileTabBar />
+          </AuthModalProvider>
         </ThemeProvider>
       </body>
     </html>

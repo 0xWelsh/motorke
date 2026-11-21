@@ -13,6 +13,7 @@ import NotificationsBell from "@/components/NotificationsBell";
 
 import { trackUiEvent } from "@/lib/analytics";
 import BrandLogo from "@/components/BrandLogo";
+import { useAuthModal } from "@/components/AuthModalProvider";
 import { BODY_TYPE_LABELS } from "@/lib/constants";
 import { loadRecentSearches, saveRecentSearch, toRecentSuggestionItems } from "@/lib/recent-searches";
 
@@ -56,6 +57,7 @@ const MEMBER_LINKS = [
 export default function Navbar({ user, navCounts }) {
   const router = useRouter();
   const pathname = usePathname();
+  const { openAuthModal } = useAuthModal();
   const [isPending, startTransition] = useTransition();
 
   const [open, setOpen] = useState(false);
@@ -198,6 +200,15 @@ export default function Navbar({ user, navCounts }) {
     if (e?.metaKey || e?.ctrlKey || e?.shiftKey || e?.altKey || e?.button !== 0) return;
     e?.preventDefault();
     closeMenus();
+    // Cars & Bids pattern: auth never leaves the page.
+    if (/^\/login(\?|$)/.test(href)) {
+      openAuthModal("login", { next: href.includes("next=") ? new URL(href, location.origin).searchParams.get("next") : undefined });
+      return;
+    }
+    if (/^\/signup(\?|$)/.test(href)) {
+      openAuthModal("signup");
+      return;
+    }
     if (href === pathname) {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
