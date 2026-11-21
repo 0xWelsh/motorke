@@ -18,7 +18,7 @@ export function HomeHeroSkeleton() {
         </div>
         <div className="grid grid-cols-3 gap-px bg-surface-overlay">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="aspect-[4/3] bg-surface">
+            <div key={i} className="aspect-[16/10] bg-surface">
               <Block className="h-full w-full rounded-none" />
             </div>
           ))}
@@ -50,7 +50,7 @@ export function HomeGridsSkeleton({ count = 8, columns = "grid-cols-2 sm:grid-co
           <div className={`grid gap-2.5 ${columns}`}>
             {Array.from({ length: count }).map((_, i) => (
               <div key={i} className="space-y-2">
-                <Block className="aspect-[4/3] w-full rounded-xl" />
+                <Block className="aspect-[16/10] w-full rounded-xl" />
                 <Block className="h-3 w-3/4" />
                 <Block className="h-3 w-1/2" />
               </div>
@@ -67,7 +67,7 @@ export function HomeTrendingSkeleton({ count = 6 }) {
     <div className="flex gap-3 overflow-hidden">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="min-w-0 shrink-0 flex-1 space-y-2">
-          <Block className="aspect-[4/3] w-full rounded-xl" />
+          <Block className="aspect-[16/10] w-full rounded-xl" />
           <Block className="h-3 w-3/4" />
           <Block className="h-3 w-1/2" />
         </div>

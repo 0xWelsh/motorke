@@ -28,7 +28,7 @@ export default function RootLoading() {
         <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i}>
-              <div className="skeleton-shimmer aspect-[4/3] w-full rounded-xl" />
+              <div className="skeleton-shimmer aspect-[16/10] w-full rounded-xl" />
               <div className="mt-3 skeleton-shimmer h-4 w-3/4 rounded-lg" />
               <div className="mt-2 skeleton-shimmer h-3 w-1/2 rounded-lg" />
             </div>
