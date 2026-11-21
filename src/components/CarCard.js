@@ -374,13 +374,15 @@ function PremiumGridCard({
     badges.push({ key: "duty", label: "Duty payable", cls: "bg-glass/85 text-amber-600 dark:text-amber-400" });
   const shownBadges = badges.slice(0, 2);
 
-  // One comma-separated spec sentence, like C&B's option list.
+  // One comma-separated spec sentence, like C&B's option list — richer than
+  // before: power, engine, drive, gearbox, fuel, mileage, colour.
   const specSentence = [
-    car.mileage != null ? formatMileage(car.mileage) : null,
+    car.horsepower ? `${car.horsepower}-hp` : null,
     car.engineCC ? `${Number(car.engineCC).toLocaleString("en-KE")} cc` : null,
-    fuelLabel || null,
+    car.drivetrain ? String(car.drivetrain).toUpperCase() : null,
     car.transmission === "AUTOMATIC" ? "Automatic" : car.transmission === "MANUAL" ? "Manual" : car.transmission || null,
-    car.bodyType ? BODY_SHORT[String(car.bodyType).toUpperCase()] || titleCase(String(car.bodyType).toLowerCase()) : null,
+    fuelLabel || null,
+    car.mileage != null ? formatMileage(car.mileage) : null,
     car.color ? titleCase(car.color) : null,
   ]
     .filter(Boolean)
@@ -422,8 +424,19 @@ function PremiumGridCard({
 
   const listingHref = carListingPath(car);
 
+  // Name line: year make model variant + body type, like "2017 Mercedes-Benz
+  // S63 AMG Sedan". Skips the body word when the variant already ends with it.
+  const bodyShort = car.bodyType
+    ? BODY_SHORT[String(car.bodyType).toUpperCase()] || titleCase(String(car.bodyType).toLowerCase())
+    : null;
+  const titleWords = [car.year, make, model].filter(Boolean).join(" ");
+  const titleWithBody =
+    bodyShort && !String(model || "").toLowerCase().endsWith(bodyShort.toLowerCase())
+      ? `${titleWords} ${bodyShort}`
+      : titleWords;
+
   return (
-    <article className="group relative flex flex-col rounded-2xl border border-border bg-surface p-2.5 transition-shadow duration-300 hover:shadow-glow">
+    <article className="group relative flex flex-col">
       <Link
         href={listingHref}
         onClick={() => onCarClick("card")}
@@ -520,7 +533,7 @@ function PremiumGridCard({
             )}
             title={`${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""}`}
           >
-            {titleHtml || [car.year, make, model].filter(Boolean).join(" ")}
+            {titleHtml || titleWithBody}
           </h3>
 
           {specSentence && (
@@ -530,7 +543,7 @@ function PremiumGridCard({
           )}
 
           {locationLabel && (
-            <p className={clsx("mt-1.5 font-medium text-muted", feed ? "text-[13.5px]" : "text-[12.5px]")}>{locationLabel}</p>
+            <p className={clsx("mt-1.5 font-medium text-dim", feed ? "text-[13.5px]" : "text-[12.5px]")}>{locationLabel}</p>
           )}
         </Link>
 
