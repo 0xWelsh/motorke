@@ -73,6 +73,8 @@ export default function CarCard({
   titleHtml = null,
   layout = "grid",
   sizes,
+  mosaic = false,
+  featured = false,
 }) {
   const spotlightActive = showSpotlight || isActiveSpotlight(car) || spotlightProminent;
   const isList = layout === "list";
@@ -292,6 +294,8 @@ export default function CarCard({
       priority={priority}
       sizes={sizes || (isFeed ? FEED_SIZES : undefined)}
       feed={isFeed}
+      mosaic={mosaic}
+      featured={featured}
       titleHtml={titleHtml}
       onCarClick={onCarClick}
       eventPayload={eventPayload}
@@ -313,6 +317,8 @@ function PremiumGridCard({
   priority,
   sizes,
   feed = false,
+  mosaic = false,
+  featured = false,
   titleHtml,
   onCarClick,
   eventPayload,
@@ -364,7 +370,7 @@ function PremiumGridCard({
   // Top-right pills, C&B order of loudness. Max 2 — the strip owns the
   // bottom of the image, so the corner stays calm.
   const badges = [];
-  if (boost.spotlight)
+  if (boost.spotlight || featured)
     badges.push({ key: "feat", label: "Featured", cls: "bg-glass/90 text-text tracking-[0.14em]" });
   else if (boost.hot) badges.push({ key: "hot", label: "Hot", cls: "bg-red-600/95 text-white" });
   if (listedDays != null && listedDays <= 7)
@@ -453,7 +459,7 @@ function PremiumGridCard({
             sold && "grayscale",
           )}
         >
-          {boost.spotlight && slides.length > 1 ? (
+          {(boost.spotlight || mosaic) && slides.length > 1 ? (
             <CardMosaic
               urls={slides}
               alt={`${car.year} ${car.make} ${car.model}`}

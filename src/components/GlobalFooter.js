@@ -1,9 +1,54 @@
 "use client";
-import { PUBLIC_SUPPORT_EMAIL } from "@/lib/site-contact";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Mail, MapPin } from "lucide-react";
+import { Mail, MapPin, MessageCircle } from "lucide-react";
 import PushOptIn from "@/components/PushOptIn";
+import BrandLogo from "@/components/BrandLogo";
+import { PUBLIC_SUPPORT_EMAIL, getSupportWhatsAppHref } from "@/lib/site-contact";
+
+const COLUMNS = [
+  {
+    title: "Browse",
+    links: [
+      { label: "All cars", href: "/cars" },
+      { label: "Luxury", href: "/luxury" },
+      { label: "Compare cars", href: "/compare" },
+      { label: "Duty calculator", href: "/duty" },
+      { label: "Cars in Nairobi", href: "/kenya" },
+      { label: "Request a car", href: "/request-car" },
+    ],
+  },
+  {
+    title: "Selling",
+    links: [
+      { label: "Sell your car", href: "/sell" },
+      { label: "Dealers", href: "/dealers" },
+      { label: "Showrooms", href: "/showrooms" },
+      { label: "How it works", href: "/how-to-buy" },
+      { label: "Testimonials", href: "/testimonials" },
+    ],
+  },
+  {
+    title: "Trust",
+    links: [
+      { label: "Safety guide", href: "/safety" },
+      { label: "Report a scam", href: "/report" },
+      { label: "Trust & verification", href: "/trust" },
+      { label: "Help center", href: "/faq" },
+      { label: "Contact us", href: "/contact" },
+    ],
+  },
+  {
+    title: "Company",
+    links: [
+      { label: "Our mission", href: "/mission" },
+      { label: "Guides", href: "/guides" },
+      { label: "Blog", href: "/blog" },
+      { label: "Privacy policy", href: "/privacy" },
+      { label: "Terms of service", href: "/terms" },
+    ],
+  },
+];
 
 export default function GlobalFooter() {
   const pathname = usePathname() || "";
@@ -13,94 +58,64 @@ export default function GlobalFooter() {
     return null;
   }
 
-  const columns = [
-    {
-      title: "Navigation",
-      links: [
-        { label: "Home", href: "/" },
-        { label: "Inventory", href: "/cars" },
-        { label: "Luxury", href: "/luxury" },
-        { label: "Kenya", href: "/kenya" },
-        { label: "How to Buy", href: "/how-to-buy" },
-        { label: "Compare", href: "/compare" },
-        { label: "Request a Car", href: "/request-car" },
-        { label: "Sell Your Car", href: "/signup" },
-      ],
-    },
-    {
-      title: "Support",
-      links: [
-        { label: "Help Center", href: "/faq" },
-        { label: "Contact Us", href: "/contact" },
-        { label: "Don't Get Scammed", href: "/safety" },
-        { label: "Privacy Policy", href: "/privacy" },
-        { label: "Terms of Service", href: "/terms" },
-      ],
-    },
-    {
-      title: "Company",
-      links: [
-        { label: "About Us", href: "/mission" },
-        { label: "Trust & Safety", href: "/faq" },
-        { label: "Contact Team", href: "/contact" },
-      ],
-    },
-  ];
+  const whatsappHref = getSupportWhatsAppHref();
 
   return (
-    <footer className="relative mt-auto border-t border-border bg-surface text-text pt-12 sm:pt-16 pb-8 cv-auto">
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-x-6 gap-y-10 lg:gap-10 mb-12">
-
-          {/* Brand Info */}
-          <div className="lg:col-span-2">
-            <div className="mb-5">
-              <Link href="/" className="group inline-flex items-center transition-opacity active:opacity-80">
-                <span className="text-[11px] font-black uppercase tracking-[0.24em] text-text">
-                  BIDGARI
-                </span>
-              </Link>
-              <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-dim">
-                Kenya's Car Marketplace
+    <footer className="relative mt-auto border-t border-border bg-surface">
+      <div className="container mx-auto max-w-7xl px-6">
+        <div className="grid gap-x-8 gap-y-10 py-12 sm:py-16 lg:grid-cols-[minmax(0,2fr)_minmax(0,5fr)]">
+          {/* Brand block */}
+          <div className="min-w-0">
+            <Link href="/" className="inline-flex h-8 items-center transition-opacity hover:opacity-80">
+              <BrandLogo />
+            </Link>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
+              Kenya&rsquo;s verified car marketplace. Every listing inspected, every
+              payment made at handover — one trusted team from first message to
+              final paperwork.
+            </p>
+            <div className="mt-5 space-y-2.5 text-[13px] font-medium text-muted">
+              <a
+                href={`mailto:${PUBLIC_SUPPORT_EMAIL}`}
+                className="flex items-center gap-2.5 transition-colors hover:text-[var(--accent)]"
+              >
+                <Mail size={14} className="shrink-0 text-dim" /> {PUBLIC_SUPPORT_EMAIL}
+              </a>
+              {whatsappHref && (
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2.5 transition-colors hover:text-[var(--accent)]"
+                >
+                  <MessageCircle size={14} className="shrink-0 text-dim" /> WhatsApp support
+                </a>
+              )}
+              <p className="flex items-center gap-2.5">
+                <MapPin size={14} className="shrink-0 text-dim" /> Nairobi, Kenya
               </p>
             </div>
-            <p className="text-muted text-sm leading-relaxed max-w-sm mb-5">
-              Verified inventory from across Kenya, with one trusted BIDGARI team handling your
-              enquiry from first message to final paperwork.
-            </p>
-            <div className="flex flex-wrap items-center gap-4">
-              <Link
-                href="/contact"
-                className="btn btn-neutral btn-sm"
-              >
-                Contact us
-              </Link>
-              <Link
-                href="/cars"
-                className="inline-flex items-center gap-2 text-xs font-semibold text-muted transition-colors hover:text-[var(--accent)]"
-              >
-                Browse cars →
-              </Link>
-            </div>
-            <div className="mt-4">
+            <div className="mt-5">
               <PushOptIn variant="compact" />
             </div>
           </div>
 
           {/* Link columns */}
-          <div className="grid grid-cols-3 gap-x-3 sm:gap-x-6 md:gap-x-8 lg:contents">
-            {columns.map((col, i) => (
-              <div key={i} className="min-w-0">
-                <h4 className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-dim mb-3 sm:mb-5">
+          <nav
+            aria-label="Footer"
+            className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4"
+          >
+            {COLUMNS.map((col) => (
+              <div key={col.title} className="min-w-0">
+                <h4 className="mb-3.5 text-[10px] font-black uppercase tracking-[0.22em] text-dim">
                   {col.title}
                 </h4>
-                <ul className="space-y-2.5 sm:space-y-3">
-                  {col.links.map((link, j) => (
-                    <li key={j}>
+                <ul className="space-y-2.5">
+                  {col.links.map((link) => (
+                    <li key={link.href + link.label}>
                       <Link
                         href={link.href}
-                        {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                        className="text-muted hover:text-[var(--accent)] text-xs sm:text-sm transition-colors font-medium leading-snug"
+                        className="text-[13px] font-medium leading-snug text-muted transition-colors hover:text-[var(--accent)]"
                       >
                         {link.label}
                       </Link>
@@ -109,25 +124,17 @@ export default function GlobalFooter() {
                 </ul>
               </div>
             ))}
-          </div>
+          </nav>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-6 border-t border-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6">
-          <p className="text-dim text-xs font-medium">
+        {/* Bottom bar */}
+        <div className="flex flex-col items-start justify-between gap-3 border-t border-border py-6 sm:flex-row sm:items-center">
+          <p className="text-xs font-medium text-dim">
             © {currentYear} BIDGARI Ltd. All rights reserved.
           </p>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-dim">
-            <span className="inline-flex items-center gap-2 text-xs">
-              <MapPin size={13} className="shrink-0" /> Nairobi, Kenya
-            </span>
-            <a
-              href={`mailto:${PUBLIC_SUPPORT_EMAIL}`}
-              className="inline-flex items-center gap-2 text-xs hover:text-[var(--accent)] transition-colors break-all"
-            >
-              <Mail size={13} className="shrink-0" /> {PUBLIC_SUPPORT_EMAIL}
-            </a>
-          </div>
+          <p className="text-xs font-semibold tracking-wide text-dim">
+            Built in Nairobi 🇰🇪 — for the way Kenya buys cars
+          </p>
         </div>
       </div>
     </footer>

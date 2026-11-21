@@ -17,11 +17,9 @@ import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import HomepageSafetyStrip from "@/components/home/HomepageSafetyStrip";
 import HomepagePriceFilter from "@/components/home/HomepagePriceFilter";
 import HomepageCtaStrip from "@/components/home/HomepageCtaStrip";
-import HomepageShapeGrid from "@/components/home/HomepageShapeGrid";
-import HomepageMakeGrid from "@/components/home/HomepageMakeGrid";
-import HeroCarousel from "@/components/home/HeroCarousel";
+import FeaturedCarsRail from "@/components/home/FeaturedCarsRail";
+import { getFeaturedRailCars } from "@/lib/featured-rail";
 import {
-  HomeHeroSkeleton,
   HomeGridsSkeleton,
   HomeTrendingSkeleton,
   HomeSidebarSkeleton,
@@ -208,13 +206,10 @@ async function LdSlot({ bundlePromise, origin }) {
   );
 }
 
-async function HeroSlot({ bundlePromise }) {
-  const { heroCars } = deriveHomeSections(await bundlePromise);
-  return (
-    <Suspense fallback={<HomeHeroSkeleton />}>
-      <HeroCarousel cars={heroCars} />
-    </Suspense>
-  );
+async function FeaturedRailSlot() {
+  const cars = await getFeaturedRailCars();
+  if (!cars.length) return null;
+  return <FeaturedCarsRail cars={cars} />;
 }
 
 async function GridsSlot({ bundlePromise }) {
@@ -331,6 +326,17 @@ export default async function HomePage() {
               {/* SEO H1 (kept hidden — the page leads with search, not a carousel) */}
               <h1 className="sr-only">Cars for sale in Kenya — buy a verified car through BIDGARI</h1>
 
+              {/* Cars first: the Featured rail owns the top of the page —
+                  five random listings, mosaic cards, sliding sideways. The
+                  car finder + budget pills sit beneath it. */}
+              <Suspense
+                fallback={
+                  <div className="mt-1 h-[460px] animate-pulse rounded-xl bg-surface-overlay" />
+                }
+              >
+                <FeaturedRailSlot />
+              </Suspense>
+
               {/* Search first. A marketplace's primary job is "find me a car",
                   so the finder and the browse-all entry sit at the very top
                   rather than below a hero carousel. */}
@@ -374,23 +380,6 @@ export default async function HomePage() {
 
               {/* CTA strip */}
               <HomepageCtaStrip />
-
-              {/* Search by Shape icon grid */}
-              <div className="mt-7">
-                <HomepageShapeGrid />
-              </div>
-
-              {/* Search by Make logo grid */}
-              <div className="mt-7">
-                <HomepageMakeGrid />
-              </div>
-
-              {/* Featured spotlight */}
-              <div className="mt-8 sm:mt-10">
-                <Suspense fallback={<HomeHeroSkeleton />}>
-                  <HeroSlot bundlePromise={bundlePromise} />
-                </Suspense>
-              </div>
 
               {/* Inventory sections */}
               <div className="mt-7 sm:mt-8">
