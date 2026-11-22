@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { MapPin, ImageOff, X, Heart, Share2, Clock } from "lucide-react";
+import { MapPin, ImageOff, X, Heart, Share2, Clock, Copy, Check, MoreHorizontal, MessageCircle } from "lucide-react";
 import PictureImage from "@/components/PictureImage";
 import CardGallery from "@/components/card/CardGallery";
 import CardMosaic from "@/components/card/CardMosaic";
@@ -13,6 +13,7 @@ import { useSavedCars } from "@/components/SavedCarsProvider";
 import { trackUiEvent } from "@/lib/analytics";
 import { carListingPath } from "@/lib/car-listing-url";
 import { isActiveSpotlight } from "@/lib/spotlight";
+import { buildFacebookSharerUrl } from "@/lib/share-helpers";
 import { getListingBoostVisuals } from "@/lib/listing-boost-visuals";
 import { isInSoldGracePeriod } from "@/lib/car-sold-status";
 import { clsx } from "clsx";
@@ -377,10 +378,6 @@ function PremiumGridCard({
     badges.push({ key: "new", label: "New", cls: "bg-emerald-600/95 text-white" });
   if (car.condition === "NEW")
     badges.push({ key: "brand", label: "Brand new", cls: "bg-glass/85 text-text" });
-  if (car.dutyPaid === true)
-    badges.push({ key: "duty", label: "Duty paid", cls: "bg-glass/85 text-emerald-600 dark:text-emerald-400" });
-  else if (car.dutyPaid === false)
-    badges.push({ key: "duty", label: "Duty payable", cls: "bg-glass/85 text-amber-600 dark:text-amber-400" });
   const shownBadges = badges.slice(0, 2);
 
   // One comma-separated spec sentence, like C&B's option list — richer than
@@ -401,25 +398,6 @@ function PremiumGridCard({
     .filter(Boolean)
     .join(" · ");
 
-  async function handleShare(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const url = new URL(carListingPath(car), window.location.origin).href;
-    const title = `${car.year} ${car.make} ${car.model} — BIDGARI`;
-    if (typeof navigator.share === "function") {
-      try {
-        await navigator.share({ title, url });
-        return;
-      } catch {
-        // user dismissed the sheet — clipboard fallback anyway
-      }
-    }
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1400);
-    } catch {}
-  }
 
   async function handleSave(e) {
     e.preventDefault();
@@ -432,6 +410,70 @@ function PremiumGridCard({
   }
 
   const listingHref = carListingPath(car);
+
+  // Quick-share popover: WhatsApp + Facebook carry the link, and both pull
+  // the listing's OG preview (cover photo + price) — no extra work here.
+  const [shareOpen, setShareOpen] = useState(false);
+  const shareRef = useRef(null);
+
+  useEffect(() => {
+    if (!shareOpen) return;
+    const onDown = (e) => {
+      if (shareRef.current && !shareRef.current.contains(e.target)) setShareOpen(false);
+    };
+    const onKey = (e) => e.key === "Escape" && setShareOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [shareOpen]);
+
+  function shareLink() {
+    return new URL(carListingPath(car), window.location.origin).href;
+  }
+
+  function shareTitle() {
+    return `${car.year} ${car.make} ${car.model}${car.variant ? ` ${car.variant}` : ""} — ${formatCarPrice(car)}`;
+  }
+
+  function shareWhatsApp(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const text = encodeURIComponent(`${shareTitle()}\n\n${shareLink()}`);
+    window.open(`https://wa.me/?text=${text}`, "_blank", "noopener,noreferrer");
+    setShareOpen(false);
+  }
+
+  function shareFacebook(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const url = buildFacebookSharerUrl(shareLink());
+    if (url) window.open(url, "_blank", "noopener,noreferrer");
+    setShareOpen(false);
+  }
+
+  function shareCopy(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(shareLink()).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1400);
+    });
+    setShareOpen(false);
+  }
+
+  function shareMore(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof navigator.share === "function") {
+      navigator
+        .share({ title: shareTitle(), url: shareLink() })
+        .catch(() => {});
+    }
+    setShareOpen(false);
+  }
 
   // Name line: year make model variant + body type, like "2017 Mercedes-Benz
   // S63 AMG Sedan". Skips the body word when the variant already ends with it.
@@ -588,23 +630,51 @@ function PremiumGridCard({
           >
             <Heart className={clsx("h-[18px] w-[18px]", saved && "fill-slate-900 text-text")} />
           </button>
-          <button
-            type="button"
-            onClick={handleShare}
-            aria-label="Share this listing"
-            className="relative inline-flex h-8 w-8 items-center justify-center rounded-full text-dim transition-colors hover:text-text"
-          >
-            <Share2 className="h-[18px] w-[18px]" />
-            {copied && (
-              <span className="absolute right-0 top-8 z-20 whitespace-nowrap rounded-md bg-slate-900 px-2 py-1 text-[10px] font-bold text-white">
-                Link copied
-              </span>
+          <div ref={shareRef} className="relative">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setShareOpen((v) => !v);
+              }}
+              aria-haspopup="menu"
+              aria-expanded={shareOpen}
+              aria-label="Share this listing"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-full text-dim transition-colors hover:text-text"
+            >
+              <Share2 className="h-[18px] w-[18px]" />
+            </button>
+            {shareOpen && (
+              <div
+                role="menu"
+                className="absolute right-0 top-9 z-30 w-48 overflow-hidden rounded-xl border border-border bg-surface py-1 shadow-2xl"
+              >
+                <button type="button" role="menuitem" onClick={shareWhatsApp}
+                  className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-[12px] font-bold text-secondary transition-colors hover:bg-surface-overlay hover:text-text">
+                  <MessageCircle className="h-4 w-4 shrink-0 text-[var(--accent)]" aria-hidden /> WhatsApp
+                </button>
+                <button type="button" role="menuitem" onClick={shareFacebook}
+                  className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-[12px] font-bold text-secondary transition-colors hover:bg-surface-overlay hover:text-text">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4 shrink-0 text-[#1877F2]" aria-hidden>
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                  </svg>
+                  Facebook
+                </button>
+                <button type="button" role="menuitem" onClick={shareCopy}
+                  className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-[12px] font-bold text-secondary transition-colors hover:bg-surface-overlay hover:text-text">
+                  {copied ? <Check className="h-4 w-4 shrink-0 text-[var(--accent)]" aria-hidden /> : <Copy className="h-4 w-4 shrink-0 text-dim" aria-hidden />}
+                  {copied ? "Link copied" : "Copy link"}
+                </button>
+                <button type="button" role="menuitem" onClick={shareMore}
+                  className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-[12px] font-bold text-secondary transition-colors hover:bg-surface-overlay hover:text-text">
+                  <MoreHorizontal className="h-4 w-4 shrink-0 text-dim" aria-hidden /> More options
+                </button>
+              </div>
             )}
-          </button>
+          </div>
         </div>
       </div>
-
-      <AdminCardControls car={car} />
     </article>
   );
 }
