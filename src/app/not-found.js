@@ -22,8 +22,7 @@ export default function NotFound() {
             Use one of the quick paths below to continue.
           </p>
           <p className="text-[12px] italic text-dim mb-8">
-            And no, this page is not up for auction — there&rsquo;s no actual
-            bidding at BIDGARI. Just a dead link, like a 2004 Scada that got away.
+            And no, this page is not up for auction.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">

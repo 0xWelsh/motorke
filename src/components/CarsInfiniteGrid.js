@@ -381,8 +381,7 @@ export default function CarsInfiniteGrid({
           </p>
           {noFiltersActive && (
             <p className="-mt-4 mb-6 text-[11px] italic text-dim">
-              And no, you cannot bid on the empty space — there&rsquo;s no actual
-              bidding here.
+              And no, you cannot bid on the empty space.
             </p>
           )}
           <div className="flex flex-wrap items-center justify-center gap-2">
