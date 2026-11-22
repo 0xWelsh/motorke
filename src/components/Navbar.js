@@ -664,7 +664,11 @@ export default function Navbar({ user, navCounts }) {
               {!user ? (
                 <Link
                   href="/signup"
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setOpen(false);
+                    openAuthModal("signup");
+                  }}
                   className="btn btn-primary btn-lg w-full"
                 >
                   Create account
@@ -836,6 +840,7 @@ function MobileMenuSection({ title, children, className }) {
 }
 
 function MobileMenuRow({ icon, label, href, onClick, variant = "default", analyticsEvent }) {
+  const { openAuthModal } = useAuthModal();
   const primary = variant === "primary";
   const rowClass = clsx(
     "flex w-full min-h-[3.15rem] items-center justify-between gap-2 rounded-xl border px-3 py-2.5 text-left transition active:scale-[0.99]",
@@ -864,6 +869,19 @@ function MobileMenuRow({ icon, label, href, onClick, variant = "default", analyt
         href={href}
         onClick={(event) => {
           if (analyticsEvent) trackUiEvent(analyticsEvent, { location: "mobile_menu" });
+          // Auth rows open the overlay (same as desktop), never a page.
+          if (href === "/login" || href.startsWith("/login?")) {
+            event.preventDefault();
+            onClick?.(event);
+            openAuthModal("login");
+            return;
+          }
+          if (href === "/signup" || href.startsWith("/signup?")) {
+            event.preventDefault();
+            onClick?.(event);
+            openAuthModal("signup");
+            return;
+          }
           onClick?.(event);
         }}
         className={rowClass}
