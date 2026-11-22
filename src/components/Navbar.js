@@ -421,9 +421,6 @@ export default function Navbar({ user, navCounts }) {
             </div>
           </div>
         </div>
-        <p className="px-4 py-2.5 text-center text-[10px] font-medium tracking-wide text-muted">
-          Every car verified. Every sale handled.
-        </p>
       </nav>
 
       {/* MOBILE SEARCH OVERLAY */}

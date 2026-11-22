@@ -16,7 +16,6 @@ import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import HomepageSafetyStrip from "@/components/home/HomepageSafetyStrip";
 import HomepagePriceFilter from "@/components/home/HomepagePriceFilter";
-import HomepageCtaStrip from "@/components/home/HomepageCtaStrip";
 import FeaturedCarsRail from "@/components/home/FeaturedCarsRail";
 import { getFeaturedRailCars } from "@/lib/featured-rail";
 import {
@@ -377,9 +376,6 @@ export default async function HomePage() {
               <Suspense fallback={<div className="mt-6 sm:mt-8 h-16" />}>
                 <PriceBandSlot countsPromise={countsPromise} />
               </Suspense>
-
-              {/* CTA strip */}
-              <HomepageCtaStrip />
 
               {/* Inventory sections */}
               <div className="mt-7 sm:mt-8">
