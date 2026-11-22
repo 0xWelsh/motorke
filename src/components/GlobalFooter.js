@@ -74,6 +74,11 @@ export default function GlobalFooter() {
               payment made at handover — one trusted team from first message to
               final paperwork.
             </p>
+            <p className="mt-3 max-w-sm text-[12px] italic leading-relaxed text-dim">
+              About the name: <span className="font-semibold not-italic">bid</span> +{" "}
+              <span className="font-semibold not-italic">gari</span>. Nobody is
+              bidding — the gari is simply for sale.
+            </p>
             <div className="mt-5 space-y-2.5 text-[13px] font-medium text-muted">
               <a
                 href={`mailto:${PUBLIC_SUPPORT_EMAIL}`}

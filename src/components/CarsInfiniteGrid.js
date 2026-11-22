@@ -379,6 +379,12 @@ export default function CarsInfiniteGrid({
               ? "We are sourcing new stock now. Tell us the car you want and we'll find it for you."
               : "Try adjusting your filters or resetting your search."}
           </p>
+          {noFiltersActive && (
+            <p className="-mt-4 mb-6 text-[11px] italic text-dim">
+              And no, you cannot bid on the empty space — there&rsquo;s no actual
+              bidding here.
+            </p>
+          )}
           <div className="flex flex-wrap items-center justify-center gap-2">
             {noFiltersActive ? (
               <>

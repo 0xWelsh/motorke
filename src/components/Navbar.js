@@ -377,7 +377,7 @@ export default function Navbar({ user, navCounts }) {
           the nav band. ─── */}
       <div className="hidden md:block py-3">
         <p className="text-center text-[11px] font-medium tracking-wide text-muted">
-          Every car verified. Every sale handled.
+          Every car verified. Every sale handled. No, not actual bidding.
         </p>
       </div>
       </header>

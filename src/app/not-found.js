@@ -17,9 +17,13 @@ export default function NotFound() {
           <h1 className="text-3xl sm:text-5xl font-bold text-text tracking-tight mb-4">
             We can&apos;t find that page.
           </h1>
-          <p className="text-sm sm:text-base text-muted leading-relaxed max-w-2xl mb-8">
+          <p className="text-sm sm:text-base text-muted leading-relaxed max-w-2xl mb-2">
             It may have moved, the listing may have been removed, or the link is outdated.
             Use one of the quick paths below to continue.
+          </p>
+          <p className="text-[12px] italic text-dim mb-8">
+            And no, this page is not up for auction — there&rsquo;s no actual
+            bidding at BIDGARI. Just a dead link, like a 2004 Scada that got away.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
