@@ -6,11 +6,19 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import CarCard from "@/components/CarCard";
 
 /**
- * Homepage Featured rail — Cars & Bids style: one sideways-sliding row of
- * five random listings, each drawn with the mosaic card (hero photo + thumb
- * grid). Cards snap to the rail so a flick lands on a clean boundary.
+ * Homepage car rail — one sideways-sliding row with snap boundaries.
+ * Featured variant: mosaic cards + FEATURED pills. Inventory variant:
+ * plain frameless cards, single title "Our Inventory".
  */
-export default function FeaturedCarsRail({ cars = [] }) {
+export default function FeaturedCarsRail({
+  cars = [],
+  title = "Featured",
+  sublabel = "today\u2019s picks from the yard",
+  viewAllHref = "/cars",
+  viewAllLabel = "All cars",
+  featured = true,
+  mosaic = true,
+}) {
   const railRef = useRef(null);
 
   if (!cars.length) return null;
@@ -24,20 +32,22 @@ export default function FeaturedCarsRail({ cars = [] }) {
   }
 
   return (
-    <section aria-label="Featured cars" className="mt-1">
+    <section aria-label={title} className="mt-1">
       <div className="mb-3 flex items-center justify-between gap-3">
         <h2 className="flex min-w-0 items-center gap-2 text-[15px] sm:text-lg font-black uppercase tracking-[0.14em] text-text">
-          <span className="truncate">Featured</span>
-          <span className="hidden sm:inline text-[11px] font-bold tracking-normal text-dim normal-case">
-            today&rsquo;s picks from the yard
-          </span>
+          <span className="truncate">{title}</span>
+          {sublabel && (
+            <span className="hidden sm:inline text-[11px] font-bold tracking-normal text-dim normal-case">
+              {sublabel}
+            </span>
+          )}
         </h2>
         <div className="flex shrink-0 items-center gap-2">
           <Link
-            href="/cars"
+            href={viewAllHref}
             className="hidden sm:inline-flex items-center gap-1 text-[11px] font-black uppercase tracking-[0.14em] text-muted transition-colors hover:text-[var(--accent)]"
           >
-            All cars
+            {viewAllLabel}
           </Link>
           {[-1, 1].map((dir) => (
             <button
@@ -63,7 +73,7 @@ export default function FeaturedCarsRail({ cars = [] }) {
             data-rail-card
             className="w-[min(84vw,330px)] shrink-0 snap-start"
           >
-            <CarCard car={car} mosaic featured priority={i < 2} />
+            <CarCard car={car} mosaic={mosaic} featured={featured} priority={i < 2} />
           </div>
         ))}
       </div>

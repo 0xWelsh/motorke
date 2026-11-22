@@ -11,7 +11,6 @@ import NikkyoSidebar from "@/components/NikkyoSidebar";
 import HomepageSidebarRight from "@/components/home/HomepageSidebarRight";
 import HomepageShopLinks from "@/components/home/HomepageShopLinks";
 import HomepageTrending from "@/components/home/HomepageTrending";
-import HomepageNikkyoGrids from "@/components/home/HomepageNikkyoGrids";
 import HomepageHeroCarFinder from "@/components/home/HomepageHeroCarFinder";
 import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import HomepageSafetyStrip from "@/components/home/HomepageSafetyStrip";
@@ -211,19 +210,30 @@ async function FeaturedRailSlot() {
   return <FeaturedCarsRail cars={cars} />;
 }
 
-async function GridsSlot({ bundlePromise }) {
+async function InventoryRailSlot({ bundlePromise }) {
   const s = deriveHomeSections(await bundlePromise);
-  const hasStock = [s.recommendedCars, s.newArrivalCars, s.dealCars, s.luxury].some(
-    (list) => (list || []).length > 0
-  );
-  if (!hasStock) return null;
+  // One category: everything we have, deduped, newest-weighted by the pool
+  // order. No Recommended / New / Deals / Luxury split — just the inventory.
+  const seen = new Set();
+  const inventory = [
+    ...(s.recommendedCars || []),
+    ...(s.newArrivalCars || []),
+    ...(s.dealCars || []),
+    ...(s.luxury || []),
+  ].filter((car) => {
+    if (!car?.id || seen.has(car.id)) return false;
+    seen.add(car.id);
+    return true;
+  });
+  if (!inventory.length) return null;
   return (
     <div className="cv-auto">
-      <HomepageNikkyoGrids
-        recommended={s.recommendedCars}
-        newArrivals={s.newArrivalCars}
-        deals={s.dealCars}
-        luxury={s.luxury}
+      <FeaturedCarsRail
+        cars={inventory}
+        title="Our Inventory"
+        sublabel=""
+        featured={false}
+        mosaic={false}
       />
     </div>
   );
@@ -380,7 +390,7 @@ export default async function HomePage() {
               {/* Inventory sections */}
               <div className="mt-7 sm:mt-8">
                 <Suspense fallback={<HomeGridsSkeleton />}>
-                  <GridsSlot bundlePromise={bundlePromise} />
+                  <InventoryRailSlot bundlePromise={bundlePromise} />
                 </Suspense>
               </div>
             </main>
