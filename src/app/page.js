@@ -16,9 +16,9 @@ import HomepageSupportWhatsApp from "@/components/home/HomepageSupportWhatsApp";
 import HomepageSafetyStrip from "@/components/home/HomepageSafetyStrip";
 import HomepagePriceFilter from "@/components/home/HomepagePriceFilter";
 import FeaturedCarsRail from "@/components/home/FeaturedCarsRail";
+import CarsInfiniteGrid from "@/components/CarsInfiniteGrid";
 import { getFeaturedRailCars } from "@/lib/featured-rail";
 import {
-  HomeGridsSkeleton,
   HomeTrendingSkeleton,
   HomeSidebarSkeleton,
 } from "@/components/home/HomeSkeletons";
@@ -210,32 +210,34 @@ async function FeaturedRailSlot() {
   return <FeaturedCarsRail cars={cars} />;
 }
 
-async function InventoryRailSlot({ bundlePromise }) {
-  const s = deriveHomeSections(await bundlePromise);
-  // One category: everything we have, deduped, newest-weighted by the pool
-  // order. No Recommended / New / Deals / Luxury split — just the inventory.
-  const seen = new Set();
-  const inventory = [
-    ...(s.recommendedCars || []),
-    ...(s.newArrivalCars || []),
-    ...(s.dealCars || []),
-    ...(s.luxury || []),
-  ].filter((car) => {
-    if (!car?.id || seen.has(car.id)) return false;
-    seen.add(car.id);
-    return true;
-  });
-  if (!inventory.length) return null;
+// Our Inventory is a vertical infinite feed (same engine as /cars): pages
+// stream from the cached listing API as you scroll, and the footer only
+// arrives once the inventory is exhausted. Empty filters object is a module
+// constant so CarsInfiniteGrid's fetch callback stays stable.
+const EMPTY_FILTERS = {};
+
+function InventoryFeedSlot() {
   return (
-    <div className="cv-auto">
-      <FeaturedCarsRail
-        cars={inventory}
-        title="Our Inventory"
-        sublabel=""
-        featured={false}
-        mosaic={false}
+    <section aria-label="Our inventory" className="home-shell py-8 sm:py-10">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <h2 className="text-[15px] sm:text-lg font-black uppercase tracking-[0.14em] text-text">
+          Our Inventory
+        </h2>
+        <Link
+          href="/cars"
+          className="text-[11px] font-black uppercase tracking-[0.14em] text-muted transition-colors hover:text-[var(--accent)]"
+        >
+          View all
+        </Link>
+      </div>
+      <CarsInfiniteGrid
+        initialCars={[]}
+        initialTotal={0}
+        filters={EMPTY_FILTERS}
+        noFiltersActive={false}
+        initialLoading
       />
-    </div>
+    </section>
   );
 }
 
@@ -386,13 +388,6 @@ export default async function HomePage() {
               <Suspense fallback={<div className="mt-6 sm:mt-8 h-16" />}>
                 <PriceBandSlot countsPromise={countsPromise} />
               </Suspense>
-
-              {/* Inventory sections */}
-              <div className="mt-7 sm:mt-8">
-                <Suspense fallback={<HomeGridsSkeleton />}>
-                  <InventoryRailSlot bundlePromise={bundlePromise} />
-                </Suspense>
-              </div>
             </main>
 
             <aside className="hidden xl:block xl:sticky xl:top-28 xl:self-start">
@@ -429,6 +424,10 @@ export default async function HomePage() {
           <TrendingSlot bundlePromise={bundlePromise} />
         </Suspense>
       </div>
+
+      {/* One category, infinite vertically — the last block before the
+          footer, which you only reach when the listings run out. */}
+      <InventoryFeedSlot />
 
       <HomepageSupportWhatsApp />
     </div>
