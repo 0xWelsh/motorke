@@ -47,20 +47,39 @@ async function fetchWithTimeout(url, init = {}) {
  * @param {string} url
  * @returns {Promise<Buffer|null>}
  */
+// Hosts the OG proxy may fetch from (SSRF guard). Our own CDN hosts — the R2
+// custom domain and the legacy pub-*.r2.dev endpoint — are always allowed,
+// as is whatever NEXT_PUBLIC_R2_PUBLIC_URL points at.
 const ALLOWED_IMAGE_HOSTS = [
+  "images.bidgari.com",
+  "r2.dev",
   "supabase.co",
   "supabase.in",
-  "r2.dev",
   "unsplash.com",
   "images.unsplash.com",
 ];
+
+function allowedImageHost(hostname) {
+  const h = String(hostname || "").toLowerCase();
+  if (ALLOWED_IMAGE_HOSTS.some((a) => h === a || h.endsWith(`.${a}`))) return true;
+  if (h.endsWith(".r2.cloudflarestorage.com")) return true;
+  const raw = process.env.NEXT_PUBLIC_R2_PUBLIC_URL?.trim();
+  if (raw) {
+    try {
+      const u = new URL(/^https?:\/\//i.test(raw) ? raw : `https://${raw}`);
+      if (h === u.hostname) return true;
+    } catch {
+      /* ignore malformed */
+    }
+  }
+  return false;
+}
 
 /** Fetch any public HTTPS image (dealer banners, external logos) — host-allowlisted. */
 export async function fetchRemoteImageBytes(url) {
   try {
     const parsed = new URL(url);
-    const isAllowed = ALLOWED_IMAGE_HOSTS.some((h) => parsed.hostname.endsWith(h));
-    if (!isAllowed) return null;
+    if (!allowedImageHost(parsed.hostname)) return null;
     const res = await fetchWithTimeout(url, { headers: { Accept: "image/*" } });
     if (!res.ok) return null;
     const ct = (res.headers.get("content-type") || "").toLowerCase();
