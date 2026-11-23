@@ -82,13 +82,16 @@ function isMaintenanceAllowed(pathname) {
 
 let liveSetCache = { at: 0, data: null };
 
-async function fetchLiveSet(origin) {
+async function fetchLiveSet() {
   const now = Date.now();
   if (liveSetCache.data && now - liveSetCache.at < 10_000) return liveSetCache.data;
   try {
+    // Hit our own container directly — going out via the public origin adds
+    // a Cloudflare round trip and always misses the budget.
+    const port = process.env.PORT || 3000;
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 250);
-    const res = await fetch(`${origin}/api/internal/live-slugs`, {
+    const timer = setTimeout(() => controller.abort(), 1500);
+    const res = await fetch(`http://127.0.0.1:${port}/api/internal/live-slugs`, {
       signal: controller.signal,
       cache: "no-store",
     });
@@ -101,7 +104,7 @@ async function fetchLiveSet(origin) {
 }
 
 async function deadSlugRedirect(request, slug) {
-  const live = await fetchLiveSet(request.nextUrl.origin);
+  const live = await fetchLiveSet();
   if (!live || live.slugs.includes(slug)) return null;
   const rest = slug.split("-").slice(1).join("-");
   const make = live.makes
