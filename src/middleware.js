@@ -80,7 +80,40 @@ function isMaintenanceAllowed(pathname) {
   return false;
 }
 
-export function middleware(request) {
+let liveSetCache = { at: 0, data: null };
+
+async function fetchLiveSet(origin) {
+  const now = Date.now();
+  if (liveSetCache.data && now - liveSetCache.at < 10_000) return liveSetCache.data;
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 250);
+    const res = await fetch(`${origin}/api/internal/live-slugs`, {
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    clearTimeout(timer);
+    if (res.ok) liveSetCache = { at: now, data: await res.json() };
+  } catch {
+    /* fail open: keep serving stale, or fall through to the page */
+  }
+  return liveSetCache.data;
+}
+
+async function deadSlugRedirect(request, slug) {
+  const live = await fetchLiveSet(request.nextUrl.origin);
+  if (!live || live.slugs.includes(slug)) return null;
+  const rest = slug.split("-").slice(1).join("-");
+  const make = live.makes
+    .filter((m) => rest === m || rest.startsWith(`${m}-`))
+    .sort((a, b) => b.length - a.length)[0];
+  if (!make) return null;
+  const url = request.nextUrl.clone();
+  url.pathname = `/cars/${make}`;
+  return NextResponse.redirect(url, 308);
+}
+
+export async function middleware(request) {
   const { pathname } = request.nextUrl;
   const isProd = process.env.NODE_ENV === "production";
 
@@ -141,6 +174,16 @@ export function middleware(request) {
           const url = request.nextUrl.clone();
           url.pathname = `/cars/hub/${a}`;
           return NextResponse.rewrite(url);
+        }
+        // Dead listing slug (year-first public slug that no longer exists):
+        // 308 to the matching make hub. Must happen HERE, not in the page —
+        // the layout's Suspense boundary flushes the shell before the page
+        // resolves, which would downgrade a page-level redirect to a
+        // client-side 200. The live-set lookup is module-cached (10s) and
+        // fails open.
+        if (a && looksLikeCarPublicSlug(a)) {
+          const decision = await deadSlugRedirect(request, a);
+          if (decision) return decision;
         }
       }
     }
