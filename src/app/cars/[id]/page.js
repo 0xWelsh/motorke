@@ -25,7 +25,7 @@ import {
   meaningfulFeatureList,
   positiveNum,
 } from "@/lib/car-display";
-import { slugifyCarSegment } from "@/lib/seo-car-slug";
+import { slugifyCarSegment, looksLikeCarPublicSlug } from "@/lib/seo-car-slug";
 import { facetPathSegment } from "@/lib/seo-car-facets";
 import { carListingPath } from "@/lib/car-listing-url";
 import { FUEL_LABELS } from "@/lib/constants";
@@ -102,6 +102,32 @@ export async function generateMetadata({ params }) {
 }
 
 
+const getMakeSlugs = unstable_cache(
+  async () => {
+    const rows = await db.car.groupBy({ by: ["make"], select: { make: true } });
+    return rows.map((r) => slugifyCarSegment(r.make)).filter(Boolean);
+  },
+  ["make-slugs-for-redirect"],
+  { revalidate: 3600, tags: ["cars"] },
+);
+
+/**
+ * Longest-prefix match: `2013-mercedes-benz-ml350-x` → `mercedes-benz`.
+ * Returns null for refs that aren't dead listing slugs.
+ */
+async function resolveMakeHubFromDeadSlug(ref) {
+  if (!looksLikeCarPublicSlug(ref)) return null;
+  const rest = ref.split("-").slice(1).join("-");
+  const makes = await getMakeSlugs();
+  let best = null;
+  for (const make of makes) {
+    if (rest === make || rest.startsWith(`${make}-`)) {
+      if (!best || make.length > best.length) best = make;
+    }
+  }
+  return best;
+}
+
 function getCarData(ref) {
   const cached = unstable_cache(
     async () => {
@@ -160,7 +186,14 @@ export default async function CarDetailPage({ params }) {
   const { id: ref } = await params;
   const carData = await getCarData(ref);
 
-  if (!carData || !carData.dealer) notFound();
+  if (!carData || !carData.dealer) {
+    // Dead listing URL (sold/removed). Old keyword slugs are year-first
+    // (`2013-mercedes-benz-ml350-…`), so route the crawler — and its
+    // backlink equity — to the matching make hub instead of a hard 404.
+    const makeHub = await resolveMakeHubFromDeadSlug(ref);
+    if (makeHub) permanentRedirect(`/cars/${makeHub}`);
+    notFound();
+  }
 
   if (carData.publicSlug && ref === carData.id) {
     permanentRedirect(carListingPath(carData));
