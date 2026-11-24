@@ -54,6 +54,22 @@ jobs:
             database_url=${{ secrets.BUILD_DATABASE_URL }}
             direct_url=${{ secrets.BUILD_DIRECT_URL }}
 
+      # Schema before code: apply this release's migration SQL to the
+      # production DB before rolling the Container App. The SQL is written
+      # idempotent (IF NOT EXISTS / guarded CREATE TYPE) and applied via
+      # `prisma db execute` rather than `migrate deploy` — the prod
+      # _prisma_migrations history is not guaranteed replayable, and a full
+      # deploy would fail on unrelated legacy migrations and block every
+      # release. If this step fails the rollout stops, so we never ship
+      # code whose Prisma client expects columns that don't exist yet.
+      - name: Apply schema changes
+        env:
+          DIRECT_URL: ${{ secrets.BUILD_DIRECT_URL }}
+        run: |
+          npx --yes prisma@5.22.0 db execute \
+            --url "$DIRECT_URL" \
+            --file prisma/migrations/20261123120000_user_profiles/migration.sql
+
       - uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
