@@ -240,6 +240,8 @@ model Car {
   location            String?
   carStatus           CarStatus?
   publicSlug          String?            @unique
+  listingStatus       ListingStatus?
+  moderationNote      String?
   images              CarImage[]
   carViews            CarView[]
   reviews             CarReview[]
@@ -562,6 +564,7 @@ enum UserRole {
 enum DealerType {
   DEALERSHIP
   BROKER
+  PRIVATE
 }
 
 enum VerificationStatus {
@@ -583,6 +586,14 @@ enum CarStatus {
   WITH_OWNER
   IN_TRANSIT
   AT_PORT
+}
+
+// Self-service (private seller) listings pass moderation before going live.
+// NULL = staff/dealer-managed listing — always trusted, never blocked.
+enum ListingStatus {
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
 }
 
 enum FuelType {

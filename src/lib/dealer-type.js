@@ -10,9 +10,11 @@
 export function getSellerBadge(dealer) {
   if (!dealer) return null;
 
+  const isPrivate = dealer.type === "PRIVATE";
   const isDealership = dealer.type === "DEALERSHIP";
   const isVerified = dealer.verificationStatus === "VERIFIED";
 
+  if (isPrivate) return isVerified ? "Verified private seller" : "Private seller";
   if (isDealership && isVerified) return "Verified Dealership";
   if (isDealership) return "Dealership";
   if (isVerified) return "Verified Broker";
@@ -26,9 +28,11 @@ export function getSellerBadge(dealer) {
 export function getSellerBadgeVariant(dealer) {
   if (!dealer) return null;
 
+  const isPrivate = dealer.type === "PRIVATE";
   const isDealership = dealer.type === "DEALERSHIP";
   const isVerified = dealer.verificationStatus === "VERIFIED";
 
+  if (isPrivate) return isVerified ? "verified_dealership" : "broker";
   if (isDealership && isVerified) return "verified_dealership";
   if (isDealership) return "dealership";
   if (isVerified) return "verified_broker";

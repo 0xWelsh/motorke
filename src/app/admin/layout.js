@@ -37,6 +37,7 @@ import { SUPER_ADMIN_EMAIL } from "@/lib/super-admin";
 const allLinks = [
   { href: "/admin", label: "Overview", Icon: LayoutDashboard },
   { href: "/admin/cars", label: "Inventory", Icon: Car },
+  { href: "/admin/listings", label: "Listing review", Icon: ClipboardList },
   { href: "/admin/users", label: "Users", Icon: Users },
   { href: "/admin/leads", label: "Leads", Icon: MessageSquare },
   { href: "/admin/my-leads", label: "My Leads", Icon: UserCheck },

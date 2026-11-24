@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
   const dealers = await db.dealer.findMany({
+    where: { type: { not: "PRIVATE" } },
     include: {
       _count: { select: { cars: { where: { available: true } } } },
     },

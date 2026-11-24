@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import CarCard from "@/components/CarCard";
 import {
   CalendarDays,
   MapPin,
@@ -12,24 +13,40 @@ import {
   User as UserIcon,
 } from "lucide-react";
 
+async function getSellerCars(dealerId) {
+  if (!dealerId) return [];
+  return db.car.findMany({
+    where: { dealerId, available: true },
+    orderBy: { createdAt: "desc" },
+    take: 12,
+    include: {
+      images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }], take: 2 },
+      dealer: { select: { name: true, slug: true, verified: true, location: true, county: true, type: true } },
+    },
+  });
+}
+
 export async function generateMetadata({ params }) {
   const { handle } = await params;
   const user = await db.user.findFirst({
     where: { handle: handle.toLowerCase(), active: true, publicProfile: true },
-    select: { name: true, bio: true, avatarUrl: true, verificationStatus: true },
+    select: { name: true, bio: true, avatarUrl: true, verificationStatus: true, dealerId: true },
   });
-  if (!user) return { title: "Profile not found | BIDGARI" };
+  if (!user) return { title: "Profile not found" };
+  const listingCount = user.dealerId
+    ? await db.car.count({ where: { dealerId: user.dealerId, available: true } })
+    : 0;
   return {
     title: user.name,
     description: user.bio || `${user.name} on BIDGARI — Kenya's calmer car marketplace.`,
     openGraph: {
-      title: user.name,
+      title: `${user.name} — BIDGARI`,
       description: user.bio || undefined,
       images: user.avatarUrl ? [user.avatarUrl] : undefined,
       type: "profile",
     },
-    // Thin until seller listings land; keep out of the index for now.
-    robots: { index: false, follow: true },
+    // Indexable once there is real inventory behind the page; thin profiles stay out.
+    robots: listingCount > 0 ? { index: true, follow: true } : { index: false, follow: true },
   };
 }
 
@@ -47,10 +64,12 @@ export default async function UserPublicProfilePage({ params }) {
     select: {
       id: true, name: true, handle: true, bio: true, avatarUrl: true, bannerUrl: true,
       locationLabel: true, phone: true, whatsapp: true, createdAt: true,
-      verificationStatus: true, verifiedAt: true,
+      verificationStatus: true, verifiedAt: true, dealerId: true,
     },
   });
   if (!user) notFound();
+
+  const cars = await getSellerCars(user.dealerId);
 
   const verified = user.verificationStatus === "VERIFIED";
   const joined = user.createdAt.toLocaleDateString("en-KE", { month: "long", year: "numeric" });
@@ -136,16 +155,26 @@ export default async function UserPublicProfilePage({ params }) {
             </a>
           )}
 
-          {/* Listings — private seller listings will surface here in Phase 1 */}
+          {/* Listings */}
           <div className="mt-10 border-t border-white/10 pt-6">
-            <h2 className="text-xs font-black uppercase tracking-[0.14em] text-white/60">Listings</h2>
-            <p className="mt-2 text-sm text-white/45">
-              No public listings yet. Selling your car through BIDGARI is coming soon —{" "}
-              <Link href="/sell" className="text-[var(--accent)] hover:underline">
-                tell us what you have
-              </Link>
-              .
-            </p>
+            <h2 className="text-xs font-black uppercase tracking-[0.14em] text-white/60">
+              {cars.length > 0 ? `Cars for sale (${cars.length})` : "Listings"}
+            </h2>
+            {cars.length > 0 ? (
+              <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                {cars.map((car) => (
+                  <CarCard key={car.id} car={car} />
+                ))}
+              </div>
+            ) : (
+              <p className="mt-2 text-sm text-white/45">
+                No public listings yet. Selling your car through BIDGARI is coming soon —{" "}
+                <Link href="/sell" className="text-[var(--accent)] hover:underline">
+                  tell us what you have
+                </Link>
+                .
+              </p>
+            )}
           </div>
         </div>
       </div>

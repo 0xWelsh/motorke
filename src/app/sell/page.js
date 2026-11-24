@@ -115,6 +115,15 @@ export default function SellPage() {
               Browse inventory
             </Link>
           </div>
+
+          {/* Self-service path for verified accounts */}
+          <div className="mt-8 inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-2xl border border-border bg-surface px-5 py-3">
+            <span className="text-sm text-muted font-medium">In a hurry? List it yourself —</span>
+            <Link href="/sell/new" className="text-sm font-black text-[var(--accent)] hover:underline">
+              self-service listing
+            </Link>
+            <span className="text-xs text-dim">(for verified accounts; a human reviews it before it goes live)</span>
+          </div>
         </section>
 
         {/* Steps */}

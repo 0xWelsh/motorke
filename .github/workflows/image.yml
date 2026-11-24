@@ -66,9 +66,16 @@ jobs:
         env:
           DIRECT_URL: ${{ secrets.BUILD_DIRECT_URL }}
         run: |
-          npx --yes prisma@5.22.0 db execute \
-            --url "$DIRECT_URL" \
-            --file prisma/migrations/20261123120000_user_profiles/migration.sql
+          # Every migration from 20261123120000 onward is written idempotent
+          # and applied here. Older migrations are NOT replay-safe — they are
+          # already applied in prod history and must stay untouched.
+          for f in $(ls prisma/migrations | sort); do
+            [[ "$f" < "20261123120000_user_profiles" ]] && continue
+            echo "applying $f"
+            npx --yes prisma@5.22.0 db execute \
+              --url "$DIRECT_URL" \
+              --file "prisma/migrations/$f/migration.sql"
+          done
 
       - uses: azure/login@v2
         with:

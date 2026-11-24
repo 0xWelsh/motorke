@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import AccountTabs from "@/components/AccountTabs";
 import AvatarUpload from "@/components/AvatarUpload";
 import { Heart, MessageSquare, ShieldCheck, User as UserIcon, Calendar, ArrowRight } from "lucide-react";
@@ -132,9 +133,14 @@ export default async function AccountPage({ searchParams }) {
               </div>
 
               {/* Quick Link */}
-              <a href="/cars" className="btn btn-dark w-full sm:w-auto">
-                Browse <ArrowRight size={16} className="hidden sm:block" />
-              </a>
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <Link href="/seller" className="btn btn-neutral w-full sm:w-auto">
+                  My listings
+                </Link>
+                <a href="/cars" className="btn btn-dark w-full sm:w-auto">
+                  Browse <ArrowRight size={16} className="hidden sm:block" />
+                </a>
+              </div>
             </div>
           </div>
         </header>

@@ -212,7 +212,7 @@ async function buildModelAggs(resolved) {
   const dealers = dealerIds.length
     ? await withDbRetry(() =>
         db.dealer.findMany({
-          where: { id: { in: dealerIds } },
+          where: { id: { in: dealerIds }, type: { not: "PRIVATE" } },
           select: { id: true, name: true, slug: true },
         })
       )
