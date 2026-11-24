@@ -192,6 +192,21 @@ export async function middleware(request) {
     }
   }
 
+  // /u/<handle>: unknown or private profiles must return a REAL 404.
+  // In-page notFound() would stream as a 200 soft-404 (layout Suspense
+  // locks the status), so decide here against the cached live set.
+  if (pathname.startsWith("/u/") && isProd) {
+    const h = decodeURIComponent(pathname.slice(3)).toLowerCase();
+    if (h && !h.includes("/")) {
+      const live = await fetchLiveSet();
+      if (live?.handles && !live.handles.includes(h)) {
+        const url = request.nextUrl.clone();
+        url.pathname = "/_not-found";
+        return NextResponse.rewrite(url, { status: 404 });
+      }
+    }
+  }
+
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-pathname", pathname);
 

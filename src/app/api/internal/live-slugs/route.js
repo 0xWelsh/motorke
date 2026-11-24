@@ -9,13 +9,18 @@ import { slugifyCarSegment } from "@/lib/seo-car-slug";
  */
 const getLiveSet = unstable_cache(
   async () => {
-    const [cars, makes] = await Promise.all([
+    const [cars, makes, people] = await Promise.all([
       db.car.findMany({ where: { publicSlug: { not: null } }, select: { publicSlug: true } }),
       db.car.groupBy({ by: ["make"], select: { make: true } }),
+      db.user.findMany({
+        where: { handle: { not: null }, active: true, publicProfile: true },
+        select: { handle: true },
+      }),
     ]);
     return {
       slugs: cars.map((c) => c.publicSlug),
       makes: [...new Set(makes.map((m) => slugifyCarSegment(m.make)).filter(Boolean))],
+      handles: people.map((p) => p.handle),
     };
   },
   ["live-slug-set"],
