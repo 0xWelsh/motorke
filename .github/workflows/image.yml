@@ -21,6 +21,31 @@ jobs:
       IMAGE: ghcr.io/0xwelsh/bidgari
     steps:
       - uses: actions/checkout@v4
+      # Schema before build: apply this release's migration SQL to the
+      # production DB before the image build (Next prerenders pages against
+      # BUILD_DATABASE_URL during `npm run build`) and before rolling the
+      # Container App. The SQL is written
+      # idempotent (IF NOT EXISTS / guarded CREATE TYPE) and applied via
+      # `prisma db execute` rather than `migrate deploy` — the prod
+      # _prisma_migrations history is not guaranteed replayable, and a full
+      # deploy would fail on unrelated legacy migrations and block every
+      # release. If this step fails the rollout stops, so we never ship
+      # code whose Prisma client expects columns that don't exist yet.
+      - name: Apply schema changes
+        env:
+          DIRECT_URL: ${{ secrets.BUILD_DIRECT_URL }}
+        run: |
+          # Every migration from 20261123120000 onward is written idempotent
+          # and applied here. Older migrations are NOT replay-safe — they are
+          # already applied in prod history and must stay untouched.
+          for f in $(ls prisma/migrations | sort); do
+            [[ "$f" < "20261123120000_user_profiles" ]] && continue
+            echo "applying $f"
+            npx --yes prisma@5.22.0 db execute \
+              --url "$DIRECT_URL" \
+              --file "prisma/migrations/$f/migration.sql"
+          done
+
 
       - uses: docker/setup-buildx-action@v3
 
@@ -54,28 +79,7 @@ jobs:
             database_url=${{ secrets.BUILD_DATABASE_URL }}
             direct_url=${{ secrets.BUILD_DIRECT_URL }}
 
-      # Schema before code: apply this release's migration SQL to the
-      # production DB before rolling the Container App. The SQL is written
-      # idempotent (IF NOT EXISTS / guarded CREATE TYPE) and applied via
-      # `prisma db execute` rather than `migrate deploy` — the prod
-      # _prisma_migrations history is not guaranteed replayable, and a full
-      # deploy would fail on unrelated legacy migrations and block every
-      # release. If this step fails the rollout stops, so we never ship
-      # code whose Prisma client expects columns that don't exist yet.
-      - name: Apply schema changes
-        env:
-          DIRECT_URL: ${{ secrets.BUILD_DIRECT_URL }}
-        run: |
-          # Every migration from 20261123120000 onward is written idempotent
-          # and applied here. Older migrations are NOT replay-safe — they are
-          # already applied in prod history and must stay untouched.
-          for f in $(ls prisma/migrations | sort); do
-            [[ "$f" < "20261123120000_user_profiles" ]] && continue
-            echo "applying $f"
-            npx --yes prisma@5.22.0 db execute \
-              --url "$DIRECT_URL" \
-              --file "prisma/migrations/$f/migration.sql"
-          done
+
 
       - uses: azure/login@v2
         with:
