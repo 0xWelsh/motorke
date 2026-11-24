@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import DeleteButton from "@/components/DeleteButton";
+import UserVerifyButton from "@/components/admin/UserVerifyButton";
 import { 
   Building2, 
   ShieldCheck, 
@@ -28,6 +29,15 @@ export default async function AdminApprovalsPage() {
     where: { verified: false },
     include: { _count: { select: { cars: true, users: true, leads: true } } },
     orderBy: { createdAt: "desc" },
+  });
+
+  const people = await db.user.findMany({
+    where: { verificationStatus: "PENDING", role: "BUYER", active: true },
+    select: {
+      id: true, name: true, email: true, handle: true, phone: true,
+      avatarUrl: true, createdAt: true, locationLabel: true,
+    },
+    orderBy: { createdAt: "asc" },
   });
 
   const gradients = [
@@ -131,6 +141,73 @@ export default async function AdminApprovalsPage() {
             <p className="text-[11px] font-bold uppercase tracking-widest text-muted mt-2 tracking-wide">All partner nodes have been successfully validated.</p>
           </div>
         )}
+      </div>
+
+      {/* ── PEOPLE VERIFICATION ── */}
+      <div className="mt-16">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-2 h-2 rounded-xl bg-[var(--accent)]" />
+          <span className="text-[11px] font-bold uppercase tracking-[0.3em] text-secondary">People Verification</span>
+          <span className="text-[11px] font-bold uppercase tracking-widest text-muted">/ {people.length} pending</span>
+        </div>
+        <div className="bg-[#1c1c1c] border border-white/[0.08] rounded-xl overflow-hidden">
+          {people.length === 0 ? (
+            <div className="py-16 text-center">
+              <Users size={28} className="text-muted mx-auto mb-4" />
+              <p className="text-[11px] font-bold uppercase tracking-widest text-muted">No verification applications.</p>
+            </div>
+          ) : (
+            <table className="w-full text-left border-collapse min-w-[800px]">
+              <thead>
+                <tr className="border-b border-white/[0.06] bg-glass/[0.03]">
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted">Person</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted">Handle</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted">Contact</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted">Applied</th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-muted text-right">Decision</th>
+                </tr>
+              </thead>
+              <tbody>
+                {people.map((p) => (
+                  <tr key={p.id} className="border-b border-white/[0.04] hover:bg-white/[0.02]">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        {p.avatarUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={p.avatarUrl} alt="" className="w-9 h-9 rounded-lg object-cover" />
+                        ) : (
+                          <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-xs font-black text-white/50">
+                            {(p.name || "?")[0].toUpperCase()}
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-text truncate">{p.name}</p>
+                          <p className="text-[11px] text-muted truncate">{p.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm font-bold text-secondary">
+                      {p.handle ? `@${p.handle}` : "—"}
+                      {p.handle && (
+                        <a href={`/u/${p.handle}`} target="_blank" rel="noopener noreferrer" className="ml-2 text-[var(--accent)]">
+                          <ExternalLink size={12} className="inline" />
+                        </a>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted">
+                      {p.phone || "—"}
+                      {p.locationLabel && <span className="block text-[11px] text-dim">{p.locationLabel}</span>}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-muted">{new Date(p.createdAt).toLocaleDateString("en-KE")}</td>
+                    <td className="px-6 py-4 text-right">
+                      <UserVerifyButton userId={p.id} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
     </div>
   );

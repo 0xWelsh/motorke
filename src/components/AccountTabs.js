@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Settings, Bookmark, MessageSquare, History, Phone, ShieldCheck, Clock, MapPin, Eye, EyeOff } from "lucide-react";
+import { Settings, Bookmark, MessageSquare, History, Phone, ShieldCheck, Clock, MapPin, Eye, EyeOff, Globe, GlobeOff } from "lucide-react";
 import { formatCarPrice, whatsappLink } from "@/lib/utils";
 import { PHONE_COUNTRY_CODE_HELPER, PHONE_PLACEHOLDER_INTERNATIONAL, telHrefFromMsisdn } from "@/lib/phone-hints";
 import { PUBLIC_SUPPORT_WHATSAPP, PUBLIC_SUPPORT_PHONE } from "@/lib/site-contact";
@@ -12,10 +12,16 @@ import { carListingPath } from "@/lib/car-listing-url";
 import { RECENT_COOKIE_KEY, readRecentCarsFromStorage, readJsonCookie } from "@/lib/personalization";
 import ProfileCompletenessPanel from "./ProfileCompletenessPanel";
 import PhoneVerificationControl from "./PhoneVerificationControl";
+import BannerUpload from "./BannerUpload";
+import ProfileVerificationCard from "./ProfileVerificationCard";
+import { suggestHandle } from "@/lib/handle";
 import { PHONE_VERIFICATION_ENABLED } from "@/lib/feature-flags";
 
 
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("en-KE", { day: "numeric", month: "short", year: "numeric" });
+
+const sanitizeHandleInput = (v) =>
+  v.toLowerCase().replace(/[^a-z0-9-]+/g, "-").replace(/-{2,}/g, "-").replace(/^-+/, "").slice(0, 24);
 
 export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
   const [tab, setTab] = useState(init || "profile");
@@ -23,6 +29,12 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [phone, setPhone] = useState(user.phone || "");
+  const [handle, setHandle] = useState(user.handle || "");
+  const [bio, setBio] = useState(user.bio || "");
+  const [whatsapp, setWhatsapp] = useState(user.whatsapp || "");
+  const [locationLabel, setLocationLabel] = useState(user.locationLabel || "");
+  const [publicProfile, setPublicProfile] = useState(user.publicProfile !== false);
+  const [profErr, setProfErr] = useState("");
   const [profMsg, setProfMsg] = useState("");
   const [pwMsg, setPwMsg] = useState("");
   const [pwErr, setPwErr] = useState("");
@@ -53,12 +65,26 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
 
   async function saveProfile(e) {
     e.preventDefault();
+    setProfErr("");
     const res = await fetch("/api/account/profile", {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, phone }),
+      body: JSON.stringify({
+        name, email, phone,
+        handle: handle.trim() || null,
+        bio: bio.trim() || null,
+        whatsapp: whatsapp.trim() || null,
+        locationLabel: locationLabel.trim() || null,
+        publicProfile,
+      }),
     });
-    setProfMsg(res.ok ? "success" : "error");
-    setTimeout(() => setProfMsg(""), 3000);
+    if (res.ok) {
+      setProfMsg("success");
+    } else {
+      const data = await res.json().catch(() => ({}));
+      setProfErr(data.error || "Could not save profile.");
+      setProfMsg("error");
+    }
+    setTimeout(() => { setProfMsg(""); setProfErr(""); }, 5000);
   }
 
   async function changePassword(e) {
@@ -87,6 +113,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
     { label: "Profile photo", done: Boolean(user.avatarUrl) },
     { label: "Full name", done: Boolean(name?.trim()) },
     { label: "Email", done: Boolean(user.email?.trim()) },
+    { label: "Handle", done: Boolean(handle?.trim()) },
     { label: "Location", done: Number.isFinite(user.lat) && Number.isFinite(user.lng) },
     { label: "Watchlist started", done: saved.length > 0 },
   ];
@@ -119,7 +146,9 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
       <div className="p-6 sm:p-8">
         {/* ── PROFILE ── */}
         {tab === "profile" && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="space-y-8">
+            <BannerUpload currentUrl={user.bannerUrl || ""} />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="space-y-6">
               <div>
                 <h2 className="text-xl font-black text-text tracking-tight flex items-center gap-2">
@@ -138,8 +167,8 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                 </p>
               )}
 
-              {profMsg === "success" && <Alert type="success">Profile identity synchronized.</Alert>}
-              {profMsg === "error" && <Alert type="error">Could not sync profile identity.</Alert>}
+              {profMsg === "success" && <Alert type="success">Profile saved.</Alert>}
+              {profErr && <Alert type="error">{profErr}</Alert>}
 
               <form onSubmit={saveProfile} className="space-y-6">
                 <div>
@@ -152,6 +181,57 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                     className={inputCls}
                     placeholder="e.g. John Doe"
                   />
+                </div>
+                <div>
+                  <label className={labelCls}>Profile handle</label>
+                  <div className="flex">
+                    <span className="inline-flex items-center px-3 rounded-l-2xl border border-r-0 border-border bg-surface-hover text-muted text-sm font-bold">@</span>
+                    <input
+                      value={handle}
+                      onChange={e => setHandle(sanitizeHandleInput(e.target.value))}
+                      onBlur={() => !handle && setHandle(suggestHandle(name) || "")}
+                      maxLength={24}
+                      className={clsx(inputCls, "rounded-l-none")}
+                      placeholder="johndoe"
+                    />
+                  </div>
+                  <p className="mt-1.5 text-[10px] font-medium text-muted">
+                    Your public address: bidgari.com/u/{handle || "johndoe"}
+                  </p>
+                </div>
+                <div>
+                  <label className={labelCls}>Short bio</label>
+                  <textarea
+                    value={bio}
+                    onChange={e => setBio(e.target.value.slice(0, 280))}
+                    rows={3}
+                    className={clsx(inputCls, "resize-none")}
+                    placeholder="e.g. Nairobi. Looking for a clean Prado. Happily selling my old one."
+                  />
+                  <p className="mt-1 text-right text-[10px] font-bold text-dim">{bio.length}/280</p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className={labelCls}>WhatsApp (optional)</label>
+                    <input
+                      value={whatsapp}
+                      onChange={e => setWhatsapp(e.target.value)}
+                      type="tel"
+                      inputMode="tel"
+                      placeholder="+254 7xx xxx xxx"
+                      className={inputCls}
+                    />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Location label (optional)</label>
+                    <input
+                      value={locationLabel}
+                      onChange={e => setLocationLabel(e.target.value)}
+                      maxLength={60}
+                      placeholder="e.g. Nairobi, Westlands"
+                      className={inputCls}
+                    />
+                  </div>
                 </div>
                 <div className="mt-3">
                   <label className={labelCls}>Primary Email</label>
@@ -175,10 +255,29 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
                     </div>
                   ) : null}
                 </div>
+                <label className="flex items-center gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={publicProfile}
+                    onChange={e => setPublicProfile(e.target.checked)}
+                    className="w-4 h-4 accent-[var(--accent)]"
+                  />
+                  <span className="inline-flex items-center gap-1.5 text-xs font-bold text-muted">
+                    {publicProfile ? <Globe size={14} className="text-[var(--accent)]" /> : <GlobeOff size={14} />}
+                    Show my public profile page
+                  </span>
+                </label>
                 <button type="submit" className="btn btn-dark btn-sm">
                   Save Changes
                 </button>
               </form>
+
+              <ProfileVerificationCard
+                status={user.verificationStatus}
+                rejectionReason={user.verificationRejectionReason}
+                handle={handle}
+                publicProfile={publicProfile}
+              />
             </div>
 
             <div className="space-y-6">
@@ -226,6 +325,7 @@ export default function AccountTabs({ tab: init, user, savedCars, enquiries }) {
             {/* Location Settings */}
             <div id="buyer-location-settings" className="lg:col-span-2 border-t border-border pt-8">
               <BuyerLocationSettings initialLat={user.lat} initialLng={user.lng} />
+            </div>
             </div>
           </div>
         )}

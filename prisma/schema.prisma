@@ -15,6 +15,17 @@ model User {
   role            UserRole         @default(BUYER)
   name            String
   avatarUrl       String?
+  bannerUrl       String?
+  handle          String?          @unique
+  bio             String?
+  phone           String?
+  whatsapp        String?
+  locationLabel   String?
+  publicProfile   Boolean          @default(true)
+  verificationStatus      VerificationStatus @default(UNVERIFIED)
+  verifiedAt                DateTime?
+  verifiedBy                String?
+  verificationRejectionReason String?
   dealerId        String?
   active          Boolean          @default(true)
   emailVerified   DateTime?

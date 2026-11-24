@@ -15,6 +15,15 @@ export default async function AccountPage({ searchParams }) {
   if (user.role === "ADMIN")  redirect("/admin");
   if (user.role === "DEALER") redirect("/");
 
+  // Full profile fields (session carries only the basics).
+  const profile = await db.user.findUnique({
+    where: { id: user.id },
+    select: {
+      handle: true, bannerUrl: true, bio: true, whatsapp: true, locationLabel: true,
+      publicProfile: true, verificationStatus: true, verificationRejectionReason: true,
+    },
+  });
+
   const tab = sp.tab || "profile";
 
   const buyerPhoneSetting = await db.setting.findUnique({
@@ -102,9 +111,11 @@ export default async function AccountPage({ searchParams }) {
               <div className="flex-1 w-full min-w-0">
                 <div className="hidden sm:flex flex-row items-center gap-3 mb-2">
                   <h2 className="text-2xl font-bold text-text">{user.name}</h2>
-                  <span className="inline-flex items-center gap-1 bg-accent-wash text-accent px-2.5 py-1 rounded-none text-[11px] font-bold uppercase tracking-wider border border-[var(--accent-dim)]">
-                    <ShieldCheck size={12} /> Verified
-                  </span>
+                  {profile?.verificationStatus === "VERIFIED" && (
+                    <span className="inline-flex items-center gap-1 bg-accent-wash text-accent px-2.5 py-1 rounded-none text-[11px] font-bold uppercase tracking-wider border border-[var(--accent-dim)]">
+                      <ShieldCheck size={12} /> Verified
+                    </span>
+                  )}
                 </div>
                 <p className="hidden sm:block text-[11px] uppercase font-black tracking-[0.10em] text-muted mb-3">{user.email}</p>
                 
@@ -137,9 +148,17 @@ export default async function AccountPage({ searchParams }) {
               name: user.name,
               email: user.email,
               avatarUrl: user.avatarUrl || null,
+              bannerUrl: profile?.bannerUrl || null,
               lat: user.lat ?? null,
               lng: user.lng ?? null,
               phone: buyerPhone,
+              handle: profile?.handle || null,
+              bio: profile?.bio || "",
+              whatsapp: profile?.whatsapp || "",
+              locationLabel: profile?.locationLabel || "",
+              publicProfile: profile?.publicProfile !== false,
+              verificationStatus: profile?.verificationStatus || "UNVERIFIED",
+              verificationRejectionReason: profile?.verificationRejectionReason || null,
             }}
             savedCars={savedCars.map(sc => ({
               savedId:   sc.id,
