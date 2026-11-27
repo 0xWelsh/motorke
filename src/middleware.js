@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
-import { looksLikeCarListingId, looksLikeCarPublicSlug } from "@/lib/seo-car-slug";
+import { looksLikeCarListingId, looksLikeCarPublicSlug, SEO_COUNTIES } from "@/lib/seo-car-slug";
+
+const COUNTY_SLUGS = new Set(
+  SEO_COUNTIES.map((c) => c.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")),
+);
 
 const SESSION_COOKIE = "welsh-motors_session";
 const MAINT_BYPASS_COOKIE = "welsh-maint-bypass";
@@ -189,6 +193,18 @@ export async function middleware(request) {
           if (decision) return decision;
         }
       }
+    }
+  }
+
+  // Legacy county URLs: /kenya/nairobi & friends were advertised before the
+  // county hubs actually lived under /cars/<county>. 301 them so old links
+  // and crawl equity land on the real page instead of a 404.
+  if (pathname.startsWith("/kenya/")) {
+    const seg = decodeURIComponent(pathname.slice(7)).toLowerCase();
+    if (seg && !seg.includes("/") && COUNTY_SLUGS.has(seg)) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/cars/${seg}`;
+      return NextResponse.redirect(url, 308);
     }
   }
 

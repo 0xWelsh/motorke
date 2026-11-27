@@ -208,9 +208,27 @@ function FAQCategory({ category, items }) {
   );
 }
 
+function faqJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: Object.values(faqs)
+      .flat()
+      .map(({ q, a }) => ({
+        "@type": "Question",
+        name: q,
+        acceptedAnswer: { "@type": "Answer", text: a.replace(/<[^>]+>/g, "") },
+      })),
+  };
+}
+
 export default function FAQPage() {
   return (
     <div className="bg-[var(--bg)] min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd()) }}
+      />
       {/* Header */}
       <section className="bg-[var(--bg)] pt-32 sm:pt-40 pb-20 px-6 border-b border-border">
         <div className="max-w-7xl mx-auto text-center">

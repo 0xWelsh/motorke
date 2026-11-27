@@ -96,7 +96,9 @@ export async function generateMetadata({ params, searchParams }) {
   const url = absoluteUrl(path);
 
   return {
-    title,
+    // Hub titles already carry the BIDGARI suffix; absolute skips the
+    // root "%s | BIDGARI" template that was doubling it.
+    title: { absolute: title },
     description,
     alternates: { canonical: path },
     openGraph: {
