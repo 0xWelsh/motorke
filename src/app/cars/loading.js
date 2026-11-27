@@ -15,7 +15,7 @@ export default function CarsLoading() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         {Array.from({ length: 14 }).map((_, i) => (
           <div key={i} className="overflow-hidden rounded-xl border border-[var(--border)] bg-surface">
             <div className={`aspect-[16/10] ${bar}`} />

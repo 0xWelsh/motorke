@@ -56,7 +56,7 @@ const hubCarSelect = {
   dutyPaid: true,
   negotiable: true,
   publicSlug: true,
-  images: { where: { isPrimary: true }, take: 1 },
+  images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }], take: 5 },
   dealer: {
     select: {
       id: true,
@@ -600,7 +600,7 @@ export default async function CarHubPage({ params, searchParams }) {
 
         {modelAggs ? (
           <div className="mb-8 rounded-xl border border-border bg-gradient-to-br from-surface-hover to-white px-4 py-5 sm:px-6">
-            <div className="mb-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
+            <div className="mb-4 grid grid-cols-1 gap-x-4 gap-y-7 sm:grid-cols-2">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted">Price range</p>
                 <p className="mt-0.5 text-lg font-black text-text">

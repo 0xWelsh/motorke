@@ -7,6 +7,11 @@ const R2_SECRET_ACCESS_KEY = process.env.R2_SECRET_ACCESS_KEY;
 const R2_BUCKET_NAME = process.env.R2_BUCKET_NAME || "bidgari";
 const R2_PUBLIC_URL = process.env.R2_PUBLIC_URL;
 
+/** Public origin of our object storage — used to validate uploaded URLs. */
+export function storagePublicOrigin() {
+  return R2_PUBLIC_URL;
+}
+
 const THUMB_SIZES = [
   { suffix: "-200w", width: 200 },
   { suffix: "-400w", width: 400 },

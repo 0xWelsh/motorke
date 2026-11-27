@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { MapPin, ImageOff, X, Heart, Share2, Clock, Copy, Check, MoreHorizontal, MessageCircle } from "lucide-react";
 import PictureImage from "@/components/PictureImage";
-import CardGallery from "@/components/card/CardGallery";
 import CardMosaic from "@/components/card/CardMosaic";
 import { formatCarPrice, formatMileage } from "@/lib/utils";
 import { FUEL_LABELS } from "@/lib/constants";
@@ -38,7 +37,7 @@ import { useCarFlag } from "@/hooks/use-car-flag";
 // slot width there. Declaring that honestly is what lets phones select the
 // 400w WebP (~25KB) instead of the 800w one (~100KB).
 const GRID_SIZES =
-  "(max-width: 640px) 48vw, (max-width: 1024px) 31vw, (max-width: 1536px) 24vw, 19vw";
+  "(max-width: 640px) 100vw, 48vw";
 
 // Homepage one-column feed: full column width on phones, ~720px on desktop.
 const FEED_SIZES = "(max-width: 1024px) 100vw, 720px";
@@ -74,7 +73,6 @@ export default function CarCard({
   titleHtml = null,
   layout = "grid",
   sizes,
-  mosaic = false,
   featured = false,
 }) {
   const spotlightActive = showSpotlight || isActiveSpotlight(car) || spotlightProminent;
@@ -295,7 +293,6 @@ export default function CarCard({
       priority={priority}
       sizes={sizes || (isFeed ? FEED_SIZES : undefined)}
       feed={isFeed}
-      mosaic={mosaic}
       featured={featured}
       titleHtml={titleHtml}
       onCarClick={onCarClick}
@@ -318,7 +315,6 @@ function PremiumGridCard({
   priority,
   sizes,
   feed = false,
-  mosaic = false,
   featured = false,
   titleHtml,
   onCarClick,
@@ -501,15 +497,8 @@ function PremiumGridCard({
             sold && "grayscale",
           )}
         >
-          {(boost.spotlight || mosaic) && slides.length > 1 ? (
+          {slides.length > 1 ? (
             <CardMosaic
-              urls={slides}
-              alt={`${car.year} ${car.make} ${car.model}`}
-              sizes={cardSizes}
-              priority={priority}
-            />
-          ) : slides.length > 1 ? (
-            <CardGallery
               urls={slides}
               alt={`${car.year} ${car.make} ${car.model}`}
               sizes={cardSizes}

@@ -1,22 +1,19 @@
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth";
-import { uploadImage, deleteImage, imagePath } from "@/lib/storage";
+import { deleteImage, storagePublicOrigin } from "@/lib/storage";
 import { ensureCarPublicSlugInTx } from "@/lib/car-public-slug";
 import { ensurePrivateDealerFor, PRIVATE_LISTING_LIMIT } from "@/lib/private-seller";
 import { revalidateTag } from "next/cache";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 30;
 
 const FUEL = ["PETROL", "DIESEL", "HYBRID", "ELECTRIC"];
 const TRANS = ["AUTOMATIC", "MANUAL", "CVT"];
 const DRIVE = ["FWD", "RWD", "AWD", "FOURWD"];
 const normDrivetrain = (v) => (v === "4WD" ? "FOURWD" : v); // form sends 4WD
 const BODY = ["SEDAN", "SUV", "HATCHBACK", "COUPE", "CONVERTIBLE", "PICKUP", "VAN", "WAGON", "STATION_WAGON"];
-const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-const MAX_PHOTOS = 8;
-const MAX_PHOTO_BYTES = 8 * 1024 * 1024;
 
 async function sellerSession() {
   const session = await getSession();
@@ -44,7 +41,7 @@ export async function GET() {
   return NextResponse.json({ listings });
 }
 
-/** POST — create a listing (multipart). Lands in review, not on the site. */
+/** POST — commit a listing. Photos must already be uploaded via /api/my-cars/photo. */
 export async function POST(request) {
   const s = await sellerSession();
   if (s.error) return NextResponse.json({ error: s.error }, { status: s.status });
@@ -53,25 +50,30 @@ export async function POST(request) {
   if (ensured.error) return NextResponse.json({ error: ensured.error }, { status: 400 });
   const dealer = ensured.dealer;
 
-  const fd = await request.formData().catch(() => null);
-  if (!fd) return NextResponse.json({ error: "Malformed request" }, { status: 400 });
+  const body = await request.json().catch(() => null);
+  if (!body || typeof body !== "object") {
+    return NextResponse.json({ error: "Malformed request" }, { status: 400 });
+  }
 
-  const get = (k) => (fd.get(k)?.toString() || "").trim();
-  const num = (k) => { const n = Number(get(k)); return Number.isFinite(n) ? n : null; };
+  const str = (k) => (body[k] == null ? "" : String(body[k]).trim());
+  const num = (k) => { const n = Number(str(k)); return Number.isFinite(n) ? n : null; };
 
-  const make = get("make"), model = get("model");
+  const make = str("make"), model = str("model");
   const year = num("year"), price = num("price");
-  const photos = fd.getAll("photos").filter((f) => typeof f !== "string");
+  const photos = Array.isArray(body.photos) ? body.photos.filter((u) => typeof u === "string") : [];
 
   const errors = [];
   if (!make || !model) errors.push("Make and model are required.");
   if (!year || year < 1970 || year > new Date().getFullYear() + 1) errors.push("Year looks wrong.");
   if (!price || price < 100000 || price > 500_000_000) errors.push("Price (KES) looks wrong.");
   if (photos.length === 0) errors.push("At least one photo is required.");
-  if (photos.length > MAX_PHOTOS) errors.push(`Max ${MAX_PHOTOS} photos.`);
-  for (const p of photos) {
-    if (!IMAGE_TYPES.includes(p.type)) errors.push("Photos must be JPEG, PNG or WebP.");
-    if (p.size > MAX_PHOTO_BYTES) errors.push("Each photo must be under 8MB.");
+  if (photos.length > 8) errors.push("Max 8 photos.");
+
+  // Ownership: only our storage, only tmp paths minted for THIS user.
+  const origin = storagePublicOrigin();
+  const prefix = origin ? `${origin}/cars/tmp-${s.user.id}-` : null;
+  if (!prefix || photos.some((u) => !u.startsWith(prefix))) {
+    errors.push("Photo URLs are not valid for this account.");
   }
   if (errors.length) return NextResponse.json({ error: [...new Set(errors)].join(" ") }, { status: 400 });
 
@@ -90,17 +92,17 @@ export async function POST(request) {
 
   const mileage = num("mileage");
   const engineCC = num("engineCC");
-  const fuelType = FUEL.includes(get("fuelType").toUpperCase()) ? get("fuelType").toUpperCase() : "PETROL";
-  const transmission = TRANS.includes(get("transmission").toUpperCase()) ? get("transmission").toUpperCase() : "AUTOMATIC";
-  const drivetrain = DRIVE.includes(normDrivetrain(get("drivetrain").toUpperCase())) ? normDrivetrain(get("drivetrain").toUpperCase()) : "FWD";
-  const bodyType = BODY.includes(get("bodyType").toUpperCase()) ? get("bodyType").toUpperCase() : "SEDAN";
+  const fuelType = FUEL.includes(str("fuelType").toUpperCase()) ? str("fuelType").toUpperCase() : "PETROL";
+  const transmission = TRANS.includes(str("transmission").toUpperCase()) ? str("transmission").toUpperCase() : "AUTOMATIC";
+  const drivetrain = DRIVE.includes(normDrivetrain(str("drivetrain").toUpperCase())) ? normDrivetrain(str("drivetrain").toUpperCase()) : "FWD";
+  const bodyType = BODY.includes(str("bodyType").toUpperCase()) ? str("bodyType").toUpperCase() : "SEDAN";
 
   const car = await db.car.create({
     data: {
       dealerId: dealer.id,
       make: make.slice(0, 40),
       model: model.slice(0, 60),
-      variant: get("variant").slice(0, 60) || null,
+      variant: str("variant").slice(0, 60) || null,
       year,
       price,
       negotiable: true,
@@ -110,9 +112,9 @@ export async function POST(request) {
       transmission,
       drivetrain,
       bodyType,
-      color: get("color").slice(0, 30) || null,
-      description: get("description").slice(0, 4000) || null,
-      videoUrl: get("videoUrl").slice(0, 300) || null,
+      color: str("color").slice(0, 30) || null,
+      description: str("description").slice(0, 4000) || null,
+      videoUrl: str("videoUrl").slice(0, 300) || null,
       condition: "USED",
       imported: false,          // local stock: inherits the 30-day listing lifecycle
       dutyPaid: true,
@@ -122,16 +124,9 @@ export async function POST(request) {
     },
   });
 
-  let order = 0;
-  for (const file of photos) {
-    const buffer = Buffer.from(await file.arrayBuffer());
-    const path = imagePath(car.id, order, file.type);
-    const url = await uploadImage(buffer, path, file.type);
-    await db.carImage.create({
-      data: { carId: car.id, url, isPrimary: order === 0, order },
-    });
-    order++;
-  }
+  await db.carImage.createMany({
+    data: photos.map((url, i) => ({ carId: car.id, url, isPrimary: i === 0, order: i })),
+  });
 
   // Keyword slug now (preview links work in the queue); no index ping yet.
   const withSlug = await db.$transaction(async (tx) => {

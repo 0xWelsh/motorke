@@ -31,7 +31,7 @@ export default function CardMosaic({ urls, alt, sizes, priority = false }) {
               alt=""
               loading="lazy"
               className="absolute inset-0 h-full w-full object-cover"
-              sizes="120px"
+              sizes="(max-width: 768px) 30vw, 160px"
             />
           </div>
         ) : (

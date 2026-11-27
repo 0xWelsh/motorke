@@ -25,7 +25,7 @@ export default function RootLoading() {
       <div className="home-shell py-6">
         <div className="skeleton-shimmer h-8 w-56 rounded-lg" />
         <div className="mt-4 skeleton-shimmer h-4 w-80 max-w-full rounded-lg" />
-        <div className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i}>
               <div className="skeleton-shimmer aspect-[16/10] w-full rounded-xl" />

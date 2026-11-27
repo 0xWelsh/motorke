@@ -17,10 +17,10 @@ export default function CarHubLoading() {
       </div>
 
       {/* Card grid skeleton */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {Array.from({ length: 12 }).map((_, i) => (
           <div key={i} className="bg-surface border border-border rounded-sm overflow-hidden">
-            <div className="aspect-[16/11] bg-surface-overlay bg-zinc-800" />
+            <div className="aspect-[16/10] bg-surface-overlay bg-zinc-800" />
             <div className="p-3 space-y-2">
               <div className="h-4 bg-surface-overlay bg-zinc-800 rounded w-3/4" />
               <div className="h-3 bg-surface-overlay bg-zinc-800/50 rounded w-1/2" />
