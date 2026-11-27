@@ -75,7 +75,7 @@ const getCarPage = unstable_cache(
           dutyPaid: true,
           negotiable: true,
           condition: true,
-          images: { take: 1, orderBy: { isPrimary: "desc" } },
+          images: { orderBy: [{ isPrimary: "desc" }, { order: "asc" }], take: 5 },
           dealer: {
             select: {
               id: true,
