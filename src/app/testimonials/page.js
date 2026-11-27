@@ -8,7 +8,7 @@ import Script from "next/script";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: buildPageTitle("Testimonials"),
+  title: { absolute: buildPageTitle("Testimonials") },
   description:
     "Read what BIDGARI customers say — real reviews from verified buyers on their car-buying experience in Kenya.",
   ...buildCanonicalMetadata("/testimonials"),

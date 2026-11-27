@@ -12,7 +12,7 @@ import {
 } from "@/lib/site-contact";
 
 export const metadata = {
-  title: buildPageTitle("Don't Get Scammed — buying cars safely in Kenya"),
+  title: { absolute: buildPageTitle("Don't Get Scammed — buying cars safely in Kenya") },
   description:
     "Spot car-buying scams in Kenya before they cost you money. Fake deposits, ghost listings, bait-and-switch, and how BIDGARI keeps every sale safe.",
   ...buildCanonicalMetadata("/safety"),

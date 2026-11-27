@@ -8,7 +8,7 @@ import { buildPageTitle, buildCanonicalMetadata } from "@/lib/seo-metadata";
 import { getSupportWhatsAppHref } from "@/lib/site-contact";
 
 export const metadata = {
-  title: buildPageTitle("Sell your car in Kenya"),
+  title: { absolute: buildPageTitle("Sell your car in Kenya") },
   description:
     "Sell your car with BIDGARI — free listing, fair market valuation, and a sale handled end to end. Our team verifies, lists, and handles the paperwork for you.",
   ...buildCanonicalMetadata("/sell"),

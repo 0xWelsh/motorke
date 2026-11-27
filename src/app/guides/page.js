@@ -11,7 +11,7 @@ import { buildPageTitle, buildCanonicalMetadata } from "@/lib/seo-metadata";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: buildPageTitle("Buyer guides & trending searches"),
+  title: { absolute: buildPageTitle("Buyer guides & trending searches") },
   description:
     "Landing guides, model comparisons, and what Kenyan shoppers are searching for right now on BIDGARI.",
   ...buildCanonicalMetadata("/guides"),

@@ -7,7 +7,7 @@ import Link from "next/link";
 import { buildPageTitle, buildCanonicalMetadata } from "@/lib/seo-metadata";
 
 export const metadata = {
-  title: buildPageTitle("How BIDGARI verifies listings"),
+  title: { absolute: buildPageTitle("How BIDGARI verifies listings") },
   description:
     "Learn how BIDGARI verifies listings, checks every car, and handles every sale — keeping Kenya's car marketplace transparent and trustworthy.",
   ...buildCanonicalMetadata("/trust"),

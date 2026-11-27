@@ -63,7 +63,7 @@ export function buildListingMetadata({
 export function buildHubMetadata({ title, description, pathname, images = [] }) {
   const ogImages = images.length ? images : [BRAND_OG_IMAGE];
   return {
-    title: buildPageTitle(title),
+    title: { absolute: buildPageTitle(title) },
     description,
     ...buildCanonicalMetadata(pathname),
     openGraph: buildOpenGraph({ title, description, pathname, images: ogImages }),
