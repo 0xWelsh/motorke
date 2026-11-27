@@ -6,10 +6,13 @@ export const metadata = {
   title: "Open Car Requests",
   description: "Browse live buyer car requests in Kenya and send offers on WhatsApp.",
   alternates: { canonical: "/requests" },
-  robots: { index: true, follow: true },
+  // Dynamic buyer-request board: usually empty, so keep it out of the index
+  // until there's enough real content to earn a place. Flip back when it has
+  // a standing list of open requests.
+  robots: { index: false, follow: true },
   openGraph: {
     url: absoluteUrl("/requests"),
-    title: "Open Car Requests | BIDGARI",
+    title: { absolute: "Open Car Requests | BIDGARI" },
   },
 };
 

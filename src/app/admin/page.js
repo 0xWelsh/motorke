@@ -25,7 +25,7 @@ import {
   Activity,
 } from "lucide-react";
 
-export const metadata = { title: "Admin Dashboard | BIDGARI" };
+export const metadata = { title: { absolute: "Admin Dashboard | BIDGARI" } };
 
 const STAT_CONFIG = {
   listings: { Icon: Car, tile: "bg-blue-500/15 text-blue-400" },

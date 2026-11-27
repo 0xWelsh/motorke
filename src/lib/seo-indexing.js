@@ -1,6 +1,8 @@
 import { carListingPath } from "@/lib/car-listing-url";
 import { requestGoogleUrlIndexing } from "@/lib/google-indexing";
 import { scheduleListingSeo } from "@/lib/car-seo-pipeline";
+import { submitUrlToIndexNow } from "@/lib/indexnow";
+import { absoluteUrl } from "@/lib/site-url";
 
 /**
  * Fire-and-forget SEO hooks after a listing is published or slug-finalized.

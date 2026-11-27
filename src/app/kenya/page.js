@@ -9,16 +9,17 @@ import { PUBLIC_ONLY_VERIFIED_DEALERS } from "@/lib/feature-flags";
 import { publicDetailVisibilityClause } from "@/lib/car-sold-status";
 import { absoluteUrl } from "@/lib/site-url";
 import NikkyoStockCard from "@/components/NikkyoStockCard";
-import { Search, Car, Ship, FileCheck, ArrowUpRight } from "lucide-react";
+import { slugifyCarSegment, SEO_COUNTIES } from "@/lib/seo-car-slug";
+import { Search, Car, Ship, FileCheck, ArrowUpRight, MapPin } from "lucide-react";
 
 export const metadata = {
-  title: "Used Cars for Sale in Kenya | Imported & Duty Paid | BIDGARI",
+  title: { absolute: "Used Cars for Sale in Kenya | Imported & Duty Paid | BIDGARI" },
   description:
     "Browse verified Japanese and European used cars for sale in Kenya. Transparent prices, duty-paid listings, handled end-to-end by BIDGARI across Nairobi and Mombasa.",
   alternates: { canonical: "/kenya" },
   openGraph: {
     url: absoluteUrl("/kenya"),
-    title: "Used Cars for Sale in Kenya | BIDGARI",
+    title: { absolute: "Used Cars for Sale in Kenya | BIDGARI" },
     description:
       "Verified duty-paid imports from Japan and Europe. BIDGARI-handled sales, transparent pricing, direct WhatsApp contact.",
     type: "website",
@@ -69,6 +70,10 @@ const STEPS = [
 
 export default async function KenyaPage() {
   const cars = await getKenyaCars();
+  // Counties with live stock first, then the rest of the SEO counties so
+  // every hub gets a homepage-adjacent link.
+  const stocked = [...new Set(cars.map((c) => c.dealer?.county).filter(Boolean))];
+  const counties = [...stocked, ...SEO_COUNTIES.filter((c) => !stocked.includes(c))].slice(0, 8);
 
   return (
     <div className="min-h-screen bg-[var(--bg)]">
@@ -98,6 +103,27 @@ export default async function KenyaPage() {
             >
               Calculate duty
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* County hubs — internal links so crawl equity reaches /cars/<county> */}
+      <section className="px-4 sm:px-6 pt-10">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-lg sm:text-xl font-black text-text tracking-tight mb-4">
+            Browse cars near you
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {counties.map((county) => (
+              <Link
+                key={county}
+                href={`/cars/${slugifyCarSegment(county)}`}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-4 py-2 text-xs font-bold uppercase tracking-widest text-secondary transition-colors hover:border-[var(--accent-dim)] hover:text-[var(--accent)]"
+              >
+                <MapPin className="h-3 w-3" aria-hidden />
+                {county}
+              </Link>
+            ))}
           </div>
         </div>
       </section>

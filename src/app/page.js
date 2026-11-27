@@ -73,13 +73,13 @@ function fillGrid(section, usedIds, pool, target) {
 }
 
 export const metadata = {
-  title: "Cars for Sale in Kenya | Buy Used & New Cars | BIDGARI",
+  title: { absolute: "Cars for Sale in Kenya | Buy Used & New Cars | BIDGARI" },
   description:
     "Find verified cars for sale in Kenya — Nairobi, Mombasa, Kisumu, and across the country. Compare prices, inspect specs, and buy handled end-to-end by BIDGARI.",
   alternates: { canonical: "/" },
   openGraph: {
     url: absoluteUrl("/"),
-    title: "Cars for Sale in Kenya | BIDGARI",
+    title: { absolute: "Cars for Sale in Kenya | BIDGARI" },
     description:
       "Verified cars for sale in Nairobi and Mombasa. Compare costs, specs, and buy handled end-to-end by BIDGARI.",
     type: "website",

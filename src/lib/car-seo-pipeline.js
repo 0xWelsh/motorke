@@ -6,6 +6,8 @@ import { getModelWikiContent } from "@/lib/seo-model-wiki";
 import { requestGoogleUrlIndexing } from "@/lib/google-indexing";
 import { carListingPath } from "@/lib/car-listing-url";
 import { revalidateHubPathsForCar } from "@/lib/revalidate-inventory";
+import { submitUrlToIndexNow } from "@/lib/indexnow";
+import { absoluteUrl } from "@/lib/site-url";
 import { slugifyCarSegment } from "@/lib/seo-car-slug";
 
 const MIN_DESCRIPTION_CHARS = 120;
@@ -200,6 +202,13 @@ export function scheduleListingSeo(car) {
   const path = carListingPath(car);
   queueMicrotask(() => {
     requestGoogleUrlIndexing(path).catch(() => {});
+  });
+
+  // Bing/Copilot/ChatGPT (IndexNow): tell search engines the moment a
+  // listing goes live instead of waiting for the next sitemap crawl.
+  queueMicrotask(() => {
+    submitUrlToIndexNow(absoluteUrl(path)).catch(() => {});
+    submitUrlToIndexNow(absoluteUrl("/")).catch(() => {});
   });
 
   queueMicrotask(() => {

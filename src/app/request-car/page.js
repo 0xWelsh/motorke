@@ -13,7 +13,7 @@ export const metadata = {
   alternates: { canonical: "/request-car" },
   openGraph: {
     url: absoluteUrl("/request-car"),
-    title: "Request a Car | BIDGARI",
+    title: { absolute: "Request a Car | BIDGARI" },
     description: "Post your ideal car spec and receive seller offers fast.",
   },
 };

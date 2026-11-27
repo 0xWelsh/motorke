@@ -35,7 +35,6 @@ export default async function sitemap() {
     available: true,
     ...(PUBLIC_ONLY_VERIFIED_DEALERS && { dealer: { verified: true } }),
   };
-  const dealerWhere = PUBLIC_ONLY_VERIFIED_DEALERS ? { verified: true } : {};
 
   const allowedCountySlugs = new Set(SEO_COUNTIES.map((c) => slugifyCarSegment(c)));
 
@@ -66,42 +65,43 @@ export default async function sitemap() {
       },
       orderBy: { updatedAt: "desc" },
     }),
-    db.car.findMany({
+    db.car.groupBy({
+      by: ["make"],
       where: carWhere,
-      distinct: ["make"],
-      select: { make: true },
+      _max: { updatedAt: true },
       orderBy: { make: "asc" },
     }),
-    db.car.findMany({
+    db.car.groupBy({
+      by: ["make", "model"],
       where: carWhere,
-      distinct: ["make", "model"],
-      select: { make: true, model: true },
-    }),
-    db.dealer.findMany({
-      where: {
-        ...dealerWhere,
-        cars: { some: { available: true } },
-      },
-      distinct: ["county"],
-      select: { county: true },
+      _max: { updatedAt: true },
     }),
     db.$queryRaw(Prisma.sql`
-      SELECT DISTINCT c.make AS make, d.county AS county
+      SELECT d.county AS county, MAX(c."updatedAt") AS max_updated
+      FROM cars c
+      INNER JOIN dealers d ON c."dealerId" = d.id
+      WHERE c.available = true
+      ${verifiedJoin}
+      AND d.county IN (${countiesSql})
+      GROUP BY d.county
+    `),
+    db.$queryRaw(Prisma.sql`
+      SELECT DISTINCT c.make AS make, d.county AS county, MAX(c."updatedAt") OVER (PARTITION BY c.make, d.county) AS max_updated
       FROM cars c
       INNER JOIN dealers d ON c."dealerId" = d.id
       WHERE c.available = true
       ${verifiedJoin}
       AND d.county IN (${countiesSql})
     `),
-    db.car.findMany({
+    db.car.groupBy({
+      by: ["make", "fuelType"],
       where: carWhere,
-      distinct: ["make", "fuelType"],
-      select: { make: true, fuelType: true },
+      _max: { updatedAt: true },
     }),
-    db.car.findMany({
+    db.car.groupBy({
+      by: ["make", "bodyType"],
       where: carWhere,
-      distinct: ["make", "bodyType"],
-      select: { make: true, bodyType: true },
+      _max: { updatedAt: true },
     }),
     db.dutyVehicle
       .findMany({ where: { active: true }, select: { slug: true, updatedAt: true } })
@@ -109,16 +109,20 @@ export default async function sitemap() {
   ]);
 
   const now = new Date();
+  // Hubs/facets are derived from inventory; their content changes exactly
+  // when their newest car changes — not when the sitemap is regenerated.
+  const inventoryMax = cars[0]?.updatedAt ?? now;
 
   const priceFacetPagesNested = await Promise.all(
     SEO_PRICE_BANDS.map(async (band) => {
       const makes = await db.car.groupBy({
         by: ["make"],
         where: { ...carWhere, ...band.where },
+        _max: { updatedAt: true },
       });
-      return makes.map(({ make }) => ({
+      return makes.map(({ make, _max }) => ({
         url: `${BASE}/cars/${slugifyCarSegment(make)}/${facetPathSegment("price", band)}`,
-        lastModified: now,
+        lastModified: _max.updatedAt ?? inventoryMax,
         changeFrequency: "daily",
         priority: 0.79,
       }));
@@ -128,33 +132,32 @@ export default async function sitemap() {
 
   const globalHubPages = listGlobalHubSitemapEntries().map((hub) => ({
     url: `${BASE}${hub.path}`,
-    lastModified: now,
+    lastModified: inventoryMax,
     changeFrequency: "daily",
     priority: hub.priority,
   }));
 
   const staticPages = [
-    { url: BASE, lastModified: now, changeFrequency: "daily", priority: 1.0 },
-    { url: `${BASE}/cars`, lastModified: now, changeFrequency: "daily", priority: 0.95 },
-    { url: `${BASE}/luxury`, lastModified: now, changeFrequency: "weekly", priority: 0.86 },
-    { url: `${BASE}/compare`, lastModified: now, changeFrequency: "weekly", priority: 0.65 },
-    { url: `${BASE}/request-car`, lastModified: now, changeFrequency: "weekly", priority: 0.82 },
-    { url: `${BASE}/requests`, lastModified: now, changeFrequency: "hourly", priority: 0.78 },
-    { url: `${BASE}/blog`, lastModified: now, changeFrequency: "weekly", priority: 0.62 },
-    { url: `${BASE}/guides`, lastModified: now, changeFrequency: "daily", priority: 0.7 },
-    { url: `${BASE}/contact`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${BASE}/faq`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${BASE}/safety`, lastModified: now, changeFrequency: "monthly", priority: 0.5 },
-    { url: `${BASE}/report`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
-    { url: `${BASE}/duty`, lastModified: now, changeFrequency: "weekly", priority: 0.88 },
-    { url: `${BASE}/mission`, lastModified: now, changeFrequency: "yearly", priority: 0.35 },
-    { url: `${BASE}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },
-    { url: `${BASE}/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.25 },
-    { url: `${BASE}/kenya`, lastModified: now, changeFrequency: "weekly", priority: 0.85 },
-    { url: `${BASE}/testimonials`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
-    { url: `${BASE}/how-to-buy`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${BASE}/trust`, lastModified: now, changeFrequency: "monthly", priority: 0.65 },
-    { url: `${BASE}/sell`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: BASE, changeFrequency: "daily", priority: 1.0 },
+    { url: `${BASE}/cars`, changeFrequency: "daily", priority: 0.95 },
+    { url: `${BASE}/luxury`, changeFrequency: "weekly", priority: 0.86 },
+    { url: `${BASE}/compare`, changeFrequency: "weekly", priority: 0.65 },
+    { url: `${BASE}/request-car`, changeFrequency: "weekly", priority: 0.82 },
+    { url: `${BASE}/blog`, changeFrequency: "weekly", priority: 0.62 },
+    { url: `${BASE}/guides`, changeFrequency: "daily", priority: 0.7 },
+    { url: `${BASE}/contact`, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${BASE}/faq`, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${BASE}/safety`, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${BASE}/report`, changeFrequency: "monthly", priority: 0.4 },
+    { url: `${BASE}/duty`, changeFrequency: "weekly", priority: 0.88 },
+    { url: `${BASE}/mission`, changeFrequency: "yearly", priority: 0.35 },
+    { url: `${BASE}/terms`, changeFrequency: "yearly", priority: 0.25 },
+    { url: `${BASE}/privacy`, changeFrequency: "yearly", priority: 0.25 },
+    { url: `${BASE}/kenya`, changeFrequency: "weekly", priority: 0.85 },
+    { url: `${BASE}/testimonials`, changeFrequency: "weekly", priority: 0.6 },
+    { url: `${BASE}/how-to-buy`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${BASE}/trust`, changeFrequency: "monthly", priority: 0.65 },
+    { url: `${BASE}/sell`, changeFrequency: "monthly", priority: 0.7 },
   ];
 
   const carPages = cars.map((car) => {
@@ -171,14 +174,14 @@ export default async function sitemap() {
 
   const makeHubPages = makeRows.map((row) => ({
     url: `${BASE}/cars/${slugifyCarSegment(row.make)}`,
-    lastModified: now,
+    lastModified: row._max?.updatedAt ?? inventoryMax,
     changeFrequency: "daily",
     priority: 0.88,
   }));
 
   const modelHubPages = comboRows.map((row) => ({
     url: `${BASE}/cars/${slugifyCarSegment(row.make)}/${slugifyCarSegment(row.model)}`,
-    lastModified: now,
+    lastModified: row._max?.updatedAt ?? inventoryMax,
     changeFrequency: "daily",
     priority: 0.82,
   }));
@@ -187,7 +190,7 @@ export default async function sitemap() {
     .filter((row) => row.county && allowedCountySlugs.has(slugifyCarSegment(row.county)))
     .map((row) => ({
       url: `${BASE}/cars/${slugifyCarSegment(row.county)}`,
-      lastModified: now,
+      lastModified: row.max_updated ?? inventoryMax,
       changeFrequency: "weekly",
       priority: 0.84,
     }));
@@ -203,7 +206,7 @@ export default async function sitemap() {
       const hubUrl = `${BASE}/cars/${slug}`;
       return {
         url: `${BASE}/cars/${slugifyCarSegment(row.make)}/${slug}`,
-        lastModified: now,
+        lastModified: row.max_updated ?? inventoryMax,
         changeFrequency: "weekly",
         priority: countyHubSlugSet.has(hubUrl) ? 0.81 : 0.8,
       };
@@ -213,7 +216,7 @@ export default async function sitemap() {
     .filter((row) => row?.make && row?.fuelType)
     .map((row) => ({
       url: `${BASE}/cars/${slugifyCarSegment(row.make)}/${facetPathSegment("fuel", row.fuelType)}`,
-      lastModified: now,
+      lastModified: row._max?.updatedAt ?? inventoryMax,
       changeFrequency: "daily",
       priority: 0.8,
     }));
@@ -222,7 +225,7 @@ export default async function sitemap() {
     .filter((row) => row?.make && row?.bodyType)
     .map((row) => ({
       url: `${BASE}/cars/${slugifyCarSegment(row.make)}/${facetPathSegment("body", row.bodyType)}`,
-      lastModified: now,
+      lastModified: row._max?.updatedAt ?? inventoryMax,
       changeFrequency: "daily",
       priority: 0.8,
     }));

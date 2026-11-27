@@ -13,7 +13,7 @@ export const metadata = {
     "Read what BIDGARI customers say — real reviews from verified buyers on their car-buying experience in Kenya.",
   ...buildCanonicalMetadata("/testimonials"),
   openGraph: {
-    title: "Testimonials | BIDGARI",
+    title: { absolute: "Testimonials | BIDGARI" },
     description:
       "Real reviews from verified BIDGARI customers across Kenya.",
     type: "website",

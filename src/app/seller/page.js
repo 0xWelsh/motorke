@@ -7,7 +7,7 @@ import Link from "next/link";
 import { CarFront, Plus } from "lucide-react";
 import MyListingRowActions from "@/components/MyListingRowActions";
 
-export const metadata = { title: "My Listings | BIDGARI" };
+export const metadata = { title: { absolute: "My Listings | BIDGARI" } };
 
 const STATUS = {
   PENDING_REVIEW: { label: "In review", cls: "text-amber-400 bg-amber-400/10 border-amber-400/20" },

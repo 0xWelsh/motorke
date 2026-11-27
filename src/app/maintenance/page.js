@@ -2,7 +2,7 @@
 export const dynamic = "force-static";
 
 export const metadata = {
-  title: "We'll be right back | BIDGARI",
+  title: { absolute: "We'll be right back | BIDGARI" },
   description: "BIDGARI is undergoing brief maintenance. We'll be back online shortly.",
   robots: { index: false, follow: false },
 };

@@ -11,7 +11,7 @@ export const metadata = {
     "Compare up to three Kenyan vehicle listings side by side: price, specs, duties, efficiency, and running costs on BIDGARI.",
   alternates: { canonical: "/compare" },
   openGraph: {
-    title: "Compare vehicles | BIDGARI",
+    title: { absolute: "Compare vehicles | BIDGARI" },
     description:
       "Stack two or three Kenyan listings beside each other before you enquire. Built for decisive buyers.",
     type: "website",

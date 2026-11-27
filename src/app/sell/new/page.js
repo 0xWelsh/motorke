@@ -7,7 +7,7 @@ import Link from "next/link";
 import { ShieldCheck, LogIn } from "lucide-react";
 import SellCarForm from "@/components/SellCarForm";
 
-export const metadata = { title: "List Your Car | BIDGARI" };
+export const metadata = { title: { absolute: "List Your Car | BIDGARI" } };
 
 export default async function NewPrivateListingPage() {
   const session = await getSession();

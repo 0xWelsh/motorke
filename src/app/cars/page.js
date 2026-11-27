@@ -20,7 +20,7 @@ export const metadata = {
     "Find verified cars for sale in Kenya. Compare real prices, mileage and specs, filter by budget, and buy with the whole sale handled end-to-end by BIDGARI — inspection, paperwork and fair pricing included.",
   alternates: { canonical: "/cars" },
   openGraph: {
-    title: "Cars for Sale in Kenya | BIDGARI",
+    title: { absolute: "Cars for Sale in Kenya | BIDGARI" },
     description:
       "Find verified cars for sale in Kenya. Compare real prices, mileage and specs, filter by budget, and buy with the whole sale handled end-to-end by BIDGARI — inspection, paperwork and fair pricing included.",
     type: "website",
